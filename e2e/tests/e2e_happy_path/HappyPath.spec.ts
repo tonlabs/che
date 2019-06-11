@@ -21,6 +21,7 @@ import { GitHubPlugin } from '../../pageobjects/ide/GitHubPlugin';
 import { TestConstants } from '../../TestConstants';
 import { RightToolbar } from '../../pageobjects/ide/RightToolbar';
 import { By } from 'selenium-webdriver';
+import * as fs from 'fs';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -44,14 +45,21 @@ const expectedGithubChanges: string = '_remote.repositories %3F/.m2/repository/a
 const springTitleLocator: By = By.xpath('//div[@class=\'container-fluid\']//h2[text()=\'Welcome\']');
 
 
+
 suite('Ide checks', async () => {
     test('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
-       
+      
         try{
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
-        }
+       }
         catch(err){
+            const screenshot: string = await driverHelper.getDriver().takeScreenshot();
+            const screenshotStream = fs.createWriteStream("./report/websocket-investigation.png");
+            screenshotStream.write(new Buffer(screenshot, 'base64'));
+            screenshotStream.end();
+
+            console.log("The first attempt was failed refresh brawser for reconnecting websockets");
             await driverHelper.getDriver().navigate().refresh();
             await ide.waitWorkspaceAndIde(namespace, workspaceName);
         }
