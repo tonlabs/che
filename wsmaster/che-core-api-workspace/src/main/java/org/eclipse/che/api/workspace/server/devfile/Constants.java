@@ -17,7 +17,7 @@ public class Constants {
 
   public static final String SCHEMA_LOCATION = "schema/devfile.json";
 
-  public static final String CURRENT_SPEC_VERSION = "0.0.1";
+  public static final String CURRENT_API_VERSION = "1.0.0";
 
   public static final String EDITOR_COMPONENT_TYPE = "cheEditor";
 
@@ -72,4 +72,10 @@ public class Constants {
    * any other value of lack of the attributes activates provisioning of default editor
    */
   public static final String EDITOR_FREE_DEVFILE_ATTRIBUTE = "editorFree";
+
+  /**
+   * Format used for composite (containing registry URL and id) editor and plugin components
+   * workspace attribute values.
+   */
+  public static final String COMPOSITE_EDITOR_PLUGIN_ATTRIBUTE_FORMAT = "%s#%s";
 }

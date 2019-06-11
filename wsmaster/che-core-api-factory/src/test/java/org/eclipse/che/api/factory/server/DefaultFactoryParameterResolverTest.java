@@ -36,6 +36,7 @@ import org.eclipse.che.api.workspace.server.devfile.convert.CommandConverter;
 import org.eclipse.che.api.workspace.server.devfile.convert.DefaultEditorProvisioner;
 import org.eclipse.che.api.workspace.server.devfile.convert.DevfileConverter;
 import org.eclipse.che.api.workspace.server.devfile.convert.ProjectConverter;
+import org.eclipse.che.api.workspace.server.devfile.convert.component.ComponentFQNParser;
 import org.eclipse.che.api.workspace.server.devfile.convert.component.ComponentProvisioner;
 import org.eclipse.che.api.workspace.server.devfile.convert.component.ComponentToWorkspaceApplier;
 import org.eclipse.che.api.workspace.server.devfile.schema.DevfileSchemaProvider;
@@ -55,15 +56,16 @@ public class DefaultFactoryParameterResolverTest {
 
   private static final String DEVFILE =
       ""
-          + "specVersion: 0.0.1\n"
-          + "name: test\n"
+          + "apiVersion: 1.0.0\n"
+          + "metadata:\n"
+          + "  name: test\n"
           + "components:\n"
           + "- type: kubernetes\n"
           + "  alias: component\n"
           + "  reference: ../localfile\n";
 
   @Mock private URLFetcher urlFetcher;
-  private PluginFQNParser fqnParser = new PluginFQNParser();
+  private ComponentFQNParser componentFQNParser = new ComponentFQNParser(new PluginFQNParser());
 
   @Test
   public void shouldResolveRelativeFiles() throws Exception {
@@ -102,7 +104,7 @@ public class DefaultFactoryParameterResolverTest {
             new CommandConverter(),
             componentProvisioners,
             appliers,
-            new DefaultEditorProvisioner(null, new String[] {}, fqnParser),
+            new DefaultEditorProvisioner(null, new String[] {}, componentFQNParser),
             new URLFetcher());
 
     WorkspaceManager workspaceManager = mock(WorkspaceManager.class);
