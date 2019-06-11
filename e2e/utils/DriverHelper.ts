@@ -158,7 +158,7 @@ export class DriverHelper {
         }
     }
 
-    public async waitDisappearanceTestWithTimeout(elementLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+    public async waitDisappearanceWithTimeout(elementLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         await this.getDriver().wait(async () => {
             const isVisible: boolean = await this.isVisible(elementLocator);
 

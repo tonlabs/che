@@ -25,14 +25,38 @@ export class Editor {
     }
 
     public async waitSuggestionContainerClosed() {
-        await this.driverHelper.waitDisappearanceTestWithTimeout(By.css(Editor.SUGGESTION_WIDGET_BODY_CSS));
+        await this.driverHelper.waitDisappearanceWithTimeout(By.css(Editor.SUGGESTION_WIDGET_BODY_CSS));
     }
 
     public async waitSuggestion(editorTabTitle: string,
         suggestionText: string,
         timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
 
-        const suggestionLocator: By = By.xpath(this.getSuggestionLineXpathLocator(suggestionText));
+        const suggestionLocator: By = this.getSuggestionLineXpathLocator(suggestionText);
+
+        await this.driverHelper.getDriver().wait(async () => {
+            await this.waitSuggestionContainer();
+            try {
+                await this.driverHelper.waitVisibility(suggestionLocator, 5000);
+                return true;
+            } catch (err) {
+                const isTimeoutError: boolean = err instanceof error.TimeoutError;
+                if (!isTimeoutError) {
+                    throw err;
+                }
+
+                await this.pressEscapeButton(editorTabTitle);
+                await this.waitSuggestionContainerClosed();
+                await this.pressControlSpaceCombination(editorTabTitle);
+            }
+        }, timeout);
+    }
+
+    public async waitHighlightedSuggestion(editorTabTitle: string,
+        suggestionText: string,
+        timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+
+        const suggestionLocator: By = this.getSuggestionLineXpathLocator(suggestionText);
 
         await this.driverHelper.getDriver().wait(async () => {
             await this.waitSuggestionContainer();
@@ -61,7 +85,7 @@ export class Editor {
     }
 
     public async clickOnSuggestion(suggestionText: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        await this.driverHelper.waitAndClick(By.xpath(this.getSuggestionLineXpathLocator(suggestionText)), timeout);
+        await this.driverHelper.waitAndClick(this.getSuggestionLineXpathLocator(suggestionText), timeout);
     }
 
     public async waitTab(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
@@ -183,6 +207,18 @@ export class Editor {
         await this.performKeyCombination(editorTabTitle, text);
     }
 
+    async waitErrorInLine(lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const errorInLineLocator: By = this.getErrorInLineLocator(lineNumber);
+
+        await this.driverHelper.waitVisibility(errorInLineLocator, timeout);
+    }
+
+    async waitErrorInLineDisappearance(lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const errorInLineLocator: By = this.getErrorInLineLocator(lineNumber);
+
+        await this.driverHelper.waitDisappearanceWithTimeout(errorInLineLocator, timeout);
+    }
+
     private getEditorBodyLocator(editorTabTitle: string): By {
         const editorXpathLocator: string = `//div[@id='theia-main-content-panel']//div[contains(@class, 'monaco-editor')` +
             ` and contains(@data-uri, '${editorTabTitle}')]//*[contains(@class, 'lines-content')]`;
@@ -201,11 +237,27 @@ export class Editor {
         return `(//div[contains(@class,'lines-content')]//div[@class='view-lines']/div[@class='view-line'])[${lineNumber}]`;
     }
 
-    private getSuggestionLineXpathLocator(suggestionText: string): string {
-        return `//div[@widgetid='editor.widget.suggestWidget']//div[@class='monaco-list-row']//span[text()='${suggestionText}']`;
+    private getSuggestionLineXpathLocator(suggestionText: string): By {
+        return By.xpath(`//div[@widgetid='editor.widget.suggestWidget']//div[contains(@aria-label, '${suggestionText}')]`);
     }
 
     private getTabXpathLocator(tabTitle: string): string {
         return `//li[contains(@class, 'p-TabBar-tab')]//div[text()='${tabTitle}']`;
+    }
+
+    private getLineYCoordinates(lineNumber: number): number {
+        const linePixelsSize: number = 19;
+
+        if (lineNumber === 1) {
+            return 0;
+        }
+
+        return linePixelsSize * (lineNumber - 1);
+    }
+
+    private getErrorInLineLocator(lineNumber: number): By {
+        const lineYCoordinates: number = this.getLineYCoordinates(lineNumber);
+
+        return By.xpath(`//div[contains(@style, 'top:${lineYCoordinates}px')]//div[contains(@class, 'squiggly-error')]`);
     }
 }

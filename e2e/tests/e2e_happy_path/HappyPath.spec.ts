@@ -20,7 +20,7 @@ import { PreviewWidget } from '../../pageobjects/ide/PreviewWidget';
 import { GitHubPlugin } from '../../pageobjects/ide/GitHubPlugin';
 import { TestConstants } from '../../TestConstants';
 import { RightToolbar } from '../../pageobjects/ide/RightToolbar';
-import { By } from 'selenium-webdriver';
+import { By, Key } from 'selenium-webdriver';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -38,6 +38,7 @@ const workspaceName: string = TestConstants.TS_SELENIUM_HAPPY_PATH_WORKSPACE_NAM
 const workspaceUrl: string = `${TestConstants.TS_SELENIUM_BASE_URL}/dashboard/#/ide/${namespace}/${workspaceName}`;
 const pathToJavaFolder: string = `${projectName}/src/main/java/org/springframework/samples/petclinic`;
 const javaFileName: string = 'PetClinicApplication.java';
+const codeNavigationClassName: string = 'SpringApplication.class';
 const pathToYamlFolder: string = projectName;
 const yamlFileName: string = 'devfile.yaml';
 const expectedGithubChanges: string = '_remote.repositories %3F/.m2/repository/antlr/antlr/2.7.7\n' + 'U';
@@ -53,18 +54,18 @@ suite('Ide checks', async () => {
         await projectTree.expandItem(`/${projectName}`);
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
-        await topMenu.clickOnTopMenuButton('Terminal');
-        await topMenu.clickOnSubmenuItem('Run Task...');
-        await quickOpenContainer.clickOnContainerItem('che: build-file-output');
+        // await topMenu.clickOnTopMenuButton('Terminal');
+        // await topMenu.clickOnSubmenuItem('Run Task...');
+        // await quickOpenContainer.clickOnContainerItem('che: build-file-output');
 
-        await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
-        await editor.waitEditorAvailable('build-output.txt');
-        await editor.clickOnTab('build-output.txt');
-        await editor.waitTabFocused('build-output.txt');
-        await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
+        // await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
+        // await editor.waitEditorAvailable('build-output.txt');
+        // await editor.clickOnTab('build-output.txt');
+        // await editor.waitTabFocused('build-output.txt');
+        // await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
-    test('Run application', async () => {
+    test.skip('Run application', async () => {
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
@@ -86,10 +87,33 @@ suite('Ide checks', async () => {
         await editor.waitEditorAvailable(javaFileName);
         await editor.clickOnTab(javaFileName);
         await editor.waitTabFocused(javaFileName);
-        await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
+        // await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
+        // await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
+        // await editor.pressControlSpaceCombination(javaFileName);
+        // await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
+
+        await editor.type(javaFileName, 'textForErrorHighlighting', 30);
+        await editor.waitErrorInLine(30);
+        await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
+        await editor.waitErrorInLineDisappearance(30);
+
+
+        await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
+        await editor.pressControlSpaceCombination(javaFileName);
+        await editor.waitSuggestionContainer();
+        await editor.waitSuggestion(javaFileName, 'SpringApplication - org.springframework.boot');
+
+
         await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
         await editor.pressControlSpaceCombination(javaFileName);
-        await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
+        await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext');
+
+
+        await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
+        await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, Key.F12));
+        await editor.waitEditorAvailable(codeNavigationClassName);
+
+
     });
 
     test.skip('Yaml LS initialization', async () => {
