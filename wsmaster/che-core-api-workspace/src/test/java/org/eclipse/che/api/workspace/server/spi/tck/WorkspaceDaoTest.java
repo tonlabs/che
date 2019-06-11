@@ -58,6 +58,7 @@ import org.eclipse.che.api.workspace.server.model.impl.devfile.DevfileImpl;
 import org.eclipse.che.api.workspace.server.model.impl.devfile.EndpointImpl;
 import org.eclipse.che.api.workspace.server.model.impl.devfile.EntrypointImpl;
 import org.eclipse.che.api.workspace.server.model.impl.devfile.EnvImpl;
+import org.eclipse.che.api.workspace.server.model.impl.devfile.MetadataImpl;
 import org.eclipse.che.api.workspace.server.model.impl.devfile.ProjectImpl;
 import org.eclipse.che.api.workspace.server.model.impl.devfile.SourceImpl;
 import org.eclipse.che.api.workspace.server.spi.WorkspaceDao;
@@ -589,6 +590,7 @@ public class WorkspaceDaoTest {
         "component3",
         "eclipse/che-theia/0.0.1",
         ImmutableMap.of("java.home", "/opt/jdk11"),
+        "https://mysite.com/registry/somepath",
         "/dev.yaml",
         null,
         ImmutableMap.of("app.kubernetes.io/component", "webapp"),
@@ -905,6 +907,7 @@ public class WorkspaceDaoTest {
             "component1",
             "eclipse/che-theia/0.0.1",
             ImmutableMap.of("java.home", "/home/user/jdk11"),
+            "https://mysite.com/registry/somepath1",
             "/dev.yaml",
             "refcontent1",
             ImmutableMap.of("app.kubernetes.io/component", "db"),
@@ -925,6 +928,7 @@ public class WorkspaceDaoTest {
             "component2",
             "eclipse/che-theia/0.0.1",
             ImmutableMap.of("java.home", "/home/user/jdk11"),
+            "https://mysite.com/registry/somepath2",
             "/dev.yaml",
             "refcontent2",
             ImmutableMap.of("app.kubernetes.io/component", "webapp"),
@@ -942,11 +946,11 @@ public class WorkspaceDaoTest {
     DevfileImpl devfile =
         new DevfileImpl(
             "0.0.1",
-            name,
             asList(project1, project2),
             asList(component1, component2),
             asList(command1, command2),
-            singletonMap("attribute1", "value1"));
+            singletonMap("attribute1", "value1"),
+            new MetadataImpl(name));
 
     return devfile;
   }
