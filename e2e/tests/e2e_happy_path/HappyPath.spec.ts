@@ -46,6 +46,14 @@ const springTitleLocator: By = By.xpath('//div[@class=\'container-fluid\']//h2[t
 
 
 suite('Ide checks', async () => {
+    test('Open workspace', async () => {
+        await driverHelper.navigateTo(workspaceUrl);
+    });
+
+    test('Wait workspace running state', async () => {
+        await ide.waitWorkspaceAndIde(namespace, workspaceName);
+    });
+
     test('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
         await ide.waitWorkspaceAndIde(namespace, workspaceName);

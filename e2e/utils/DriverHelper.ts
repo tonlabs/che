@@ -342,6 +342,18 @@ export class DriverHelper {
 
     public async navigateTo(url: string) {
         await this.driver.navigate().to(url);
+        await this.waitURL(url);
+    }
+
+    public async waitURL(expectedUrl: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.getDriver().wait(async () => {
+            const currentUrl: string = await this.getDriver().getCurrentUrl();
+            const urlEquals: boolean = currentUrl === expectedUrl;
+
+            if (urlEquals) {
+                return true;
+            }
+        });
     }
 
     public async scrollTo(elementLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
