@@ -55,6 +55,7 @@ suite('Ide checks', async () => {
        }
         catch(err){
             const screenshot: string = await driverHelper.getDriver().takeScreenshot();
+            fs.mkdirSync("./report")
             const screenshotStream = fs.createWriteStream("./report/websocket-investigation.png");
             screenshotStream.write(new Buffer(screenshot, 'base64'));
             screenshotStream.end();
