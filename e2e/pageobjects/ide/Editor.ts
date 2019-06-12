@@ -13,12 +13,14 @@ import { DriverHelper } from '../../utils/DriverHelper';
 import { CLASSES } from '../../inversify.types';
 import { TestConstants } from '../../TestConstants';
 import { By, Key, error } from 'selenium-webdriver';
+import { Ide } from './Ide';
 
 @injectable()
 export class Editor {
     private static readonly SUGGESTION_WIDGET_BODY_CSS: string = 'div.visible[widgetId=\'editor.widget.suggestWidget\']';
 
-    constructor(@inject(CLASSES.DriverHelper) private readonly driverHelper: DriverHelper) { }
+    constructor(@inject(CLASSES.DriverHelper) private readonly driverHelper: DriverHelper,
+        @inject(CLASSES.Ide) private readonly ide: Ide) { }
 
     public async waitSuggestionContainer(timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         await this.driverHelper.waitVisibility(By.css(Editor.SUGGESTION_WIDGET_BODY_CSS), timeout);
@@ -129,26 +131,27 @@ export class Editor {
         await this.waitEditorOpened(tabTitle, timeout);
     }
 
-    async getLineText(lineNumber: number): Promise<string> {
+    async getLineText(tabTitle: string, lineNumber: number): Promise<string> {
         const lineIndex: number = lineNumber - 1;
-        const editorText: string = await this.getEditorVisibleText();
+        const editorText: string = await this.getEditorVisibleText(tabTitle);
         const editorLines: string[] = editorText.split('\n');
         const editorLine = editorLines[lineIndex] + '\n';
 
         return editorLine;
     }
 
-    async getEditorVisibleText(): Promise<string> {
-        const editorBodyLocator: By = By.xpath('//div[@class=\'view-lines\']');
+    async getEditorVisibleText(tabTitle: string): Promise<string> {
+        const editorBodyLocator: By = By.xpath(`//div[contains(@data-uri, \'${tabTitle}')]//div[@class=\'view-lines\']`);
+        // const editorBodyLocator: By = By.xpath('//div[@class=\'view-lines\']');
         const editorText: string = await this.driverHelper.waitAndGetText(editorBodyLocator);
         return editorText;
     }
 
-    async waitText(expectedText: string,
+    async waitText(tabTitle: string, expectedText: string,
         timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT,
         polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING) {
         await this.driverHelper.getDriver().wait(async () => {
-            const editorText: string = await this.getEditorVisibleText();
+            const editorText: string = await this.getEditorVisibleText(tabTitle);
             const isEditorContainText: boolean = editorText.includes(expectedText);
 
             if (isEditorContainText) {
@@ -164,9 +167,13 @@ export class Editor {
         timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT,
         polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING) {
 
+        await this.ide.closeAllNotifications();
+        await this.clickOnTab(editorTabTitle);
+        await this.waitTabFocused(editorTabTitle);
+
         await this.driverHelper.getDriver().wait(async () => {
             await this.performKeyCombination(editorTabTitle, Key.chord(Key.CONTROL, Key.END));
-            const editorText: string = await this.getEditorVisibleText();
+            const editorText: string = await this.getEditorVisibleText(editorTabTitle);
 
             const isEditorContainText: boolean = editorText.includes(expectedText);
 

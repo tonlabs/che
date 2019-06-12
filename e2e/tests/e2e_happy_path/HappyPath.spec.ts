@@ -37,12 +37,23 @@ const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
 const workspaceName: string = TestConstants.TS_SELENIUM_HAPPY_PATH_WORKSPACE_NAME;
 const workspaceUrl: string = `${TestConstants.TS_SELENIUM_BASE_URL}/dashboard/#/ide/${namespace}/${workspaceName}`;
 const pathToJavaFolder: string = `${projectName}/src/main/java/org/springframework/samples/petclinic`;
+const pathToChangedJavaFileFolder: string = `${projectName}/src/main/java/org/springframework/samples/petclinic/system`;
 const javaFileName: string = 'PetClinicApplication.java';
+const changedJavaFileName: string = 'CrashController.java';
+const textForErrorMessageChange: string = 'HHHHHHHHHHHHH';
 const codeNavigationClassName: string = 'SpringApplication.class';
 const pathToYamlFolder: string = projectName;
 const yamlFileName: string = 'devfile.yaml';
 const expectedGithubChanges: string = '_remote.repositories %3F/.m2/repository/antlr/antlr/2.7.7\n' + 'U';
-const springTitleLocator: By = By.xpath('//div[@class=\'container-fluid\']//h2[text()=\'Welcome\']');
+
+const SpringAppLocators = {
+    springTitleLocator: By.xpath('//div[@class=\'container-fluid\']//h2[text()=\'Welcome\']'),
+    springMenuButtonLocator: By.css('button[data-target=\'#main-navbar\']'),
+    springErrorButtonLocator: By.xpath('//div[@id=\'main-navbar\']//span[text()=\'Error\']'),
+    springErrorMessageLocator: By.xpath('//p[text()=\'Expected: controller used to ' +
+        `showcase what happens when an exception is thrown${textForErrorMessageChange}\']`),
+
+};
 
 
 suite('Ide checks', async () => {
@@ -85,7 +96,7 @@ suite('Ide checks', async () => {
 
         await ide.waitNotification('Redirect is now enabled on port 8080', 120000);
         await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
-        await previewWidget.waitContentAvailable(springTitleLocator, 60000, 10000);
+        await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
         await rightToolbar.clickOnToolIcon('Preview');
         await previewWidget.waitPreviewWidgetAbsence();
     });
@@ -122,6 +133,53 @@ suite('Ide checks', async () => {
         await editor.waitEditorAvailable(codeNavigationClassName);
 
 
+        await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, changedJavaFileName);
+        await editor.waitEditorAvailable(changedJavaFileName);
+        await editor.clickOnTab(changedJavaFileName);
+        await editor.waitTabFocused(changedJavaFileName);
+
+
+        await editor.moveCursorToLineAndChar(changedJavaFileName, 34, 55);
+        await editor.performKeyCombination(changedJavaFileName, textForErrorMessageChange);
+        await editor.performKeyCombination(changedJavaFileName, Key.chord(Key.CONTROL, 's'));
+
+
+        await topMenu.clickOnTopMenuButton('Terminal');
+        await topMenu.clickOnSubmenuItem('Run Task...');
+        await quickOpenContainer.clickOnContainerItem('che: build');
+
+
+
+        await projectTree.expandPathAndOpenFile(projectName, 'build.txt');
+        await editor.waitEditorAvailable('build.txt');
+        await editor.clickOnTab('build.txt');
+        await editor.waitTabFocused('build.txt');
+        await editor.followAndWaitForText('build.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
+
+
+
+        await topMenu.clickOnTopMenuButton('Terminal');
+        await topMenu.clickOnSubmenuItem('Run Task...');
+        await quickOpenContainer.clickOnContainerItem('che: run');
+
+
+
+        await ide.waitNotification('A new process is now listening on port 8080', 120000);
+        await ide.clickOnNotificationButton('A new process is now listening on port 8080', 'yes');
+
+        await ide.waitNotification('Redirect is now enabled on port 8080', 120000);
+        await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
+
+        await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
+
+        await previewWidget.waitAndSwitchToWidgetFrame();
+        await previewWidget.waitAndClick(SpringAppLocators.springMenuButtonLocator);
+        await previewWidget.waitAndClick(SpringAppLocators.springErrorButtonLocator);
+        await previewWidget.waitVisibility(SpringAppLocators.springErrorMessageLocator);
+        await previewWidget.switchBackToIdeFrame();
+
+        await rightToolbar.clickOnToolIcon('Preview');
+        await previewWidget.waitPreviewWidgetAbsence();
     });
 
     test.skip('Yaml LS initialization', async () => {

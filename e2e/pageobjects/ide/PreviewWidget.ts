@@ -50,17 +50,29 @@ export class PreviewWidget {
                 return true;
             }
 
-            await this.driverHelper.getDriver().switchTo().defaultContent();
-            await this.ide.waitAndSwitchToIdeFrame();
+            await this.switchBackToIdeFrame();
             await this.refreshPage();
             await this.waitAndSwitchToWidgetFrame();
             await this.driverHelper.wait(polling);
         }, timeout);
     }
 
+    async waitVisibility(element: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.driverHelper.waitVisibility(element, timeout);
+    }
+
+    async waitAndClick(element: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.driverHelper.waitAndClick(element, timeout);
+    }
+
     async refreshPage() {
         const refreshButtonLocator: By = By.css('.theia-mini-browser .theia-mini-browser-refresh');
         await this.driverHelper.waitAndClick(refreshButtonLocator);
+    }
+
+    async switchBackToIdeFrame() {
+        await this.driverHelper.getDriver().switchTo().defaultContent();
+        await this.ide.waitAndSwitchToIdeFrame();
     }
 
 }
