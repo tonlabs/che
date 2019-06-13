@@ -72,9 +72,9 @@ suite('Ide checks', async () => {
         await topMenu.clickOnTopMenuButton('Terminal');
         await topMenu.clickOnSubmenuItem('Run Task...');
         await quickOpenContainer.clickOnContainerItem('che: build-file-output');
-
         await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
         await editor.waitEditorAvailable('build-output.txt');
+        await ide.closeAllNotifications();
         await editor.clickOnTab('build-output.txt');
         await editor.waitTabFocused('build-output.txt');
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
