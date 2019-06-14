@@ -32,7 +32,7 @@ export class WorkspaceDataManager {
     if (workspace.config) {
       return workspace.config.name;
     } else if (workspace.devfile) {
-      return workspace.devfile.name;
+      return workspace.devfile.metadata.name;
     }
   }
 
@@ -46,7 +46,7 @@ export class WorkspaceDataManager {
     if (workspace.config) {
       workspace.config.name = name;
     } else if (workspace.devfile) {
-      workspace.devfile.name = name;
+      workspace.devfile.metadata.name = name;
     }
   }
 
@@ -96,10 +96,17 @@ export class WorkspaceDataManager {
    * @param workspace workspace 
    * @param project project to be added to pointed workspace 
    */
-  addProject(workspace: che.IWorkspace, project: any): void {
+  addProject(workspace: che.IWorkspace, projectTemplate: che.IProjectTemplate): void {
     if (workspace.config) {
-      workspace.config.projects.push(project);
+      workspace.config.projects.push(projectTemplate);
     } else if (workspace.devfile) {
+      let project = {
+        name: projectTemplate.displayName,
+        source: {
+          type: projectTemplate.source.type,
+          location: projectTemplate.source.location
+        }
+      };
       workspace.devfile.projects.push(project);
     }
   }
@@ -114,6 +121,7 @@ export class WorkspaceDataManager {
     if (workspace.config) {
       workspace.config.commands.push(command);
     } else if (workspace.devfile) {
+      workspace.devfile.commands = workspace.devfile.commands || [];
       workspace.devfile.commands.push(command);
     }
   }
