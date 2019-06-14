@@ -28,6 +28,7 @@ import { QuickOpenContainer } from './pageobjects/ide/QuickOpenContainer';
 import { PreviewWidget } from './pageobjects/ide/PreviewWidget';
 import { GitHubPlugin } from './pageobjects/ide/GitHubPlugin';
 import { RightToolbar } from './pageobjects/ide/RightToolbar';
+import { Terminal } from './pageobjects/ide/Terminal';
 
 const e2eContainer = new Container();
 
@@ -49,5 +50,6 @@ e2eContainer.bind<QuickOpenContainer>(CLASSES.QuickOpenContainer).to(QuickOpenCo
 e2eContainer.bind<PreviewWidget>(CLASSES.PreviewWidget).to(PreviewWidget).inSingletonScope();
 e2eContainer.bind<GitHubPlugin>(CLASSES.GitHubPlugin).to(GitHubPlugin).inSingletonScope();
 e2eContainer.bind<RightToolbar>(CLASSES.RightToolbar).to(RightToolbar).inSingletonScope();
+e2eContainer.bind<Terminal>(CLASSES.Terminal).to(Terminal).inSingletonScope();
 
 export { e2eContainer };

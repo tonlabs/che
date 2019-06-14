@@ -1,10 +1,3 @@
-import { injectable, inject } from 'inversify';
-import { CLASSES } from '../../inversify.types';
-import { DriverHelper } from '../../utils/DriverHelper';
-import { By } from 'selenium-webdriver';
-import { TestConstants } from '../../TestConstants';
-import { Ide } from './Ide';
-
 /*********************************************************************
  * Copyright (c) 2019 Red Hat, Inc.
  *
@@ -14,6 +7,12 @@ import { Ide } from './Ide';
  *
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
+import { injectable, inject } from 'inversify';
+import { CLASSES } from '../../inversify.types';
+import { DriverHelper } from '../../utils/DriverHelper';
+import { By } from 'selenium-webdriver';
+import { TestConstants } from '../../TestConstants';
+import { Ide } from './Ide';
 
 @injectable()
 export class PreviewWidget {

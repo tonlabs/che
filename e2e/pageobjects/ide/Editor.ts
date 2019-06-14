@@ -226,6 +226,20 @@ export class Editor {
         await this.driverHelper.waitDisappearanceWithTimeout(errorInLineLocator, timeout);
     }
 
+    async waitStoppedDebugBreakpoint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const stoppedDebugBreakpointLocator: By = By.xpath(this.getStoppedDebugBreakpointXpathLocator(tabTitle, lineNumber));
+
+        this.driverHelper.waitVisibility(stoppedDebugBreakpointLocator, timeout);
+    }
+
+    private getStoppedDebugBreakpointXpathLocator(tabTitle: string, lineNumber: number): string {
+        const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
+
+        return `//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
+            `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
+            '//div[contains(@class, \'theia-debug-top-stack-frame\')]';
+    }
+
     private getEditorBodyLocator(editorTabTitle: string): By {
         const editorXpathLocator: string = `//div[@id='theia-main-content-panel']//div[contains(@class, 'monaco-editor')` +
             ` and contains(@data-uri, '${editorTabTitle}')]//*[contains(@class, 'lines-content')]`;
