@@ -106,6 +106,7 @@ suite('Ide checks', async () => {
         await editor.waitEditorAvailable(javaFileName);
         await editor.clickOnTab(javaFileName);
         await editor.waitTabFocused(javaFileName);
+
         // await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
         // await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
         // await editor.pressControlSpaceCombination(javaFileName);
