@@ -81,6 +81,7 @@ export class Ide {
         const mainIdeParts: Array<By> = [By.css(Ide.TOP_MENU_PANEL_CSS), By.css(Ide.LEFT_CONTENT_PANEL_CSS), By.xpath(Ide.EXPLORER_BUTTON_XPATH)];
 
         for (const idePartLocator of mainIdeParts) {
+            console.log("Ide.waitIde: Waiting for ["+idePartLocator + "] to be visible");
             await this.driverHelper.waitVisibility(idePartLocator, timeout);
         }
     }

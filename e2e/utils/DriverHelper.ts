@@ -301,7 +301,9 @@ export class DriverHelper {
     }
 
     public async waitAndSwitchToFrame(iframeLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        console.log("Waiting for being able to switch to frame.");
         await this.driver.wait(until.ableToSwitchToFrame(iframeLocator), timeout);
+        console.log("Waiting for being able to switch to frame finished.");
     }
 
     public async waitAndGetText(elementLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT): Promise<string> {
@@ -341,6 +343,7 @@ export class DriverHelper {
     }
 
     public async navigateTo(url: string) {
+        this.driver.get()
         await this.driver.navigate().to(url);
     }
 

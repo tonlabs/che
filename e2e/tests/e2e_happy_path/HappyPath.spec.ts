@@ -49,35 +49,49 @@ const springTitleLocator: By = By.xpath('//div[@class=\'container-fluid\']//h2[t
 suite('Ide checks', async () => {
     test('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
-      
-        try{
-        await ide.waitWorkspaceAndIde(namespace, workspaceName);
-       }
-        catch(err){
+
+        try {
+            await ide.waitWorkspaceAndIde(namespace, workspaceName);
+            console.log("Build application: ide.waitWorkspaceAndIde succeeded");
+        }
+        catch (err) {
+            console.log("Build application: ide.waitWorkspaceAndIde thrown error: "+err);
             const screenshot: string = await driverHelper.getDriver().takeScreenshot();
             fs.mkdirSync("./report")
             const screenshotStream = fs.createWriteStream("./report/websocket-investigation.png");
             screenshotStream.write(new Buffer(screenshot, 'base64'));
             screenshotStream.end();
 
-            console.log("The first attempt was failed refresh brawser for reconnecting websockets");
+            console.log("Build application: The first attempt was failed refresh brawser for reconnecting websockets");
             await driverHelper.getDriver().navigate().refresh();
             await ide.waitWorkspaceAndIde(namespace, workspaceName);
         }
-            
+
+        console.log("Build application: openProjectTreeContainer");
         await projectTree.openProjectTreeContainer();
+        console.log("Build application: waitProjectImported");
         await projectTree.waitProjectImported(projectName, 'src');
+        console.log("Build application: expandItem");
         await projectTree.expandItem(`/${projectName}`);
+        console.log("Build application: waitTopMenu");
         await topMenu.waitTopMenu();
+        console.log("Build application: closeAllNotifications");
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
         await topMenu.clickOnSubmenuItem('Run Task...');
+        console.log("Build application: clickOnContainerItem");
         await quickOpenContainer.clickOnContainerItem('che: build-file-output');
+        console.log("Build application: expandPathAndOpenFile");
         await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
+        console.log("Build application: waitEditorAvailable");
         await editor.waitEditorAvailable('build-output.txt');
+        console.log("Build application: closeAllNotifications");
         await ide.closeAllNotifications();
+        console.log("Build application: clickOnTab");
         await editor.clickOnTab('build-output.txt');
+        console.log("Build application: waitTabFocused");
         await editor.waitTabFocused('build-output.txt');
+        console.log("Build application: followAndWaitForText");
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
