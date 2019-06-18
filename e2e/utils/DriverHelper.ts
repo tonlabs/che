@@ -343,7 +343,6 @@ export class DriverHelper {
     }
 
     public async navigateTo(url: string) {
-        this.driver.get()
         await this.driver.navigate().to(url);
     }
 
