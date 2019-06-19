@@ -1,5 +1,36 @@
 # Change Log
 
+## [7.0.0-RC-2.0](https://github.com/eclipse/che/tree/7.0.0-RC-2.0) (2019-06-19)
+[Full Changelog](https://github.com/eclipse/che/compare/7.0.0-RC-1.0...7.0.0-RC-2.0)
+
+**Merged pull requests:**
+
+- Update Openshift v4 provider download URL [\#13567](https://github.com/eclipse/che/pull/13567) ([davidfestal](https://github.com/davidfestal))
+- Operator-related fix and openshift v4 support [\#13554](https://github.com/eclipse/che/pull/13554) ([davidfestal](https://github.com/davidfestal))
+- Change plugin registry to v3 [\#13548](https://github.com/eclipse/che/pull/13548) ([nickboldt](https://github.com/nickboldt))
+- Add creation of k8s secrets during deploying of broker [\#13546](https://github.com/eclipse/che/pull/13546) ([sleshchenko](https://github.com/sleshchenko))
+- \[E2E\] Update typescript tests according to workspace creation changes [\#13544](https://github.com/eclipse/che/pull/13544) ([Ohrimenko1988](https://github.com/Ohrimenko1988))
+- Remove non-null constraints from some devfile fields; [\#13516](https://github.com/eclipse/che/pull/13516) ([mshaposhnik](https://github.com/mshaposhnik))
+- Do not serialize DTO fields with empty or null objects and arrays [\#13515](https://github.com/eclipse/che/pull/13515) ([mkuznyetsov](https://github.com/mkuznyetsov))
+- Use the metadata.name instead of name. [\#13513](https://github.com/eclipse/che/pull/13513) ([metlos](https://github.com/metlos))
+- Use memory limit provided by meta.yaml in apache-camel stack [\#13505](https://github.com/eclipse/che/pull/13505) ([svor](https://github.com/svor))
+- Polishing of monitoring dashboards [\#13501](https://github.com/eclipse/che/pull/13501) ([skabashnyuk](https://github.com/skabashnyuk))
+- \[E2E typescript\] Fix plugins adding [\#13496](https://github.com/eclipse/che/pull/13496) ([Katka92](https://github.com/Katka92))
+- K8s-like devfile naming [\#13490](https://github.com/eclipse/che/pull/13490) ([metlos](https://github.com/metlos))
+- \[TS-SELENIUM\] Cover the "Start a Workspace from a devfile" step from "Happy path" scenario [\#13479](https://github.com/eclipse/che/pull/13479) ([Ohrimenko1988](https://github.com/Ohrimenko1988))
+- Add devfile validation to /workspace/devfile endpoint [\#13472](https://github.com/eclipse/che/pull/13472) ([metlos](https://github.com/metlos))
+- Create workspace from devfile [\#13469](https://github.com/eclipse/che/pull/13469) ([ashumilova](https://github.com/ashumilova))
+- Selenium: remove selenium tests that check Che 6 compatible factories from CheSuite test suite [\#13468](https://github.com/eclipse/che/pull/13468) ([SkorikSergey](https://github.com/SkorikSergey))
+- Initialize the empty binding for allowed environment type upgrades in k8s infrastructure [\#13466](https://github.com/eclipse/che/pull/13466) ([metlos](https://github.com/metlos))
+- Rework dynamodule exclusion regexps to match nested WARs as well [\#13464](https://github.com/eclipse/che/pull/13464) ([mkuznyetsov](https://github.com/mkuznyetsov))
+- RELEASE: Set next development version [\#13460](https://github.com/eclipse/che/pull/13460) ([vparfonov](https://github.com/vparfonov))
+- Adding owners for `e2e` directory. [\#13457](https://github.com/eclipse/che/pull/13457) ([rhopp](https://github.com/rhopp))
+- \[E2E tests\] Changes needed to reuse the tests [\#13456](https://github.com/eclipse/che/pull/13456) ([Katka92](https://github.com/Katka92))
+- Attempt to create the che project multiple times if it was previously deleted. [\#13443](https://github.com/eclipse/che/pull/13443) ([metlos](https://github.com/metlos))
+- Add possibility to specify reference or registry url for chePlugin/cheEditor type components [\#13297](https://github.com/eclipse/che/pull/13297) ([mshaposhnik](https://github.com/mshaposhnik))
+- Decoupled monitoring configuration and deployment [\#13152](https://github.com/eclipse/che/pull/13152) ([skabashnyuk](https://github.com/skabashnyuk))
+
+
 ## [7.0.0-beta-5.0](https://github.com/eclipse/che/tree/7.0.0-beta-5.0) (2019-05-22)
 [Full Changelog](https://github.com/eclipse/che/compare/7.0.0-beta-4.0...7.0.0-beta-5.0)
 
