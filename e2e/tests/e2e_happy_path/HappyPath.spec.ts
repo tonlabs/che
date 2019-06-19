@@ -31,6 +31,7 @@ const editor: Editor = e2eContainer.get(CLASSES.Editor);
 const previewWidget: PreviewWidget = e2eContainer.get(CLASSES.PreviewWidget);
 const githubPlugin: GitHubPlugin = e2eContainer.get(CLASSES.GitHubPlugin);
 const rightToolbar: RightToolbar = e2eContainer.get(CLASSES.RightToolbar);
+// const debugView: DebugView = e2eContainer.get(CLASSES.DebugView);
 
 const projectName: string = 'petclinic';
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
@@ -45,6 +46,7 @@ const codeNavigationClassName: string = 'SpringApplication.class';
 const pathToYamlFolder: string = projectName;
 const yamlFileName: string = 'devfile.yaml';
 const expectedGithubChanges: string = '_remote.repositories %3F/.m2/repository/antlr/antlr/2.7.7\n' + 'U';
+// const debugConfigurationFile: string = 'launch.json';
 
 const SpringAppLocators = {
     springTitleLocator: By.xpath('//div[@class=\'container-fluid\']//h2[text()=\'Welcome\']'),
@@ -73,15 +75,15 @@ suite('Ide checks', async () => {
         await projectTree.expandItem(`/${projectName}`);
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
-        // await topMenu.clickOnTopMenuButton('Terminal');
-        // await topMenu.clickOnSubmenuItem('Run Task...');
-        // await quickOpenContainer.clickOnContainerItem('che: build-file-output');
+        await topMenu.clickOnTopMenuButton('Terminal');
+        await topMenu.clickOnSubmenuItem('Run Task...');
+        await quickOpenContainer.clickOnContainerItem('che: build-file-output');
 
-        // await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
-        // await editor.waitEditorAvailable('build-output.txt');
-        // await editor.clickOnTab('build-output.txt');
-        // await editor.waitTabFocused('build-output.txt');
-        // await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
+        await projectTree.expandPathAndOpenFile(projectName, 'build-output.txt');
+        await editor.waitEditorAvailable('build-output.txt');
+        await editor.clickOnTab('build-output.txt');
+        await editor.waitTabFocused('build-output.txt');
+        await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
     test.skip('Run application', async () => {
@@ -107,17 +109,25 @@ suite('Ide checks', async () => {
         await editor.clickOnTab(javaFileName);
         await editor.waitTabFocused(javaFileName);
 
-        // await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
-        // await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
-        // await editor.pressControlSpaceCombination(javaFileName);
-        // await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
+        await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
+        await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
+        await editor.pressControlSpaceCombination(javaFileName);
+        await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
+    });
+
+
+    // ########################################################################
+
+    test('Error highlighting', async () => {
 
         await editor.type(javaFileName, 'textForErrorHighlighting', 30);
         await editor.waitErrorInLine(30);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
         await editor.waitErrorInLineDisappearance(30);
 
+    });
 
+    test('Autocomplete and suggestion', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestionContainer();
@@ -127,13 +137,17 @@ suite('Ide checks', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext');
+    });
 
 
+    test('Codenavigation', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, Key.F12));
         await editor.waitEditorAvailable(codeNavigationClassName);
+    });
 
 
+    test('Display source code changes in the running application', async () => {
         await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, changedJavaFileName);
         await editor.waitEditorAvailable(changedJavaFileName);
         await editor.clickOnTab(changedJavaFileName);
@@ -182,6 +196,48 @@ suite('Ide checks', async () => {
         await rightToolbar.clickOnToolIcon('Preview');
         await previewWidget.waitPreviewWidgetAbsence();
     });
+
+    // ##################################################################################################
+    // ##################################################################################################
+    // ##################################################################################################
+
+    test('Debug', async () => {
+        // await topMenu.clickOnTopMenuButton('Debug');
+        // await topMenu.clickOnSubmenuItem('Open Configurations');
+
+        // await editor.waitEditorAvailable(debugConfigurationFile);
+        // await editor.waitTabFocused(debugConfigurationFile);
+
+        // await editor.moveCursorToLineAndChar(debugConfigurationFile, 11, 7);
+        // await editor.pressControlSpaceCombination(debugConfigurationFile);
+
+        // await editor.waitSuggestion(debugConfigurationFile, 'Java: Attach');
+        // await editor.clickOnSuggestion('Java: Attach');
+        // await editor.waitText(debugConfigurationFile, '\"name\": \"Debug (Attach)\"');
+        // await editor.moveCursorToLineAndChar(debugConfigurationFile, 16, 17);
+
+
+
+
+        // await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.SHIFT, Key.END));
+        // await editor.performKeyCombination(debugConfigurationFile, Key.DELETE);
+        // await editor.performKeyCombination(debugConfigurationFile, '1044');
+        // await editor.waitText(debugConfigurationFile, '\"port\": 1044');
+
+        // await editor.waitTabWithUnsavedStatus(debugConfigurationFile);
+        // await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.CONTROL, 's'));
+        // await editor.waitTabWithSavedStatus(debugConfigurationFile);
+
+
+
+        // await topMenu.clickOnTopMenuButton('View');
+        // await topMenu.clickOnSubmenuItem('Debug');
+
+        // await ide.waitRightToolbarButton(RightToolbarButton.Debug);
+        // await debugView.clickOnDebugConfigurationDropDown();
+        // await debugView.clickOnDebugConfigurationItem('Debug (Launch)-PetClinicApplication<spring-petclinic>');
+    });
+
 
     test.skip('Yaml LS initialization', async () => {
         await projectTree.expandPathAndOpenFile(pathToYamlFolder, yamlFileName);

@@ -114,9 +114,22 @@ export class Editor {
     }
 
     async closeTab(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const tabCloseButtonLocator: By = By.xpath(`//div[text()='${tabTitle}']/parent::li//div[contains(@class, 'p-TabBar-tabCloseIcon')]`);
+        const tabCloseButtonLocator: By = this.getTabCloseIconLocator(tabTitle);
 
         await this.driverHelper.waitAndClick(tabCloseButtonLocator, timeout);
+    }
+
+    async waitTabWithUnsavedStatus(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const unsavedTabLocator: By = this.getTabWithUnsavedStatus(tabTitle);
+
+        await this.driverHelper.waitVisibility(unsavedTabLocator, timeout);
+    }
+
+    async waitTabWithSavedStatus(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const unsavedTabLocator: By = this.getTabWithUnsavedStatus(tabTitle);
+
+        await this.driverHelper.waitDisappearanceWithTimeout(unsavedTabLocator, timeout);
+        await this.waitTab(tabTitle, timeout);
     }
 
     async waitEditorOpened(editorTabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
@@ -296,6 +309,10 @@ export class Editor {
         throw new Error(`Exceeded maximum breakpoint activation attempts`);
     }
 
+    private getTabWithUnsavedStatus(tabTitle: string): By {
+        return By.xpath(`//div[text()='${tabTitle}']/parent::li[contains(@class, 'theia-mod-dirty')]`);
+    }
+
     private getStoppedDebugBreakpointXpathLocator(tabTitle: string, lineNumber: number): string {
         const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
 
@@ -346,11 +363,15 @@ export class Editor {
     }
 
     private getSuggestionLineXpathLocator(suggestionText: string): By {
-        return By.xpath(`//div[@widgetid='editor.widget.suggestWidget']//div[contains(@aria-label, '${suggestionText}')]`);
+        return By.xpath(`//div[@widgetid='editor.widget.suggestWidget']//div[@aria-label='${suggestionText}, suggestion, has details']`);
     }
 
     private getTabXpathLocator(tabTitle: string): string {
         return `//li[contains(@class, 'p-TabBar-tab')]//div[text()='${tabTitle}']`;
+    }
+
+    private getTabCloseIconLocator(tabTitle: string): By {
+        return By.xpath(`//div[text()='${tabTitle}']/parent::li//div[contains(@class, 'p-TabBar-tabCloseIcon')]`);
     }
 
     private getLineYCoordinates(lineNumber: number): number {

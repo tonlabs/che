@@ -232,6 +232,32 @@ export class DriverHelper {
         throw new Error(`Exceeded maximum gettin of the '${attribute}' attribute attempts, from the '${elementLocator}' element`);
     }
 
+    public async waitAndGetCssValue(elementLocator: By,
+        cssAttribute: string,
+        visibilityTimeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT): Promise<string> {
+
+        const attempts: number = TestConstants.TS_SELENIUM_DEFAULT_ATTEMPTS;
+        const polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING;
+
+        for (let i = 0; i < attempts; i++) {
+            const element: WebElement = await this.waitVisibility(elementLocator, visibilityTimeout);
+
+            try {
+                const cssAttributeValue = await element.getCssValue(cssAttribute);
+                return cssAttributeValue;
+            } catch (err) {
+                if (err instanceof error.StaleElementReferenceError) {
+                    await this.wait(polling);
+                    continue;
+                }
+
+                throw err;
+            }
+        }
+
+        throw new Error(`Exceeded maximum gettin of the '${cssAttribute}' css attribute attempts, from the '${elementLocator}' element`);
+    }
+
     public async waitAttributeValue(elementLocator: By,
         attribute: string,
         expectedValue: string,

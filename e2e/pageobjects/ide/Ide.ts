@@ -14,13 +14,17 @@ import { TestConstants } from '../../TestConstants';
 import { By, WebElement } from 'selenium-webdriver';
 import { TestWorkspaceUtil, WorkspaceStatus } from '../../utils/workspace/TestWorkspaceUtil';
 
+export enum RightToolbarButton {
+    Explorer = 'Explorer',
+    Git = 'Git',
+    Debug = 'Debug'
+}
 
 @injectable()
 export class Ide {
     public static readonly EXPLORER_BUTTON_XPATH: string = '(//ul[@class=\'p-TabBar-content\']//li[@title=\'Explorer\'])[1]';
     public static readonly SELECTED_EXPLORER_BUTTON_XPATH: string = '(//ul[@class=\'p-TabBar-content\']//li[@title=\'Explorer\' and contains(@class, \'p-mod-current\')])[1]';
     public static readonly ACTIVATED_IDE_IFRAME_CSS: string = '#ide-iframe-window[aria-hidden=\'false\']';
-    public static readonly GIT_BUTTON_XPATH: string = '(//ul[@class=\'p-TabBar-content\']//li[@title=\'Git\'])[1]';
     public static readonly SELECTED_GIT_BUTTON_XPATH: string = '(//ul[@class=\'p-TabBar-content\']//li[@title=\'Git\' and contains(@class, \'p-mod-current\')])[1]';
     private static readonly TOP_MENU_PANEL_CSS: string = '#theia-app-shell #theia-top-panel .p-MenuBar-content';
     private static readonly LEFT_CONTENT_PANEL_CSS: string = '#theia-left-content-panel';
@@ -30,18 +34,6 @@ export class Ide {
     constructor(
         @inject(CLASSES.DriverHelper) private readonly driverHelper: DriverHelper,
         @inject(CLASSES.TestWorkspaceUtil) private readonly testWorkspaceUtil: TestWorkspaceUtil) { }
-
-    async waitGitButton() {
-        const gitButtonLocator: By = By.xpath(Ide.GIT_BUTTON_XPATH);
-
-        await this.driverHelper.waitVisibility(gitButtonLocator);
-    }
-
-    async clickOnGitButton() {
-        const gitButtonLocator: By = By.xpath(Ide.GIT_BUTTON_XPATH);
-
-        await this.driverHelper.waitAndClick(gitButtonLocator);
-    }
 
     async waitAndSwitchToIdeFrame(timeout: number = TestConstants.TS_SELENIUM_LOAD_PAGE_TIMEOUT) {
         await this.driverHelper.waitAndSwitchToFrame(By.css(Ide.IDE_IFRAME_CSS), timeout);
@@ -85,12 +77,16 @@ export class Ide {
         }
     }
 
-    async waitExplorerButton(timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        await this.driverHelper.waitVisibility(By.xpath(Ide.EXPLORER_BUTTON_XPATH), timeout);
+    async waitRightToolbarButton(buttonTitle: RightToolbarButton, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const buttonLocator: By = this.getRightToolbarButtonLocator(buttonTitle);
+
+        await this.driverHelper.waitVisibility(buttonLocator, timeout);
     }
 
-    async clickOnExplorerButton(timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        await this.driverHelper.waitAndClick(By.xpath(Ide.EXPLORER_BUTTON_XPATH), timeout);
+    async waitAndClickRightToolbarButton(buttonTitle: RightToolbarButton, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const buttonLocator: By = this.getRightToolbarButtonLocator(buttonTitle);
+
+        await this.driverHelper.waitAndClick(buttonLocator, timeout);
     }
 
     async waitTopMenuPanel(timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
@@ -162,8 +158,29 @@ export class Ide {
         }
     }
 
+    async performKeyCombination(keyCombination: string) {
+        const bodyLocator: By = By.tagName('body');
+
+        await this.driverHelper.type(bodyLocator, keyCombination);
+    }
+
+    async waitRightToolbarButtonSelection(buttonTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const selectedRightToolbarButtonLocator: By = this.getSelectedRightToolbarButtonLocator(buttonTitle);
+
+        await this.driverHelper.waitVisibility(selectedRightToolbarButtonLocator, timeout);
+    }
+
+    private getSelectedRightToolbarButtonLocator(buttonTitle: string): By {
+        return By.xpath(`//div[@id='theia-left-content-panel']//ul[@class='p-TabBar-content']` +
+            `//li[@title='${buttonTitle}' and contains(@id, 'shell-tab')] and contains(@class, 'p-mod-current')`);
+    }
+
+    private getRightToolbarButtonLocator(buttonTitle: String): By {
+        return By.xpath(`//div[@id='theia-left-content-panel']//ul[@class='p-TabBar-content']` +
+            `//li[@title='${buttonTitle}' and contains(@id, 'shell-tab')]`);
+    }
+
     private getNotificationXpathLocator(notificationText: string): string {
         return `//div[@class='theia-Notification' and contains(@id,'${notificationText}')]`;
     }
-
 }

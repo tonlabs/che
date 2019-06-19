@@ -29,7 +29,8 @@ const CLASSES = {
     PreviewWidget: 'PreviewWidget',
     GitHubPlugin: 'GitHubPlugin',
     RightToolbar: 'RightToolbar',
-    Terminal: 'Terminal'
+    Terminal: 'Terminal',
+    DebugView: 'DebugView'
 };
 
 export { TYPES, CLASSES };
