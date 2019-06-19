@@ -49,22 +49,21 @@ const springTitleLocator: By = By.xpath('//div[@class=\'container-fluid\']//h2[t
 suite('Ide checks', async () => {
     test('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
-      
-        try{
+
+        try {
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
-       }
-        catch(err){
+       } catch (err) {
             const screenshot: string = await driverHelper.getDriver().takeScreenshot();
-            fs.mkdirSync("./report")
-            const screenshotStream = fs.createWriteStream("./report/websocket-investigation.png");
+            fs.mkdirSync('./report');
+            const screenshotStream = fs.createWriteStream('./report/websocket-investigation.png');
             screenshotStream.write(new Buffer(screenshot, 'base64'));
             screenshotStream.end();
 
-            console.log("The first attempt was failed refresh brawser for reconnecting websockets");
+            console.log('The first attempt was failed refresh brawser for reconnecting websockets');
             await driverHelper.getDriver().navigate().refresh();
             await ide.waitWorkspaceAndIde(namespace, workspaceName);
         }
-            
+
         await projectTree.openProjectTreeContainer();
         await projectTree.waitProjectImported(projectName, 'src');
         await projectTree.expandItem(`/${projectName}`);
