@@ -31,15 +31,20 @@ export class TestWorkspaceUtil {
         const attempts: number = TestConstants.TS_SELENIUM_WORKSPACE_STATUS_ATTEMPTS;
         const polling: number = TestConstants.TS_SELENIUM_WORKSPACE_STATUS_POLLING;
 
+        console.log("Waiting for workspace to be in state: "+expectedWorkspaceStatus);
+
         for (let i = 0; i < attempts; i++) {
             const response: rm.IRestResponse<any> = await this.rest.get(workspaceStatusApiUrl);
 
             if (response.statusCode !== 200) {
+                console.log("Waiting for workspace to be "+expectedWorkspaceStatus+". Current state: wrong response code - "+response.statusCode);
                 await this.driverHelper.wait(polling);
                 continue;
             }
 
             const workspaceStatus: string = await response.result.status;
+
+            console.log("Waiting for workspace to be "+expectedWorkspaceStatus+". Current state: "+workspaceStatus);
 
             if (workspaceStatus === expectedWorkspaceStatus) {
                 return;

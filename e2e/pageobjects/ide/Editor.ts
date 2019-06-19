@@ -139,17 +139,18 @@ export class Editor {
         expectedText: string,
         timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT,
         polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING) {
-
         await this.driverHelper.getDriver().wait(async () => {
+            console.log("Editor.followAndWaitForText: performing key combination Ctrl+End");
             await this.performKeyCombination(editorTabTitle, Key.chord(Key.CONTROL, Key.END));
+            console.log("Editor.followAndWaitForText: getEditorVisibleText");
             const editorText: string = await this.getEditorVisibleText();
 
             const isEditorContainText: boolean = editorText.includes(expectedText);
-
+            console.log("Editor.followAndWaitForText: Does editor include text?" + isEditorContainText);
             if (isEditorContainText) {
                 return true;
             }
-
+            console.log("Editor.followAndWaitForText: waiting for "+polling+"ms");
             await this.driverHelper.wait(polling);
         }, timeout);
     }
