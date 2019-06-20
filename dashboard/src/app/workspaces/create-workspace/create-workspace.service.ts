@@ -190,23 +190,9 @@ export class CreateWorkspaceSvc {
   }
 
   createWorkspaceFromDevfile(workspaceDevfile: che.IWorkspaceDevfile, attributes: any): ng.IPromise<che.IWorkspace> {
-    const namespaceId = this.namespaceSelectorSvc.getNamespaceId(),
-          projectTemplates = this.projectSourceSelectorService.getProjectTemplates();
-
-    let projects = [];
-    projectTemplates.forEach((template: che.IProjectTemplate) => {
-      let project = {
-        name: template.displayName,
-        source: {
-          type: template.source.type,
-          location: template.source.location
-        }
-      };
-      projects.push(project);
-    });      
+    const namespaceId = this.namespaceSelectorSvc.getNamespaceId();
 
     return this.checkEditingProgress().then(() => {
-      workspaceDevfile.projects = projects;
      //TODO waits for fix https://github.com/eclipse/che/issues/13514
      //this.addProjectCommands({devfile: workspaceDevfile}, projectTemplates);
       return this.cheWorkspace.createWorkspaceFromDevfile(namespaceId, workspaceDevfile, attributes).then((workspace: che.IWorkspace) => {
