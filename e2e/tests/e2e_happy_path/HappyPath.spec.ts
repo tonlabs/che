@@ -21,6 +21,7 @@ import { GitHubPlugin } from '../../pageobjects/ide/GitHubPlugin';
 import { TestConstants } from '../../TestConstants';
 import { RightToolbar } from '../../pageobjects/ide/RightToolbar';
 import { By, Key } from 'selenium-webdriver';
+import { Terminal } from '../../pageobjects/ide/Terminal';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -31,6 +32,7 @@ const editor: Editor = e2eContainer.get(CLASSES.Editor);
 const previewWidget: PreviewWidget = e2eContainer.get(CLASSES.PreviewWidget);
 const githubPlugin: GitHubPlugin = e2eContainer.get(CLASSES.GitHubPlugin);
 const rightToolbar: RightToolbar = e2eContainer.get(CLASSES.RightToolbar);
+const terminal: Terminal = e2eContainer.get(CLASSES.Terminal);
 // const debugView: DebugView = e2eContainer.get(CLASSES.DebugView);
 
 const projectName: string = 'petclinic';
@@ -86,7 +88,7 @@ suite('Ide checks', async () => {
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
-    test.skip('Run application', async () => {
+    test('Run application', async () => {
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
@@ -101,6 +103,10 @@ suite('Ide checks', async () => {
         await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
         await rightToolbar.clickOnToolIcon('Preview');
         await previewWidget.waitPreviewWidgetAbsence();
+        await terminal.closeTerminalTab('build-file-output');
+
+        await terminal.rejectTerminalProcess('run');
+        terminal.closeTerminalTab('run');
     });
 
     test('Java LS initialization', async () => {
@@ -115,11 +121,8 @@ suite('Ide checks', async () => {
         await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
     });
 
-
     // ########################################################################
-
     test('Error highlighting', async () => {
-
         await editor.type(javaFileName, 'textForErrorHighlighting', 30);
         await editor.waitErrorInLine(30);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
@@ -195,6 +198,9 @@ suite('Ide checks', async () => {
 
         await rightToolbar.clickOnToolIcon('Preview');
         await previewWidget.waitPreviewWidgetAbsence();
+
+        await terminal.rejectTerminalProcess('run');
+        terminal.closeTerminalTab('run');
     });
 
     // ##################################################################################################

@@ -295,6 +295,29 @@ export class DriverHelper {
         throw new Error(`Exceeded maximum typing attempts, to the '${elementLocator}' element`);
     }
 
+    public async typeToInvisible(elementLocator: By, text: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        const attempts: number = TestConstants.TS_SELENIUM_DEFAULT_ATTEMPTS;
+        const polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING;
+
+        for (let i = 0; i < attempts; i++) {
+            const element: WebElement = await this.waitPresence(elementLocator, timeout);
+
+            try {
+                await element.sendKeys(text);
+                return;
+            } catch (err) {
+                if (err instanceof error.StaleElementReferenceError) {
+                    await this.wait(polling);
+                    continue;
+                }
+
+                throw err;
+            }
+        }
+
+        throw new Error(`Exceeded maximum typing attempts, to the '${elementLocator}' element`);
+    }
+
     public async clear(elementLocator: By, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         const attempts: number = TestConstants.TS_SELENIUM_DEFAULT_ATTEMPTS;
         const polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING;
