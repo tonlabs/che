@@ -113,6 +113,12 @@ export class Editor {
         await this.driverHelper.wait(2000);
     }
 
+    public async selectTab(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.waitTab(tabTitle, timeout);
+        await this.clickOnTab(tabTitle, timeout);
+        await this.waitTabFocused(tabTitle, timeout);
+    }
+
     async closeTab(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         const tabCloseButtonLocator: By = this.getTabCloseIconLocator(tabTitle);
 
@@ -242,7 +248,7 @@ export class Editor {
     async waitStoppedDebugBreakpoint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         const stoppedDebugBreakpointLocator: By = By.xpath(this.getStoppedDebugBreakpointXpathLocator(tabTitle, lineNumber));
 
-        this.driverHelper.waitVisibility(stoppedDebugBreakpointLocator, timeout);
+        await this.driverHelper.waitVisibility(stoppedDebugBreakpointLocator, timeout);
     }
 
     async waitBreakpoint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
@@ -271,8 +277,6 @@ export class Editor {
 
     async activateBreakpoint(tabTitle: string,
         lineNumber: number,
-        xCoordinateOffset: number,
-        yCoordinateOffset: number,
         timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
 
         const attempts: number = TestConstants.TS_SELENIUM_DEFAULT_ATTEMPTS;
@@ -282,7 +286,7 @@ export class Editor {
             const element: WebElement = await this.driverHelper.waitVisibility(this.getLineNumberBlockLocator(tabTitle, lineNumber), timeout);
 
             try {
-                await this.driverHelper.getAction().mouseMove(element, { x: xCoordinateOffset, y: yCoordinateOffset }).perform();
+                await this.driverHelper.getAction().mouseMove(element, { x: 5, y: 5 }).perform();
                 await this.waitBreakpointHint(tabTitle, lineNumber);
                 await this.driverHelper.getAction().click().perform();
                 await this.waitBreakpoint(tabTitle, lineNumber);
@@ -309,16 +313,48 @@ export class Editor {
         throw new Error(`Exceeded maximum breakpoint activation attempts`);
     }
 
+    public getLineYCoordinates(lineNumber: number): number {
+        // const lineNumberLocator: By = By.xpath(`//div[contains(@class, 'line-numbers') and text()='$${lineNumber}']` +
+        //     `//parent::div[contains(@style, 'position')]`);
+
+        let elementStyleValue: string = 'position:absolute;top:551px;width:100%;height:19px;';
+        // const elementStyleValue: string = await this.driverHelper.waitAndGetElementAttribute(lineNumberLocator, 'style');
+        console.log('element style value: ', elementStyleValue);
+
+        elementStyleValue = elementStyleValue.replace('position:absolute;top:', '');
+        console.log('element style value: ', elementStyleValue);
+
+        elementStyleValue = elementStyleValue.replace('px;width:100%;height:19px;', '');
+        console.log('element style value: ', elementStyleValue);
+
+
+        return Number.parseInt(elementStyleValue, 10);
+
+
+
+
+        // const linePixelsSize: number = 19;
+
+        // if (lineNumber === 1) {
+        //     return 0;
+        // }
+
+        // return linePixelsSize * (lineNumber);
+    }
+
     private getTabWithUnsavedStatus(tabTitle: string): By {
         return By.xpath(`//div[text()='${tabTitle}']/parent::li[contains(@class, 'theia-mod-dirty')]`);
     }
 
     private getStoppedDebugBreakpointXpathLocator(tabTitle: string, lineNumber: number): string {
         const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
-
-        return `//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
+        const stoppedDebugBreakpointXpathLocator: string = `//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
             '//div[contains(@class, \'theia-debug-top-stack-frame\')]';
+
+        console.log('stoppedDebugBreakpointXpathLocator: ', stoppedDebugBreakpointXpathLocator);
+
+        return stoppedDebugBreakpointXpathLocator;
     }
 
     private getDebugBreakpointLocator(tabTitle: string, lineNumber: number): By {
@@ -372,16 +408,6 @@ export class Editor {
 
     private getTabCloseIconLocator(tabTitle: string): By {
         return By.xpath(`//div[text()='${tabTitle}']/parent::li//div[contains(@class, 'p-TabBar-tabCloseIcon')]`);
-    }
-
-    private getLineYCoordinates(lineNumber: number): number {
-        const linePixelsSize: number = 19;
-
-        if (lineNumber === 1) {
-            return 0;
-        }
-
-        return linePixelsSize * (lineNumber - 1);
     }
 
     private getErrorInLineLocator(lineNumber: number): By {

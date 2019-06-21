@@ -11,7 +11,7 @@
 import { e2eContainer } from '../../inversify.config';
 import { DriverHelper } from '../../utils/DriverHelper';
 import { CLASSES } from '../../inversify.types';
-import { Ide } from '../../pageobjects/ide/Ide';
+import { Ide, RightToolbarButton } from '../../pageobjects/ide/Ide';
 import { ProjectTree } from '../../pageobjects/ide/ProjectTree';
 import { TopMenu } from '../../pageobjects/ide/TopMenu';
 import { QuickOpenContainer } from '../../pageobjects/ide/QuickOpenContainer';
@@ -22,6 +22,7 @@ import { TestConstants } from '../../TestConstants';
 import { RightToolbar } from '../../pageobjects/ide/RightToolbar';
 import { By, Key } from 'selenium-webdriver';
 import { Terminal } from '../../pageobjects/ide/Terminal';
+import { DebugView } from '../../pageobjects/ide/DebugView';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -33,7 +34,7 @@ const previewWidget: PreviewWidget = e2eContainer.get(CLASSES.PreviewWidget);
 const githubPlugin: GitHubPlugin = e2eContainer.get(CLASSES.GitHubPlugin);
 const rightToolbar: RightToolbar = e2eContainer.get(CLASSES.RightToolbar);
 const terminal: Terminal = e2eContainer.get(CLASSES.Terminal);
-// const debugView: DebugView = e2eContainer.get(CLASSES.DebugView);
+const debugView: DebugView = e2eContainer.get(CLASSES.DebugView);
 
 const projectName: string = 'petclinic';
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
@@ -48,7 +49,7 @@ const codeNavigationClassName: string = 'SpringApplication.class';
 const pathToYamlFolder: string = projectName;
 const yamlFileName: string = 'devfile.yaml';
 const expectedGithubChanges: string = '_remote.repositories %3F/.m2/repository/antlr/antlr/2.7.7\n' + 'U';
-// const debugConfigurationFile: string = 'launch.json';
+const debugConfigurationFile: string = 'launch.json';
 
 const SpringAppLocators = {
     springTitleLocator: By.xpath('//div[@class=\'container-fluid\']//h2[text()=\'Welcome\']'),
@@ -62,6 +63,7 @@ const SpringAppLocators = {
 
 suite('Ide checks', async () => {
     test('Open workspace', async () => {
+        console.log('==>>>', editor.getLineYCoordinates(32));
         await driverHelper.navigateTo(workspaceUrl);
     });
 
@@ -88,7 +90,7 @@ suite('Ide checks', async () => {
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
-    test('Run application', async () => {
+    test.skip('Run application', async () => {
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
@@ -109,7 +111,7 @@ suite('Ide checks', async () => {
         terminal.closeTerminalTab('run');
     });
 
-    test('Java LS initialization', async () => {
+    test.skip('Java LS initialization', async () => {
         await projectTree.expandPathAndOpenFile(pathToJavaFolder, javaFileName);
         await editor.waitEditorAvailable(javaFileName);
         await editor.clickOnTab(javaFileName);
@@ -122,7 +124,7 @@ suite('Ide checks', async () => {
     });
 
     // ########################################################################
-    test('Error highlighting', async () => {
+    test.skip('Error highlighting', async () => {
         await editor.type(javaFileName, 'textForErrorHighlighting', 30);
         await editor.waitErrorInLine(30);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
@@ -130,7 +132,7 @@ suite('Ide checks', async () => {
 
     });
 
-    test('Autocomplete and suggestion', async () => {
+    test.skip('Autocomplete and suggestion', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestionContainer();
@@ -143,14 +145,14 @@ suite('Ide checks', async () => {
     });
 
 
-    test('Codenavigation', async () => {
+    test.skip('Codenavigation', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, Key.F12));
         await editor.waitEditorAvailable(codeNavigationClassName);
     });
 
 
-    test('Display source code changes in the running application', async () => {
+    test.skip('Display source code changes in the running application', async () => {
         await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, changedJavaFileName);
         await editor.waitEditorAvailable(changedJavaFileName);
         await editor.clickOnTab(changedJavaFileName);
@@ -208,40 +210,82 @@ suite('Ide checks', async () => {
     // ##################################################################################################
 
     test('Debug', async () => {
-        // await topMenu.clickOnTopMenuButton('Debug');
-        // await topMenu.clickOnSubmenuItem('Open Configurations');
+        // await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, 'WelcomeController.java');
+        // await editor.selectTab('WelcomeController.java');
+        // await editor.activateBreakpoint('WelcomeController.java', 28);
 
-        // await editor.waitEditorAvailable(debugConfigurationFile);
-        // await editor.waitTabFocused(debugConfigurationFile);
+        await projectTree.expandPathAndOpenFile(pathToJavaFolder, javaFileName);
+        await editor.selectTab(javaFileName);
+        await editor.moveCursorToLineAndChar(javaFileName, 34, 1);
+        await editor.activateBreakpoint(javaFileName, 32);
 
-        // await editor.moveCursorToLineAndChar(debugConfigurationFile, 11, 7);
-        // await editor.pressControlSpaceCombination(debugConfigurationFile);
+        // #################################################
 
-        // await editor.waitSuggestion(debugConfigurationFile, 'Java: Attach');
-        // await editor.clickOnSuggestion('Java: Attach');
-        // await editor.waitText(debugConfigurationFile, '\"name\": \"Debug (Attach)\"');
-        // await editor.moveCursorToLineAndChar(debugConfigurationFile, 16, 17);
-
-
-
-
-        // await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.SHIFT, Key.END));
-        // await editor.performKeyCombination(debugConfigurationFile, Key.DELETE);
-        // await editor.performKeyCombination(debugConfigurationFile, '1044');
-        // await editor.waitText(debugConfigurationFile, '\"port\": 1044');
-
-        // await editor.waitTabWithUnsavedStatus(debugConfigurationFile);
-        // await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.CONTROL, 's'));
-        // await editor.waitTabWithSavedStatus(debugConfigurationFile);
+        await topMenu.clickOnTopMenuButton('Terminal');
+        await topMenu.clickOnSubmenuItem('Run Task...');
+        await quickOpenContainer.clickOnContainerItem('che: run-debug');
 
 
 
-        // await topMenu.clickOnTopMenuButton('View');
-        // await topMenu.clickOnSubmenuItem('Debug');
+        await ide.waitNotification('A new process is now listening on port 8080', 120000);
+        await ide.clickOnNotificationButton('A new process is now listening on port 8080', 'yes');
 
-        // await ide.waitRightToolbarButton(RightToolbarButton.Debug);
-        // await debugView.clickOnDebugConfigurationDropDown();
-        // await debugView.clickOnDebugConfigurationItem('Debug (Launch)-PetClinicApplication<spring-petclinic>');
+        await ide.waitNotification('Redirect is now enabled on port 8080', 120000);
+        await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
+
+        await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
+
+        // #################################################
+
+        await topMenu.clickOnTopMenuButton('Debug');
+        await topMenu.clickOnSubmenuItem('Open Configurations');
+
+        await editor.waitEditorAvailable(debugConfigurationFile);
+        await editor.waitTabFocused(debugConfigurationFile);
+
+        await editor.moveCursorToLineAndChar(debugConfigurationFile, 5, 22);
+        await editor.pressControlSpaceCombination(debugConfigurationFile);
+
+        await editor.waitSuggestion(debugConfigurationFile, 'Java: Attach');
+        await editor.clickOnSuggestion('Java: Attach');
+        await editor.waitText(debugConfigurationFile, '\"name\": \"Debug (Attach)\"');
+        await editor.moveCursorToLineAndChar(debugConfigurationFile, 10, 15);
+
+        await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.SHIFT, Key.END));
+        await editor.performKeyCombination(debugConfigurationFile, Key.DELETE);
+        await editor.performKeyCombination(debugConfigurationFile, '1153');
+        await editor.waitText(debugConfigurationFile, '\"port\": 1153');
+
+        await editor.waitTabWithUnsavedStatus(debugConfigurationFile);
+        await editor.performKeyCombination(debugConfigurationFile, Key.chord(Key.CONTROL, 's'));
+        await editor.waitTabWithSavedStatus(debugConfigurationFile);
+
+        // ##
+        await ide.closeAllNotifications();
+        await editor.selectTab(javaFileName);
+        // ##
+
+        await topMenu.clickOnTopMenuButton('View');
+        await topMenu.clickOnSubmenuItem('Debug');
+
+        await ide.waitRightToolbarButton(RightToolbarButton.Debug);
+        await debugView.clickOnDebugConfigurationDropDown();
+        // await debugView.clickOnDebugConfigurationItem('Debug (Attach)');
+        await debugView.clickOnDebugConfigurationItem('Debug (Launch) - Current File');
+        await debugView.clickOnRunDebugButton();
+
+        await driverHelper.wait(10000);
+
+        console.log('==>>>  1');
+        await previewWidget.refreshPage();
+        console.log('==>>>  2');
+        // await editor.waitStoppedDebugBreakpoint('WelcomeController.java', 28);
+        await editor.waitStoppedDebugBreakpoint(javaFileName, 32);
+        console.log('==>>>  3');
+
+
+
+
     });
 
 
