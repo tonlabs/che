@@ -234,43 +234,43 @@ export class Editor {
     }
 
     async waitErrorInLine(lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const errorInLineLocator: By = this.getErrorInLineLocator(lineNumber);
+        const errorInLineLocator: By = await this.getErrorInLineLocator(lineNumber);
 
         await this.driverHelper.waitVisibility(errorInLineLocator, timeout);
     }
 
     async waitErrorInLineDisappearance(lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const errorInLineLocator: By = this.getErrorInLineLocator(lineNumber);
+        const errorInLineLocator: By = await this.getErrorInLineLocator(lineNumber);
 
         await this.driverHelper.waitDisappearanceWithTimeout(errorInLineLocator, timeout);
     }
 
     async waitStoppedDebugBreakpoint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const stoppedDebugBreakpointLocator: By = By.xpath(this.getStoppedDebugBreakpointXpathLocator(tabTitle, lineNumber));
+        const stoppedDebugBreakpointLocator: By = By.xpath(await this.getStoppedDebugBreakpointXpathLocator(tabTitle, lineNumber));
 
         await this.driverHelper.waitVisibility(stoppedDebugBreakpointLocator, timeout);
     }
 
     async waitBreakpoint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const debugBreakpointLocator: By = this.getDebugBreakpointLocator(tabTitle, lineNumber);
+        const debugBreakpointLocator: By = await this.getDebugBreakpointLocator(tabTitle, lineNumber);
 
         await this.driverHelper.waitVisibility(debugBreakpointLocator, timeout);
     }
 
     async waitBreakpointAbsence(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const debugBreakpointLocator: By = this.getDebugBreakpointLocator(tabTitle, lineNumber);
+        const debugBreakpointLocator: By = await this.getDebugBreakpointLocator(tabTitle, lineNumber);
 
         await this.driverHelper.waitDisappearanceWithTimeout(debugBreakpointLocator, timeout);
     }
 
     async waitBreakpointHint(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const debugBreakpointHintLocator: By = this.getDebugBreakpointHintLocator(tabTitle, lineNumber);
+        const debugBreakpointHintLocator: By = await this.getDebugBreakpointHintLocator(tabTitle, lineNumber);
 
         await this.driverHelper.waitVisibility(debugBreakpointHintLocator, timeout);
     }
 
     async waitBreakpointHintDisappearance(tabTitle: string, lineNumber: number, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
-        const debugBreakpointHintLocator: By = this.getDebugBreakpointHintLocator(tabTitle, lineNumber);
+        const debugBreakpointHintLocator: By = await this.getDebugBreakpointHintLocator(tabTitle, lineNumber);
 
         await this.driverHelper.waitDisappearanceWithTimeout(debugBreakpointHintLocator, timeout);
     }
@@ -283,7 +283,8 @@ export class Editor {
         const polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING;
 
         for (let i = 0; i < attempts; i++) {
-            const element: WebElement = await this.driverHelper.waitVisibility(this.getLineNumberBlockLocator(tabTitle, lineNumber), timeout);
+            const elementLocator: By = await this.getLineNumberBlockLocator(tabTitle, lineNumber);
+            const element: WebElement = await this.driverHelper.waitVisibility(elementLocator, timeout);
 
             try {
                 await this.driverHelper.getAction().mouseMove(element, { x: 5, y: 5 }).perform();
@@ -313,41 +314,24 @@ export class Editor {
         throw new Error(`Exceeded maximum breakpoint activation attempts`);
     }
 
-    public getLineYCoordinates(lineNumber: number): number {
-        // const lineNumberLocator: By = By.xpath(`//div[contains(@class, 'line-numbers') and text()='$${lineNumber}']` +
-        //     `//parent::div[contains(@style, 'position')]`);
+    private async getLineYCoordinates(lineNumber: number): Promise<number> {
+        const lineNumberLocator: By = By.xpath(`//div[contains(@class, 'line-numbers') and text()='${lineNumber}']` +
+            `//parent::div[contains(@style, 'position')]`);
 
-        let elementStyleValue: string = 'position:absolute;top:551px;width:100%;height:19px;';
-        // const elementStyleValue: string = await this.driverHelper.waitAndGetElementAttribute(lineNumberLocator, 'style');
-        console.log('element style value: ', elementStyleValue);
+        let elementStyleValue: string = await this.driverHelper.waitAndGetElementAttribute(lineNumberLocator, 'style');
 
         elementStyleValue = elementStyleValue.replace('position:absolute;top:', '');
-        console.log('element style value: ', elementStyleValue);
-
         elementStyleValue = elementStyleValue.replace('px;width:100%;height:19px;', '');
-        console.log('element style value: ', elementStyleValue);
-
 
         return Number.parseInt(elementStyleValue, 10);
-
-
-
-
-        // const linePixelsSize: number = 19;
-
-        // if (lineNumber === 1) {
-        //     return 0;
-        // }
-
-        // return linePixelsSize * (lineNumber);
     }
 
     private getTabWithUnsavedStatus(tabTitle: string): By {
         return By.xpath(`//div[text()='${tabTitle}']/parent::li[contains(@class, 'theia-mod-dirty')]`);
     }
 
-    private getStoppedDebugBreakpointXpathLocator(tabTitle: string, lineNumber: number): string {
-        const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
+    private async getStoppedDebugBreakpointXpathLocator(tabTitle: string, lineNumber: number): Promise<string> {
+        const lineYPixelCoordinates: number = await this.getLineYCoordinates(lineNumber);
         const stoppedDebugBreakpointXpathLocator: string = `//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
             '//div[contains(@class, \'theia-debug-top-stack-frame\')]';
@@ -357,16 +341,16 @@ export class Editor {
         return stoppedDebugBreakpointXpathLocator;
     }
 
-    private getDebugBreakpointLocator(tabTitle: string, lineNumber: number): By {
-        const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
+    private async getDebugBreakpointLocator(tabTitle: string, lineNumber: number): Promise<By> {
+        const lineYPixelCoordinates: number = await this.getLineYCoordinates(lineNumber);
 
         return By.xpath(`//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
             '//div[contains(@class, \'theia-debug-breakpoint\')]');
     }
 
-    private getDebugBreakpointHintLocator(tabTitle: string, lineNumber: number): By {
-        const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
+    private async getDebugBreakpointHintLocator(tabTitle: string, lineNumber: number): Promise<By> {
+        const lineYPixelCoordinates: number = await this.getLineYCoordinates(lineNumber);
 
         return By.xpath(`//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
@@ -391,8 +375,8 @@ export class Editor {
         return `(//div[contains(@class,'lines-content')]//div[@class='view-lines']/div[@class='view-line'])[${lineNumber}]`;
     }
 
-    private getLineNumberBlockLocator(tabTitle: string, lineNumber: number): By {
-        const lineYPixelCoordinates: number = this.getLineYCoordinates(lineNumber);
+    private async getLineNumberBlockLocator(tabTitle: string, lineNumber: number): Promise<By> {
+        const lineYPixelCoordinates: number = await this.getLineYCoordinates(lineNumber);
 
         return By.xpath(`//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]`);
@@ -410,8 +394,8 @@ export class Editor {
         return By.xpath(`//div[text()='${tabTitle}']/parent::li//div[contains(@class, 'p-TabBar-tabCloseIcon')]`);
     }
 
-    private getErrorInLineLocator(lineNumber: number): By {
-        const lineYCoordinates: number = this.getLineYCoordinates(lineNumber);
+    private async getErrorInLineLocator(lineNumber: number): Promise<By> {
+        const lineYCoordinates: number = await this.getLineYCoordinates(lineNumber);
 
         return By.xpath(`//div[contains(@style, 'top:${lineYCoordinates}px')]//div[contains(@class, 'squiggly-error')]`);
     }
