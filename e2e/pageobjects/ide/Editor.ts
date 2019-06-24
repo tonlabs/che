@@ -320,8 +320,13 @@ export class Editor {
 
         let elementStyleValue: string = await this.driverHelper.waitAndGetElementAttribute(lineNumberLocator, 'style');
 
-        elementStyleValue = elementStyleValue.replace('position:absolute;top:', '');
-        elementStyleValue = elementStyleValue.replace('px;width:100%;height:19px;', '');
+        console.log('===>>> style attribute: ', elementStyleValue);
+
+        elementStyleValue = elementStyleValue.replace('position: absolute; top: ', '');
+        console.log('===>>> style attribute: ', elementStyleValue);
+
+        elementStyleValue = elementStyleValue.replace('px; width: 100%; height: 19px;', '');
+        console.log('===>>> style attribute: ', elementStyleValue);
 
         return Number.parseInt(elementStyleValue, 10);
     }

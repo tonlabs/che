@@ -69,7 +69,7 @@ suite('Ide checks', async () => {
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
     });
 
-    test('Build application', async () => {
+    test.skip('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
         await projectTree.openProjectTreeContainer();
@@ -88,7 +88,7 @@ suite('Ide checks', async () => {
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
-    test('Run application', async () => {
+    test.skip('Run application', async () => {
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
@@ -109,7 +109,7 @@ suite('Ide checks', async () => {
         terminal.closeTerminalTab('run');
     });
 
-    test('Java LS initialization', async () => {
+    test.skip('Java LS initialization', async () => {
         await projectTree.expandPathAndOpenFile(pathToJavaFolder, javaFileName);
         await editor.waitEditorAvailable(javaFileName);
         await editor.clickOnTab(javaFileName);
@@ -121,7 +121,7 @@ suite('Ide checks', async () => {
         await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
     });
 
-    test('Error highlighting', async () => {
+    test.skip('Error highlighting', async () => {
         await editor.type(javaFileName, 'textForErrorHighlighting', 30);
         await editor.waitErrorInLine(30);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
@@ -129,7 +129,7 @@ suite('Ide checks', async () => {
 
     });
 
-    test('Autocomplete and suggestion', async () => {
+    test.skip('Autocomplete and suggestion', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestionContainer();
@@ -142,14 +142,14 @@ suite('Ide checks', async () => {
     });
 
 
-    test('Codenavigation', async () => {
+    test.skip('Codenavigation', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, Key.F12));
         await editor.waitEditorAvailable(codeNavigationClassName);
     });
 
 
-    test('Display source code changes in the running application', async () => {
+    test.skip('Display source code changes in the running application', async () => {
         await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, changedJavaFileName);
         await editor.waitEditorAvailable(changedJavaFileName);
         await editor.clickOnTab(changedJavaFileName);
@@ -203,38 +203,61 @@ suite('Ide checks', async () => {
     });
 
     test('Debug', async () => {
+        console.log('===>>>   1');
         await projectTree.expandPathAndOpenFile(pathToJavaFolder, javaFileName);
+        console.log('===>>>   2');
         await editor.selectTab(javaFileName);
+        console.log('===>>>   3');
         await editor.moveCursorToLineAndChar(javaFileName, 34, 1);
+        console.log('===>>>   4');
         await editor.activateBreakpoint(javaFileName, 32);
+        console.log('===>>>   5');
 
         await topMenu.clickOnTopMenuButton('Terminal');
+        console.log('===>>>   6');
         await topMenu.clickOnSubmenuItem('Run Task...');
+        console.log('===>>>   7');
         await quickOpenContainer.clickOnContainerItem('che: run-debug');
+        console.log('===>>>   8');
 
 
 
         await ide.waitNotification('A new process is now listening on port 8080', 120000);
+        console.log('===>>>   9');
         await ide.clickOnNotificationButton('A new process is now listening on port 8080', 'yes');
+        console.log('===>>>   10');
 
         await ide.waitNotification('Redirect is now enabled on port 8080', 120000);
+        console.log('===>>>   11');
         await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
+        console.log('===>>>   12');
 
         await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
+        console.log('===>>>   13');
 
         await ide.closeAllNotifications();
+        console.log('===>>>   14');
         await editor.selectTab(javaFileName);
+        console.log('===>>>   15');
 
         await topMenu.clickOnTopMenuButton('View');
+        console.log('===>>>   16');
         await topMenu.clickOnSubmenuItem('Debug');
+        console.log('===>>>   17');
 
         await ide.waitRightToolbarButton(RightToolbarButton.Debug);
+        console.log('===>>>   18');
         await debugView.clickOnDebugConfigurationDropDown();
+        console.log('===>>>   19');
         await debugView.clickOnDebugConfigurationItem('Debug (Launch) - Current File');
+        console.log('===>>>   20');
         await debugView.clickOnRunDebugButton();
+        console.log('===>>>   21');
 
         await previewWidget.refreshPage();
+        console.log('===>>>   22');
         await editor.waitStoppedDebugBreakpoint(javaFileName, 32);
+        console.log('===>>>   23');
     });
 
 
