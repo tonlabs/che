@@ -23,6 +23,7 @@ import { RightToolbar } from '../../pageobjects/ide/RightToolbar';
 import { By, Key } from 'selenium-webdriver';
 import { Terminal } from '../../pageobjects/ide/Terminal';
 import { DebugView } from '../../pageobjects/ide/DebugView';
+import { WarningDialog } from '../../pageobjects/ide/WarningDialog';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -35,6 +36,7 @@ const githubPlugin: GitHubPlugin = e2eContainer.get(CLASSES.GitHubPlugin);
 const rightToolbar: RightToolbar = e2eContainer.get(CLASSES.RightToolbar);
 const terminal: Terminal = e2eContainer.get(CLASSES.Terminal);
 const debugView: DebugView = e2eContainer.get(CLASSES.DebugView);
+const warningDialog: WarningDialog = e2eContainer.get(CLASSES.WarningDialog);
 
 const projectName: string = 'petclinic';
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
@@ -69,7 +71,7 @@ suite('Ide checks', async () => {
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
     });
 
-    test.skip('Build application', async () => {
+    test('Build application', async () => {
         await driverHelper.navigateTo(workspaceUrl);
         await ide.waitWorkspaceAndIde(namespace, workspaceName);
         await projectTree.openProjectTreeContainer();
@@ -88,7 +90,7 @@ suite('Ide checks', async () => {
         await editor.followAndWaitForText('build-output.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
     });
 
-    test.skip('Run application', async () => {
+    test('Run application', async () => {
         await topMenu.waitTopMenu();
         await ide.closeAllNotifications();
         await topMenu.clickOnTopMenuButton('Terminal');
@@ -106,22 +108,31 @@ suite('Ide checks', async () => {
         await terminal.closeTerminalTab('build-file-output');
 
         await terminal.rejectTerminalProcess('run');
-        terminal.closeTerminalTab('run');
+        await terminal.closeTerminalTab('run');
+
+        await warningDialog.waitAndCloseIfAppear();
     });
 
-    test.skip('Java LS initialization', async () => {
+    test('Java LS initialization', async () => {
         await projectTree.expandPathAndOpenFile(pathToJavaFolder, javaFileName);
         await editor.waitEditorAvailable(javaFileName);
         await editor.clickOnTab(javaFileName);
         await editor.waitTabFocused(javaFileName);
 
+        await ide.checkLSInitializationStart('Starting Java Language Server');
         await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
+        await ide.waitStatusBarTextAbcence('Building workspace', 360000);
+
+
+        await editor.waitEditorAvailable(javaFileName);
+        await editor.clickOnTab(javaFileName);
+        await editor.waitTabFocused(javaFileName);
         await editor.moveCursorToLineAndChar(javaFileName, 32, 27);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestion(javaFileName, 'run(Class<?> primarySource, String... args) : ConfigurableApplicationContext', 40000);
     });
 
-    test.skip('Error highlighting', async () => {
+    test('Error highlighting', async () => {
         await editor.type(javaFileName, 'textForErrorHighlighting', 30);
         await editor.waitErrorInLine(30);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, 'z'));
@@ -129,7 +140,7 @@ suite('Ide checks', async () => {
 
     });
 
-    test.skip('Autocomplete and suggestion', async () => {
+    test('Autocomplete and suggestion', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.pressControlSpaceCombination(javaFileName);
         await editor.waitSuggestionContainer();
@@ -142,64 +153,100 @@ suite('Ide checks', async () => {
     });
 
 
-    test.skip('Codenavigation', async () => {
+    test('Codenavigation', async () => {
         await editor.moveCursorToLineAndChar(javaFileName, 32, 17);
         await editor.performKeyCombination(javaFileName, Key.chord(Key.CONTROL, Key.F12));
         await editor.waitEditorAvailable(codeNavigationClassName);
     });
 
 
-    test.skip('Display source code changes in the running application', async () => {
+    test('Display source code changes in the running application', async () => {
+        console.log('===>>>> 1');
         await projectTree.expandPathAndOpenFile(pathToChangedJavaFileFolder, changedJavaFileName);
+        console.log('===>>>> 2');
         await editor.waitEditorAvailable(changedJavaFileName);
+        console.log('===>>>> 3');
         await editor.clickOnTab(changedJavaFileName);
+        console.log('===>>>> 4');
         await editor.waitTabFocused(changedJavaFileName);
+        console.log('===>>>> 5');
 
 
         await editor.moveCursorToLineAndChar(changedJavaFileName, 34, 55);
+        console.log('===>>>> 6');
         await editor.performKeyCombination(changedJavaFileName, textForErrorMessageChange);
+        console.log('===>>>> 7');
         await editor.performKeyCombination(changedJavaFileName, Key.chord(Key.CONTROL, 's'));
+        console.log('===>>>> 8');
 
 
         await topMenu.clickOnTopMenuButton('Terminal');
+        console.log('===>>>> 9');
         await topMenu.clickOnSubmenuItem('Run Task...');
+        console.log('===>>>> 10');
         await quickOpenContainer.clickOnContainerItem('che: build');
+        console.log('===>>>> 11');
 
 
 
         await projectTree.expandPathAndOpenFile(projectName, 'build.txt');
+        console.log('===>>>> 12');
         await editor.waitEditorAvailable('build.txt');
+        console.log('===>>>> 13');
         await editor.clickOnTab('build.txt');
+        console.log('===>>>> 14');
         await editor.waitTabFocused('build.txt');
+        console.log('===>>>> 15');
         await editor.followAndWaitForText('build.txt', '[INFO] BUILD SUCCESS', 180000, 5000);
+        console.log('===>>>> 16');
 
 
 
         await topMenu.clickOnTopMenuButton('Terminal');
+        console.log('===>>>> 17');
         await topMenu.clickOnSubmenuItem('Run Task...');
+        console.log('===>>>> 18');
         await quickOpenContainer.clickOnContainerItem('che: run');
+        console.log('===>>>> 19');
 
 
 
         await ide.waitNotification('A new process is now listening on port 8080', 120000);
+        console.log('===>>>> 20');
         await ide.clickOnNotificationButton('A new process is now listening on port 8080', 'yes');
+        console.log('===>>>> 21');
 
         await ide.waitNotification('Redirect is now enabled on port 8080', 120000);
+        console.log('===>>>> 22');
         await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
+        console.log('===>>>> 23');
 
         await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
+        console.log('===>>>> 24');
 
         await previewWidget.waitAndSwitchToWidgetFrame();
+        console.log('===>>>> 25');
         await previewWidget.waitAndClick(SpringAppLocators.springMenuButtonLocator);
+        console.log('===>>>> 26');
         await previewWidget.waitAndClick(SpringAppLocators.springErrorButtonLocator);
+        console.log('===>>>> 27');
         await previewWidget.waitVisibility(SpringAppLocators.springErrorMessageLocator);
+        console.log('===>>>> 28');
         await previewWidget.switchBackToIdeFrame();
+        console.log('===>>>> 29');
 
         await rightToolbar.clickOnToolIcon('Preview');
+        console.log('===>>>> 30');
         await previewWidget.waitPreviewWidgetAbsence();
+        console.log('===>>>> 31');
 
         await terminal.rejectTerminalProcess('run');
-        terminal.closeTerminalTab('run');
+        console.log('===>>>> 32');
+        await terminal.closeTerminalTab('run');
+        console.log('===>>>> 33');
+
+        await warningDialog.waitAndCloseIfAppear();
+        console.log('===>>>> 34');
     });
 
     test('Debug', async () => {
@@ -232,32 +279,66 @@ suite('Ide checks', async () => {
         await ide.clickOnNotificationButton('Redirect is now enabled on port 8080', 'Open Link');
         console.log('===>>>   12');
 
-        await previewWidget.waitContentAvailable(SpringAppLocators.springTitleLocator, 60000, 10000);
+        await previewWidget.waitContentAvailable(SpringAppLocators.springErrorMessageLocator, 60000, 10000);
         console.log('===>>>   13');
 
         await ide.closeAllNotifications();
-        console.log('===>>>   14');
-        await editor.selectTab(javaFileName);
+
+
+        // ####################################
+
+
+
         console.log('===>>>   15');
+        await topMenu.clickOnTopMenuButton('Debug');
+        console.log('===>>>   16');
+        await topMenu.clickOnSubmenuItem('Open Configurations');
+        console.log('===>>>   17');
+        await editor.waitEditorAvailable('launch.json');
+        console.log('===>>>   18');
+        await editor.selectTab('launch.json');
+        console.log('===>>>   19');
+
+        await editor.moveCursorToLineAndChar('launch.json', 5, 22);
+        console.log('===>>>   20');
+        await editor.performKeyCombination('launch.json', Key.chord(Key.CONTROL, Key.SPACE));
+        console.log('===>>>   21');
+        await editor.clickOnSuggestion('Java: Launch Program in Current File');
+        console.log('===>>>   22');
+        await editor.waitTabWithUnsavedStatus('launch.json');
+        console.log('===>>>   23');
+        await editor.waitText('launch.json', '\"name\": \"Debug (Launch) - Current File\"');
+        console.log('===>>>   24');
+        await editor.performKeyCombination('launch.json', Key.chord(Key.CONTROL, 's'));
+        console.log('===>>>   25');
+        await editor.waitTabWithSavedStatus('launch.json');
+        console.log('===>>>   26');
+
+
+        // ####################################
+
+        console.log('===>>>   27');
+        await editor.selectTab(javaFileName);
+        console.log('===>>>   28');
 
         await topMenu.clickOnTopMenuButton('View');
-        console.log('===>>>   16');
+        console.log('===>>>   29');
         await topMenu.clickOnSubmenuItem('Debug');
-        console.log('===>>>   17');
+        console.log('===>>>   30');
 
         await ide.waitRightToolbarButton(RightToolbarButton.Debug);
-        console.log('===>>>   18');
+        console.log('===>>>   31');
         await debugView.clickOnDebugConfigurationDropDown();
-        console.log('===>>>   19');
+        console.log('===>>>   32');
         await debugView.clickOnDebugConfigurationItem('Debug (Launch) - Current File');
-        console.log('===>>>   20');
+        console.log('===>>>   33');
         await debugView.clickOnRunDebugButton();
-        console.log('===>>>   21');
+        console.log('===>>>   34');
 
         await previewWidget.refreshPage();
-        console.log('===>>>   22');
+        console.log('===>>>   35');
         await editor.waitStoppedDebugBreakpoint(javaFileName, 32);
-        console.log('===>>>   23');
+        console.log('===>>>   36');
     });
 
 

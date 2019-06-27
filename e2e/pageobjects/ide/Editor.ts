@@ -320,15 +320,16 @@ export class Editor {
 
         let elementStyleValue: string = await this.driverHelper.waitAndGetElementAttribute(lineNumberLocator, 'style');
 
-        console.log('===>>> style attribute: ', elementStyleValue);
-
         elementStyleValue = elementStyleValue.replace('position: absolute; top: ', '');
-        console.log('===>>> style attribute: ', elementStyleValue);
-
         elementStyleValue = elementStyleValue.replace('px; width: 100%; height: 19px;', '');
-        console.log('===>>> style attribute: ', elementStyleValue);
 
-        return Number.parseInt(elementStyleValue, 10);
+        const lineYCoordinate: number = Number.parseInt(elementStyleValue, 10);
+
+        if (Number.isNaN(lineYCoordinate)) {
+            throw new error.UnsupportedOperationError(`Failed to parse the ${elementStyleValue} row to number format`);
+        }
+
+        return lineYCoordinate;
     }
 
     private getTabWithUnsavedStatus(tabTitle: string): By {
@@ -340,8 +341,6 @@ export class Editor {
         const stoppedDebugBreakpointXpathLocator: string = `//div[contains(@id, '${tabTitle}')]//div[@class='margin']` +
             `//div[contains(@style, '${lineYPixelCoordinates}px')]` +
             '//div[contains(@class, \'theia-debug-top-stack-frame\')]';
-
-        console.log('stoppedDebugBreakpointXpathLocator: ', stoppedDebugBreakpointXpathLocator);
 
         return stoppedDebugBreakpointXpathLocator;
     }

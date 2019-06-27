@@ -30,7 +30,8 @@ const CLASSES = {
     GitHubPlugin: 'GitHubPlugin',
     RightToolbar: 'RightToolbar',
     Terminal: 'Terminal',
-    DebugView: 'DebugView'
+    DebugView: 'DebugView',
+    WarningDialog: 'WarningDialog'
 };
 
 export { TYPES, CLASSES };

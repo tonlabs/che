@@ -11,7 +11,7 @@ import { DriverHelper } from '../../utils/DriverHelper';
 import { injectable, inject } from 'inversify';
 import { CLASSES } from '../../inversify.types';
 import { TestConstants } from '../../TestConstants';
-import { By, WebElement } from 'selenium-webdriver';
+import { By, WebElement, error } from 'selenium-webdriver';
 import { TestWorkspaceUtil, WorkspaceStatus } from '../../utils/workspace/TestWorkspaceUtil';
 
 export enum RightToolbarButton {
@@ -119,20 +119,40 @@ export class Ide {
     async waitStatusBarTextAbcence(expectedText: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
         const statusBarLocator: By = By.css('div[id=\'theia-statusBar\']');
 
-        await this.driverHelper.getDriver().wait(async () => {
-            const elementText: string = await this.driverHelper.waitAndGetText(statusBarLocator, timeout);
+        // for ensuring that check is not invoked in the gap of status displaying
+        for (let i: number = 0; i < 3; i++) {
+            await this.driverHelper.wait(2000);
 
-            const isTextAbsent: boolean = elementText.search(expectedText) === -1;
+            await this.driverHelper.getDriver().wait(async () => {
+                const elementText: string = await this.driverHelper.waitAndGetText(statusBarLocator, timeout);
 
-            if (isTextAbsent) {
-                return true;
-            }
+                const isTextAbsent: boolean = elementText.search(expectedText) === -1;
 
-        }, timeout);
+                if (isTextAbsent) {
+                    return true;
+                }
+
+            }, timeout);
+        }
     }
 
     async waitIdeFrameAndSwitchOnIt(timeout: number = TestConstants.TS_SELENIUM_LOAD_PAGE_TIMEOUT) {
         await this.driverHelper.waitAndSwitchToFrame(By.css(Ide.IDE_IFRAME_CSS), timeout);
+    }
+
+    async checkLSInitializationStart(expectedTextInStatusBar: string) {
+        try {
+            await this.waitStatusBarContains(expectedTextInStatusBar, 20000);
+        } catch (err) {
+            if (!(err instanceof error.TimeoutError)) {
+                throw err;
+            }
+
+            await this.driverHelper.getDriver().navigate().refresh();
+            await this.waitAndSwitchToIdeFrame();
+            await this.waitStatusBarContains(expectedTextInStatusBar);
+        }
+
     }
 
     async closeAllNotifications() {
