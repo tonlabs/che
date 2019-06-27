@@ -101,6 +101,7 @@ export class Editor {
     }
 
     public async clickOnTab(tabTitle: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.ide.closeAllNotifications();
         await this.driverHelper.waitAndClick(By.xpath(this.getTabXpathLocator(tabTitle)), timeout);
     }
 
