@@ -230,6 +230,7 @@ export class Editor {
     }
 
     async type(editorTabTitle: string, text: string, line: number) {
+        await this.selectTab(editorTabTitle);
         await this.moveCursorToLineAndChar(editorTabTitle, line, 1);
         await this.performKeyCombination(editorTabTitle, text);
     }

@@ -45,6 +45,16 @@ export class Ide {
         await this.driverHelper.waitVisibility(notificationLocator, timeout);
     }
 
+    async waitNotificationAndConfirm(notificationText: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.waitNotification(notificationText, timeout);
+        await this.clickOnNotificationButton(notificationText, 'yes');
+    }
+
+    async waitNotificationAndOpenLink(notificationText: string, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        await this.waitNotification(notificationText, timeout);
+        await this.clickOnNotificationButton(notificationText, 'Open Link');
+    }
+
     async isNotificationPresent(notificationText: string): Promise<boolean> {
         const notificationLocator: By = By.xpath(this.getNotificationXpathLocator(notificationText));
 
@@ -146,7 +156,7 @@ export class Ide {
         await this.driverHelper.waitAndSwitchToFrame(By.css(Ide.IDE_IFRAME_CSS), timeout);
     }
 
-    async checkLSInitializationStart(expectedTextInStatusBar: string) {
+    async checkLsInitializationStart(expectedTextInStatusBar: string) {
         try {
             await this.waitStatusBarContains(expectedTextInStatusBar, 20000);
         } catch (err) {
