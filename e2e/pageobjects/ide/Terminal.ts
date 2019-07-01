@@ -98,8 +98,6 @@ export class Terminal {
             const terminalTabLocator: By = By.xpath(`(${terminalTabTitleXpathLocator})[${i}]`);
             const currentTerminalTitle: string = await this.driverHelper.waitAndGetText(terminalTabLocator);
 
-            console.log(`contains: ${currentTerminalTitle.search(terminalTitle) > -1}`);
-
             if (currentTerminalTitle.search(terminalTitle) > -1) {
                 return i;
             }

@@ -45,6 +45,12 @@ export class Ide {
         await this.driverHelper.waitVisibility(notificationLocator, timeout);
     }
 
+    async isNotificationPresent(notificationText: string): Promise<boolean> {
+        const notificationLocator: By = By.xpath(this.getNotificationXpathLocator(notificationText));
+
+        return await this.driverHelper.waitVisibilityBoolean(notificationLocator);
+    }
+
     async waitNotificationDisappearance(notificationText: string,
         attempts: number = TestConstants.TS_SELENIUM_DEFAULT_ATTEMPTS,
         polling: number = TestConstants.TS_SELENIUM_DEFAULT_POLLING) {

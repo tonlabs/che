@@ -121,6 +121,7 @@ suite('Ide checks', async () => {
 
         await ide.checkLSInitializationStart('Starting Java Language Server');
         await ide.waitStatusBarTextAbcence('Starting Java Language Server', 360000);
+        await checkJavaPathCompletion();
         await ide.waitStatusBarTextAbcence('Building workspace', 360000);
 
 
@@ -357,3 +358,10 @@ suite('Ide checks', async () => {
         await githubPlugin.waitChangesPresence(expectedGithubChanges);
     });
 });
+
+async function checkJavaPathCompletion() {
+    if (await ide.isNotificationPresent('Classpath is incomplete. Only syntax errors will be reported')) {
+        throw new Error('Known issue: https://github.com/eclipse/che/issues/13427 \n' +
+            '\"Java LS \"Classpath is incomplete\" warning when loading petclinic\"');
+    }
+}
