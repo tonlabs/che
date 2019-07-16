@@ -61,5 +61,6 @@
         <module>plugin-clangd</module>
         <module>plugin-golang</module>
         <module>plugin-ton-project</module>
+        <module>plugin-ton-sendmessage</module>
     </modules>
 </project>
