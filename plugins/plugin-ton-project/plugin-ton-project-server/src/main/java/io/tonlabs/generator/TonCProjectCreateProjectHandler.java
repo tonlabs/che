@@ -34,20 +34,30 @@ public class TonCProjectCreateProjectHandler implements CreateProjectHandler {
 
   @Inject private FsManager fsManager;
 
-  private static final String FILE_NAME = "hello_world.c";
+  private static final String TEMPLATE_DIR = "templates/c/";
+
+  private static final String C_FILE_NAME = "hello_world.c";
+  private static final String ABI_FILE_NAME = "hello_world.abi";
+
+  private void createFromTemplate(String projectPath, String fileName)
+      throws ConflictException, ServerException {
+
+    try (InputStream inputStream =
+        this.getClass().getClassLoader().getResourceAsStream(TEMPLATE_DIR + fileName)) {
+      String projectWsPath = WsPathUtils.absolutize(projectPath);
+      this.fsManager.createFile(resolve(projectWsPath, fileName), inputStream);
+    } catch (IOException | NotFoundException e) {
+      throw new ServerException(e.getLocalizedMessage(), e);
+    }
+  }
 
   @Override
   public void onCreateProject(
       String projectPath, Map<String, AttributeValue> attributes, Map<String, String> options)
       throws ConflictException, ServerException {
 
-    try (InputStream helloWorld =
-        this.getClass().getClassLoader().getResourceAsStream("files/hello_world.c")) {
-      String projectWsPath = WsPathUtils.absolutize(projectPath);
-      this.fsManager.createFile(resolve(projectWsPath, FILE_NAME), helloWorld);
-    } catch (IOException | NotFoundException e) {
-      throw new ServerException(e.getLocalizedMessage(), e);
-    }
+    this.createFromTemplate(projectPath, C_FILE_NAME);
+    this.createFromTemplate(projectPath, ABI_FILE_NAME);
   }
 
   @Override

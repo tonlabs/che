@@ -34,20 +34,28 @@ public class TonSolProjectCreateProjectHandler implements CreateProjectHandler {
 
   @Inject private FsManager fsManager;
 
-  private static final String FILE_NAME = "hello_world.sol";
+  private static final String TEMPLATE_DIR = "templates/sol/";
+
+  private static final String SOL_FILE_NAME = "hello_world.sol";
+
+  private void createFromTemplate(String projectPath, String fileName)
+      throws ConflictException, ServerException {
+
+    try (InputStream inputStream =
+        this.getClass().getClassLoader().getResourceAsStream(TEMPLATE_DIR + fileName)) {
+      String projectWsPath = WsPathUtils.absolutize(projectPath);
+      this.fsManager.createFile(resolve(projectWsPath, fileName), inputStream);
+    } catch (IOException | NotFoundException e) {
+      throw new ServerException(e.getLocalizedMessage(), e);
+    }
+  }
 
   @Override
   public void onCreateProject(
       String projectPath, Map<String, AttributeValue> attributes, Map<String, String> options)
       throws ConflictException, ServerException {
 
-    try (InputStream helloWorld =
-        this.getClass().getClassLoader().getResourceAsStream("files/hello_world.sol")) {
-      String projectWsPath = WsPathUtils.absolutize(projectPath);
-      this.fsManager.createFile(resolve(projectWsPath, FILE_NAME), helloWorld);
-    } catch (IOException | NotFoundException e) {
-      throw new ServerException(e.getLocalizedMessage(), e);
-    }
+    this.createFromTemplate(projectPath, SOL_FILE_NAME);
   }
 
   @Override
