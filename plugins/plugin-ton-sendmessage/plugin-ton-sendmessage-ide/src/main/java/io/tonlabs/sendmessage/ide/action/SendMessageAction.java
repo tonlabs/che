@@ -9,66 +9,34 @@
 package io.tonlabs.sendmessage.ide.action;
 
 import com.google.inject.Inject;
-import io.tonlabs.sendmessage.ide.SendMessageServiceClient;
-import org.eclipse.che.api.promises.client.Operation;
-import org.eclipse.che.api.promises.client.OperationException;
-import org.eclipse.che.api.promises.client.PromiseError;
+import io.tonlabs.sendmessage.ide.part.SendMessagePresenter;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.BaseAction;
-import org.eclipse.che.ide.api.notification.NotificationManager;
-import org.eclipse.che.ide.api.notification.StatusNotification;
+import org.eclipse.che.ide.api.parts.PartStackType;
+import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 
-/**
- * Actions that triggers the sample server service call.
- *
- * @author Edgar Mueller
- */
 public class SendMessageAction extends BaseAction {
 
-  private final NotificationManager notificationManager;
-  private final SendMessageServiceClient serviceClient;
+  private final WorkspaceAgent workspaceAgent;
+  private final SendMessagePresenter sendMessagePresenter;
 
   /**
    * Constructor.
    *
-   * @param notificationManager the notification manager
-   * @param serviceClient the client that is used to create requests
+   * @param workspaceAgent the workspace agent
+   * @param sendMessagePresenter the presenter of the Send Message part
    */
   @Inject
   public SendMessageAction(
-      final NotificationManager notificationManager, final SendMessageServiceClient serviceClient) {
+      final WorkspaceAgent workspaceAgent, final SendMessagePresenter sendMessagePresenter) {
     super("Send Message...", "Sends a message to the specified smart contract");
-    this.notificationManager = notificationManager;
-    this.serviceClient = serviceClient;
+    this.workspaceAgent = workspaceAgent;
+    this.sendMessagePresenter = sendMessagePresenter;
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    // This calls the service in the workspace.
-    // This method is in our org.eclipse.che.plugin.serverservice.ide.SendMessageServiceClient class
-    // This is a Promise, so the .then() method is invoked after the response is made
-    serviceClient
-        .getHello("CheTheAllPowerful!")
-        .then(
-            new Operation<String>() {
-              @Override
-              public void apply(String response) throws OperationException {
-                // This passes the response String to the notification manager.
-                notificationManager.notify(
-                    response,
-                    StatusNotification.Status.SUCCESS,
-                    StatusNotification.DisplayMode.FLOAT_MODE);
-              }
-            })
-        .catchError(
-            new Operation<PromiseError>() {
-              @Override
-              public void apply(PromiseError error) throws OperationException {
-                notificationManager.notify(
-                    "Fail",
-                    StatusNotification.Status.FAIL,
-                    StatusNotification.DisplayMode.FLOAT_MODE);
-              }
-            });
+    this.workspaceAgent.openPart(this.sendMessagePresenter, PartStackType.EDITING);
+    this.workspaceAgent.setActivePart(this.sendMessagePresenter);
   }
 }
