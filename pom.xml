@@ -79,6 +79,16 @@
                 <version>${che.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.tonlabs</groupId>
+                <artifactId>plugin-ton-sendmessage-ide</artifactId>
+                <version>${che.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.tonlabs</groupId>
+                <artifactId>plugin-ton-sendmessage-server</artifactId>
+                <version>${che.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-catalina</artifactId>
                 <version>${org.apache.tomcat.version}</version>

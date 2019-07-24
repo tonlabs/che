@@ -37,7 +37,7 @@ public class SendMessageAction extends BaseAction {
   @Inject
   public SendMessageAction(
       final NotificationManager notificationManager, final SendMessageServiceClient serviceClient) {
-    super("My Action", "My Action Description");
+    super("Send Message...", "Sends a message to the specified smart contract");
     this.notificationManager = notificationManager;
     this.serviceClient = serviceClient;
   }
