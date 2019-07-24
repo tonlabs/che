@@ -49,7 +49,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <moduleName>io.tonlabs.ServerServiceExtension</moduleName>
+                    <moduleName>io.tonlabs.SendMessageExtension</moduleName>
                 </configuration>
             </plugin>
         </plugins>
