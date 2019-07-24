@@ -165,8 +165,7 @@
       "type": "git",	
       "location": "https://github.com/tonlabs/samples.git",
       "parameters": {
-        "branch":"c-project/example-1-hello-world
-"
+        "branch":"c-project/example-1-hello-world"
       }
     },
     "commands": [],
