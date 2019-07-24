@@ -1,9 +1,9 @@
 [
   {
-    "name": "sample-solidity-contract",
-    "displayName": "sample-solidity-contract",
+    "name": "sample-solidity-contract-1",
+    "displayName": "sample-solidity-contract-1",
     "path": "/solidity",
-    "description": "A set of sample solidity contracts",
+    "description": "A sample solidity contract 1",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -13,13 +13,190 @@
     "source": {	
       "type": "git",	
       "location": "https://github.com/tonlabs/samples.git",
-      "parameters": {	
-        "branch":"master"
+      "parameters": {
+        "branch":"solidity-project/example-01"
       }
     },
     "commands": [],
     "links": [],	
-    "category": "Samples",
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+  {
+    "name": "sample-solidity-contract-2",
+    "displayName": "sample-solidity-contract-2",
+    "path": "/solidity",
+    "description": "A sample solidity contract 2",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"solidity-project/example-02"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+  {
+    "name": "sample-solidity-contract-3",
+    "displayName": "sample-solidity-contract-3",
+    "path": "/solidity",
+    "description": "A sample solidity contract 3",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"solidity-project/example-03"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+  {
+    "name": "sample-solidity-contract-4",
+    "displayName": "sample-solidity-contract-4",
+    "path": "/solidity",
+    "description": "A sample solidity contract 4",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"solidity-project/example-04"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+
+  {
+    "name": "sample-solidity-contract-5",
+    "displayName": "sample-solidity-contract-5",
+    "path": "/solidity",
+    "description": "A sample solidity contract 5",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"solidity-project/example-05"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+   {
+    "name": "sample-solidity-contract-6",
+    "displayName": "sample-solidity-contract-6",
+    "path": "/solidity",
+    "description": "A sample solidity contract 6",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"solidity-project/example-06"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/Solidity",
+    "tags": [	
+      "TVM"
+    ]
+  },
+  {
+    "name": "sample-c-contract-1",
+    "displayName": "sample-c-contract-1-hello-world",
+    "path": "/c-project",
+    "description": "A sample C contract 1. Hello world",
+    "projectType": "ton-c-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"c-project/example-1-hello-world
+"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/C",
+    "tags": [	
+      "TVM"
+    ]
+  },
+  {
+    "name": "sample-c-contract-2",
+    "displayName": "sample-c-contract-2-echo",
+    "path": "/c-project",
+    "description": "A sample C contract 2. Echo example",
+    "projectType": "ton-c-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"c-project/example-2-echo"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/C",
     "tags": [	
       "TVM"
     ]
