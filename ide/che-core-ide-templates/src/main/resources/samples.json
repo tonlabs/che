@@ -1,2 +1,27 @@
 [
+  {
+    "name": "sample-solidity-contract",
+    "displayName": "sample-solidity-contract",
+    "path": "/solidity",
+    "description": "A set of sample solidity contracts",
+    "projectType": "ton-solidity-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {	
+        "branch":"master"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples",
+    "tags": [	
+      "TVM"
+    ]
+  }
 ]
