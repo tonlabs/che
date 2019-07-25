@@ -1,9 +1,9 @@
 [
   {
     "name": "sample-solidity-contract-1",
-    "displayName": "sample-solidity-contract-1",
+    "displayName": "Example 1",
     "path": "/solidity",
-    "description": "A sample solidity contract 1",
+    "description": "This example demontrates how to save data to persistent storage. Contract's state can be checked with getaccount.",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -26,9 +26,9 @@
   },
   {
     "name": "sample-solidity-contract-2",
-    "displayName": "sample-solidity-contract-2",
+    "displayName": "Example 2",
     "path": "/solidity",
-    "description": "A sample solidity contract 2",
+    "description": "This example demontrates how to call remote contract function with an argument. Remote contract saves the received value for checking.",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -51,9 +51,9 @@
   },
   {
     "name": "sample-solidity-contract-3",
-    "displayName": "sample-solidity-contract-3",
+    "displayName": "Example 3",
     "path": "/solidity",
-    "description": "A sample solidity contract 3",
+    "description": "This example demontrates how to use msg.sender -- an address of a contract that calls it.",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -76,9 +76,9 @@
   },
   {
     "name": "sample-solidity-contract-4",
-    "displayName": "sample-solidity-contract-4",
+    "displayName": "Example-4",
     "path": "/solidity",
-    "description": "A sample solidity contract 4",
+    "description": "This example demontrates how to transfer grams with address.transfer()",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -102,9 +102,9 @@
 
   {
     "name": "sample-solidity-contract-5",
-    "displayName": "sample-solidity-contract-5",
+    "displayName": "Example-5",
     "path": "/solidity",
-    "description": "A sample solidity contract 5",
+    "description": "This example demontrates callbacks. First contract calls the second and retreives the answer with a callback.",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -127,9 +127,9 @@
   },
    {
     "name": "sample-solidity-contract-6",
-    "displayName": "sample-solidity-contract-6",
+    "displayName": "Example-6",
     "path": "/solidity",
-    "description": "A sample solidity contract 6",
+    "description": "This example demontrates how to use mappings, external methods and demontsrates callbacks.",
     "projectType": "ton-solidity-project",
     "mixins": [],
     "attributes": {	
@@ -152,9 +152,10 @@
   },
   {
     "name": "sample-c-contract-1",
-    "displayName": "sample-c-contract-1-hello-world",
+    "displayName": "Example 1. Hello, world!",
     "path": "/c-project",
-    "description": "A sample C contract 1. Hello world",
+    "description": "This is the simplest contract in the repository, it adds 2 and 2 and 
+returns the sum as an external message. This contract is a good starting point.",
     "projectType": "ton-c-project",
     "mixins": [],
     "attributes": {	
@@ -177,9 +178,11 @@
   },
   {
     "name": "sample-c-contract-2",
-    "displayName": "sample-c-contract-2-echo",
+    "displayName": "Example 2. Echo",
     "path": "/c-project",
-    "description": "A sample C contract 2. Echo example",
+    "description": "This contract stores the last input value in a persistent variable.
+This allows the user to check the results of the contract's method invocations 
+using getaccount command.",
     "projectType": "ton-c-project",
     "mixins": [],
     "attributes": {	
@@ -199,5 +202,32 @@
     "tags": [	
       "TVM"
     ]
+  },
+  {
+    "name": "sample-c-contract-3",
+    "displayName": "Example 3. Transfer 80000001",
+    "path": "/c-project",
+    "description": "This contract sends 0xAAAA nanograms (43960 in decimal) 
+to account 0x80000001. This contract shows how to create and send internal messages.",
+    "projectType": "ton-c-project",
+    "mixins": [],
+    "attributes": {	
+    },
+    "modules": [],	
+    "problems": [],	
+    "source": {	
+      "type": "git",	
+      "location": "https://github.com/tonlabs/samples.git",
+      "parameters": {
+        "branch":"c-project/example-3-transfer-80000001"
+      }
+    },
+    "commands": [],
+    "links": [],	
+    "category": "Samples/C",
+    "tags": [	
+      "TVM"
+    ]
   }
+
 ]
