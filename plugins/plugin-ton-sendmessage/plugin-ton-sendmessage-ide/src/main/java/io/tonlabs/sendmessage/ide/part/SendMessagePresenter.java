@@ -37,5 +37,6 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
   @Override
   public void go(AcceptsOneWidget container) {
     container.setWidget(this.getView());
+    this.setVisible(true);
   }
 }
