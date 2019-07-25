@@ -9,14 +9,12 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.inject.Inject;
 import io.tonlabs.sendmessage.ide.model.Parameter;
-import org.eclipse.che.ide.api.parts.base.BaseView;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.che.ide.api.parts.base.BaseView;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
-    implements SendMessageView
-{
+    implements SendMessageView {
   private final ListBox functionControl;
   private final CellTable<Parameter> parametersControl;
   private final List<Parameter> parameters;
@@ -51,19 +49,23 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private CellTable<Parameter> createParameterTable() {
     CellTable<Parameter> result = new CellTable<>();
 
-    result.addColumn(new TextColumn<Parameter>() {
-      @Override
-      public String getValue(Parameter parameter) {
-        return parameter.getName();
-      }
-    }, "Parameter");
+    result.addColumn(
+        new TextColumn<Parameter>() {
+          @Override
+          public String getValue(Parameter parameter) {
+            return parameter.getName();
+          }
+        },
+        "Parameter");
 
-    result.addColumn(new Column<Parameter, String>(new EditTextCell()) {
-      @Override
-      public String getValue(Parameter parameter) {
-        return parameter.getValue();
-      }
-    }, "Value");
+    result.addColumn(
+        new Column<Parameter, String>(new EditTextCell()) {
+          @Override
+          public String getValue(Parameter parameter) {
+            return parameter.getValue();
+          }
+        },
+        "Value");
 
     return result;
   }
