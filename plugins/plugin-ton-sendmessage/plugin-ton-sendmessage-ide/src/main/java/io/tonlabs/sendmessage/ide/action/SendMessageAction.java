@@ -36,7 +36,7 @@ public class SendMessageAction extends BaseAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    this.workspaceAgent.openPart(this.sendMessagePresenter, PartStackType.EDITING);
+    this.workspaceAgent.openPart(this.sendMessagePresenter, PartStackType.TOOLING);
     this.workspaceAgent.setActivePart(this.sendMessagePresenter);
   }
 }
