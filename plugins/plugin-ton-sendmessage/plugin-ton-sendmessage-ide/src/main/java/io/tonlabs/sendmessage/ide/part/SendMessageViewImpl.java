@@ -23,12 +23,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @Inject
   public SendMessageViewImpl() {
-    this.parameters = new ArrayList<Parameter>();
+    this.parameters = new ArrayList<>();
 
     VerticalPanel verticalPanel = new VerticalPanel();
     verticalPanel.add(new Label("Function"));
 
-    this.functionControl = this.createFunctionListBox()
+    this.functionControl = this.createFunctionListBox();
     verticalPanel.add(this.functionControl);
 
     this.parametersControl = this.createParameterTable();
@@ -43,9 +43,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private ListBox createFunctionListBox() {
     ListBox result = new ListBox();
     result.setVisibleItemCount(1);
-    result.addChangeHandler(event -> {
-      SendMessageViewImpl.this.populateParameterList();
-    });
+    result.addChangeHandler(event -> SendMessageViewImpl.this.populateParameterList());
 
     return result;
   }
