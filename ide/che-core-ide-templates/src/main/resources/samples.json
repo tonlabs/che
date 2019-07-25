@@ -1,7 +1,7 @@
 [
   {
     "name": "sample-solidity-contract-1",
-    "displayName": "Example 1",
+    "displayName": "Example 1. Persistent storage",
     "path": "/solidity",
     "description": "This example demontrates how to save data to persistent storage. Contract's state can be checked with getaccount.",
     "projectType": "ton-solidity-project",
@@ -26,7 +26,7 @@
   },
   {
     "name": "sample-solidity-contract-2",
-    "displayName": "Example 2",
+    "displayName": "Example 2. Function with arguments",
     "path": "/solidity",
     "description": "This example demontrates how to call remote contract function with an argument. Remote contract saves the received value for checking.",
     "projectType": "ton-solidity-project",
@@ -51,7 +51,7 @@
   },
   {
     "name": "sample-solidity-contract-3",
-    "displayName": "Example 3",
+    "displayName": "Example 3. msg.sender",
     "path": "/solidity",
     "description": "This example demontrates how to use msg.sender -- an address of a contract that calls it.",
     "projectType": "ton-solidity-project",
@@ -76,7 +76,7 @@
   },
   {
     "name": "sample-solidity-contract-4",
-    "displayName": "Example-4",
+    "displayName": "Example 4. Send grams",
     "path": "/solidity",
     "description": "This example demontrates how to transfer grams with address.transfer()",
     "projectType": "ton-solidity-project",
@@ -102,7 +102,7 @@
 
   {
     "name": "sample-solidity-contract-5",
-    "displayName": "Example-5",
+    "displayName": "Example 5. Callbacks",
     "path": "/solidity",
     "description": "This example demontrates callbacks. First contract calls the second and retreives the answer with a callback.",
     "projectType": "ton-solidity-project",
@@ -127,7 +127,7 @@
   },
    {
     "name": "sample-solidity-contract-6",
-    "displayName": "Example-6",
+    "displayName": "Example 6. Mappings and external methods",
     "path": "/solidity",
     "description": "This example demontrates how to use mappings, external methods and demontsrates callbacks.",
     "projectType": "ton-solidity-project",
