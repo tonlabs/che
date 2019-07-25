@@ -155,7 +155,7 @@
     "displayName": "Example 1. Hello, world!",
     "path": "/c-project",
     "description": "This is the simplest contract in the repository, it adds 2 and 2 and 
-returns the sum as an external message. This contract is a good starting point.",
+returns the sum as an external message.",
     "projectType": "ton-c-project",
     "mixins": [],
     "attributes": {	
@@ -178,11 +178,9 @@ returns the sum as an external message. This contract is a good starting point."
   },
   {
     "name": "sample-c-contract-2",
-    "displayName": "Example 2. Echo",
+    "displayName": "Example 2. Persistent storage",
     "path": "/c-project",
-    "description": "This contract stores the last input value in a persistent variable.
-This allows the user to check the results of the contract's method invocations 
-using getaccount command.",
+    "description": "This contract stores the last input value in a persistent storage.",
     "projectType": "ton-c-project",
     "mixins": [],
     "attributes": {	
@@ -205,10 +203,9 @@ using getaccount command.",
   },
   {
     "name": "sample-c-contract-3",
-    "displayName": "Example 3. Transfer 80000001",
+    "displayName": "Example 3. Transfer grams",
     "path": "/c-project",
-    "description": "This contract sends 0xAAAA nanograms (43960 in decimal) 
-to account 0x80000001. This contract shows how to create and send internal messages.",
+    "description": "This contract sends 0xAAAA (43960 in decimal) nanograms to account 0x80000001.",
     "projectType": "ton-c-project",
     "mixins": [],
     "attributes": {	
