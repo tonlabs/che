@@ -9,16 +9,17 @@
     </ui:style>
     <g:DockLayoutPanel unit="EM" width="100%" height="100%" addStyleNames="{style.rootLayout}">
         <g:north size="5">
-            <g:VerticalPanel width="100%">
+<!--            <g:VerticalPanel width="100%">-->
                 <g:Label>Function</g:Label>
-                <che:CustomComboBox width="100%" ui:field="functionControl"/>
-            </g:VerticalPanel>
+<!--                <che:CustomComboBox width="100%" ui:field="functionControl"/>-->
+<!--            </g:VerticalPanel>-->
         </g:north>
         <g:center>
-            <c:CellTable ui:field="parametersControl"/>
+<!--            <c:CellTable ui:field="parametersControl"/>-->
+            <g:Label>Center</g:Label>
         </g:center>
-        <g:south size="5">
-            <g:Button text="Send Message"/>
-        </g:south>
+<!--        <g:south size="5">-->
+<!--            <g:Button text="Send Message"/>-->
+<!--        </g:south>-->
     </g:DockLayoutPanel>
 </ui:UiBinder>
