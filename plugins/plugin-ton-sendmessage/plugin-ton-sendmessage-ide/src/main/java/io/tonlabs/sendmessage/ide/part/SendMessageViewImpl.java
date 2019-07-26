@@ -27,7 +27,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiField CustomComboBox functionControl;
 
-  @UiField CellTable<Parameter> parametersControl;
+  @UiField(provided = true) CellTable<Parameter> parametersControl;
 
   private final List<Parameter> parameters;
 
