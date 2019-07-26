@@ -44,7 +44,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private DockLayoutPanel initUi() {
     DockLayoutPanel rootElement = UI_BINDER.createAndBindUi(this);
-    this.initWidget(rootElement);
+    //this.initWidget(rootElement);
     this.setupParameterTable(this.parametersControl);
 
     return rootElement;
