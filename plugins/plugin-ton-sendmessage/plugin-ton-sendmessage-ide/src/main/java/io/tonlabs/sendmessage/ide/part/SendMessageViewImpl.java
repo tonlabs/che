@@ -2,10 +2,10 @@ package io.tonlabs.sendmessage.ide.part;
 
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.core.client.GWT;
-//import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
-//import com.google.gwt.uibinder.client.UiField;
-//import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -15,7 +15,7 @@ import io.tonlabs.sendmessage.ide.model.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.che.ide.api.parts.base.BaseView;
-//import org.eclipse.che.ide.ui.listbox.CustomComboBox;
+import org.eclipse.che.ide.ui.listbox.CustomComboBox;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -25,9 +25,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private final DockLayoutPanel rootElement;
 
-  //@UiField CustomComboBox functionControl;
+  @UiField CustomComboBox functionControl;
 
-  //@UiField CellTable<Parameter> parametersControl;
+  @UiField CellTable<Parameter> parametersControl;
 
   private final List<Parameter> parameters;
 
@@ -38,14 +38,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.rootElement = this.initUi();
     this.setContentWidget(this.rootElement);
 
-    //this.populateFunctionList();
-    //this.populateParameterList();
+    this.populateFunctionList();
+    this.populateParameterList();
   }
 
   private DockLayoutPanel initUi() {
     DockLayoutPanel rootElement = UI_BINDER.createAndBindUi(this);
 
-    //this.setupParameterTable(this.parametersControl);
+    this.setupParameterTable(this.parametersControl);
 
     return rootElement;
   }
@@ -70,20 +70,20 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         "Value");
   }
 
-  //private void populateFunctionList() {
-  //  this.functionControl.addItem("");
-  //  this.functionControl.addItem("compute0");
-  //}
-  //
-  //private void populateParameterList() {
-  //  this.parameters.add(new Parameter("Param1"));
-  //  this.parametersControl.setRowData(this.parameters);
-  //}
+  private void populateFunctionList() {
+    this.functionControl.addItem("");
+    this.functionControl.addItem("compute0");
+  }
 
-  //@UiHandler("functionControl")
-  //void handleChange(ChangeEvent event) {
-  //  this.populateParameterList();
-  //}
+  private void populateParameterList() {
+    this.parameters.add(new Parameter("Param1"));
+    this.parametersControl.setRowData(this.parameters);
+  }
+
+  @UiHandler("functionControl")
+  void handleChange(ChangeEvent event) {
+    this.populateParameterList();
+  }
 
   interface SendMessageViewImplUiBinder extends UiBinder<DockLayoutPanel, SendMessageViewImpl> {}
 }
