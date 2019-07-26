@@ -36,6 +36,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.parameters = new ArrayList<>();
 
     this.rootElement = this.initUi();
+    this.setContentWidget(this.rootElement);
 
     //this.populateFunctionList();
     //this.populateParameterList();
