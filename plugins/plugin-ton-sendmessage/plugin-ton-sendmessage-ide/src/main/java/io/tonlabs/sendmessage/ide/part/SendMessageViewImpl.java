@@ -31,25 +31,26 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   public SendMessageViewImpl() {
     this.parameters = new ArrayList<>();
 
-    this.setContentWidget(this.initUi());
+    this.setContentWidget(UI_BINDER.createAndBindUi(this));
 
     this.populateFunctionList();
     this.populateParameterList();
   }
 
-  private Widget initUi() {
-    Widget rootElement = UI_BINDER.createAndBindUi(this);
-
-    return rootElement;
-  }
-
   private void populateFunctionList() {
+    this.functionControl.clear();
+    this.functionControl.addItem("");
     this.functionControl.addItem("compute0");
   }
 
   private void populateParameterList() {
+    this.parameters.clear();
     this.parameters.add(new Parameter("Param1"));
 
+    this.refreshParameterList();
+  }
+
+  private void refreshParameterList() {
     this.inputsControl.resize(this.parameters.size(), 2);
     for (int i = 0; i < this.parameters.size(); i++) {
       this.inputsControl.setText(i, 0, this.parameters.get(i).getName());
