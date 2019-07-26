@@ -13,7 +13,7 @@ import io.tonlabs.sendmessage.ide.model.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.che.ide.api.parts.base.BaseView;
-import org.eclipse.che.ide.ui.listbox.CustomComboBox;
+import org.eclipse.che.ide.ui.listbox.CustomListBox;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -21,7 +21,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  @UiField CustomComboBox functionControl;
+  @UiField CustomListBox functionControl;
 
   @UiField Grid inputsControl;
 
