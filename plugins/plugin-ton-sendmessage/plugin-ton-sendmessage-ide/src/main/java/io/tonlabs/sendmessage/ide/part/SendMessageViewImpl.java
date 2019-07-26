@@ -46,6 +46,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private void populateParameterList() {
     this.parameters.clear();
     this.parameters.add(new Parameter("Param1"));
+    this.parameters.add(new Parameter("Param Last"));
 
     this.refreshParameterList();
   }
