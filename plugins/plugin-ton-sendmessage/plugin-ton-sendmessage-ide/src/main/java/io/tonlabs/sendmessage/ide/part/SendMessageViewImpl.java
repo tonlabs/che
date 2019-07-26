@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -13,7 +14,6 @@ import io.tonlabs.sendmessage.ide.model.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.che.ide.api.parts.base.BaseView;
-import org.eclipse.che.ide.ui.listbox.CustomListBox;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -21,18 +21,15 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  @UiField(provided = true)
-  CustomListBox functionControl;
-
-  @UiField Grid inputsControl;
-
   private final List<Parameter> parameters;
+
+  @UiField ListBox functionControl;
+  @UiField Grid inputsControl;
 
   @Inject
   public SendMessageViewImpl() {
     this.parameters = new ArrayList<>();
 
-    this.functionControl = new CustomListBox();
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
 
     this.populateFunctionList();

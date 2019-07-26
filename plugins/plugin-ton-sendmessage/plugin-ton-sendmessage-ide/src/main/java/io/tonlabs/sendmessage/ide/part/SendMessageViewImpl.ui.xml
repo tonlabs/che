@@ -17,7 +17,7 @@
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
         <g:Label>Function</g:Label>
-        <che:CustomListBox ui:field="functionControl"/>
+        <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1" />
         <g:Label addStyleNames="{style.inputsHeader}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
         <g:Button text="Send Message"/>
