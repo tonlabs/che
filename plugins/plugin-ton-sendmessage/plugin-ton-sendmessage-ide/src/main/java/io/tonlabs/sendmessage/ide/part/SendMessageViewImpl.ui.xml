@@ -10,12 +10,16 @@
         .inputsControl {
             margin-bottom: 10px;
         }
+
+        .inputsHeader {
+            margin-top: 5px;
+        }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
         <g:Label>Function</g:Label>
         <che:CustomComboBox width="100%" ui:field="functionControl"/>
-        <g:Label>Inputs</g:Label>
-        <c:CellTable ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
+        <g:Label addStyleNames="{style.inputsHeader}">Inputs</g:Label>
+        <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
         <g:Button text="Send Message"/>
     </g:VerticalPanel>
 </ui:UiBinder>

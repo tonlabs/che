@@ -1,14 +1,12 @@
 package io.tonlabs.sendmessage.ide.part;
 
-import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import io.tonlabs.sendmessage.ide.model.Parameter;
@@ -25,7 +23,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiField CustomComboBox functionControl;
 
-  @UiField CellTable<Parameter> inputsControl;
+  @UiField Grid inputsControl;
 
   private final List<Parameter> parameters;
 
@@ -42,39 +40,24 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private Widget initUi() {
     Widget rootElement = UI_BINDER.createAndBindUi(this);
 
-    this.setupParameterTable(this.inputsControl);
-
     return rootElement;
   }
 
-  private void setupParameterTable(CellTable<Parameter> cellTable) {
-    cellTable.addColumn(
-        new TextColumn<Parameter>() {
-          @Override
-          public String getValue(Parameter parameter) {
-            return parameter.getName();
-          }
-        },
-        "Parameter");
-
-    cellTable.addColumn(
-        new Column<Parameter, String>(new EditTextCell()) {
-          @Override
-          public String getValue(Parameter parameter) {
-            return parameter.getValue();
-          }
-        },
-        "Value");
-  }
-
   private void populateFunctionList() {
-    this.functionControl.addItem("");
     this.functionControl.addItem("compute0");
   }
 
   private void populateParameterList() {
     this.parameters.add(new Parameter("Param1"));
-    this.inputsControl.setRowData(this.parameters);
+
+    this.inputsControl.resize(this.parameters.size(), 2);
+    for (int i = 0; i < this.parameters.size(); i++) {
+      this.inputsControl.setText(i, 0, this.parameters.get(i).getName());
+
+      TextBox valueTextBox = new TextBox();
+      valueTextBox.setValue(this.parameters.get(i).getValue());
+      this.inputsControl.setWidget(i, 1, valueTextBox);
+    }
   }
 
   @UiHandler("functionControl")
