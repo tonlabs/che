@@ -33,30 +33,19 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @Inject
   public SendMessageViewImpl() {
-    this.rootElement = UI_BINDER.createAndBindUi(this);
-
     this.parameters = new ArrayList<>();
 
-    // VerticalPanel verticalPanel = new VerticalPanel();
-    // verticalPanel.add(new Label("Function"));
-    //
-    // this.functionControl = this.createFunctionListBox();
-    // verticalPanel.add(this.functionControl);
-
-    // DockLayoutPanel layout = new DockLayoutPanel(Style.Unit.EM);
-    // layout.addNorth(verticalPanel, 5);
-
-    // this.parametersControl = this.createParameterTable();
-    // layout.add(this.parametersControl);
-
-    // this.setContentWidget(layout);
-
-    // layout.setStyleName();
-
-    this.setupParameterTable(this.parametersControl);
+    this.rootElement = this.initUi();
 
     this.populateFunctionList();
     this.populateParameterList();
+  }
+
+  private DockLayoutPanel initUi() {
+    DockLayoutPanel rootElement = UI_BINDER.createAndBindUi(this);
+    this.setupParameterTable(this.parametersControl);
+
+    return rootElement;
   }
 
   private void setupParameterTable(CellTable<Parameter> cellTable) {
