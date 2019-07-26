@@ -16,7 +16,6 @@
         </g:north>
         <g:center>
             <c:CellTable ui:field="parametersControl"/>
-            <g:Label>Center</g:Label>
         </g:center>
         <g:south size="5">
             <g:Button text="Send Message"/>
