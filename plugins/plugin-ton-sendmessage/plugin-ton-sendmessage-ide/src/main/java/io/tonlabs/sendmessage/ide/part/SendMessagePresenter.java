@@ -27,7 +27,7 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
 
   @Override
   public String getTitleToolTip() {
-    return "Sends a message to the contract";
+    return "Sends message to the contract";
   }
 
   public void setVisible(boolean visible) {

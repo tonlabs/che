@@ -21,7 +21,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  @UiField CustomListBox functionControl;
+  @UiField(provided = true)
+  CustomListBox functionControl;
 
   @UiField Grid inputsControl;
 
@@ -31,6 +32,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   public SendMessageViewImpl() {
     this.parameters = new ArrayList<>();
 
+    this.functionControl = new CustomListBox();
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
 
     this.populateFunctionList();
