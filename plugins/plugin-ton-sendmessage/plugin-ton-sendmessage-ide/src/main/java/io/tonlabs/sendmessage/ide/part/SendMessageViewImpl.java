@@ -27,8 +27,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiField CustomComboBox functionControl;
 
-  @UiField(provided = true)
-  CellTable<Parameter> parametersControl;
+  @UiField CellTable<Parameter> parametersControl;
 
   private final List<Parameter> parameters;
 
@@ -44,7 +43,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private DockLayoutPanel initUi() {
     DockLayoutPanel rootElement = UI_BINDER.createAndBindUi(this);
-    // this.initWidget(rootElement);
+    this.initWidget(rootElement);
     this.setupParameterTable(this.parametersControl);
 
     return rootElement;
