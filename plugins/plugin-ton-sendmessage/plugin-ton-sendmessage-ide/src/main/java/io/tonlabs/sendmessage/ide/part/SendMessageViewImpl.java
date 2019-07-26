@@ -83,5 +83,5 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.populateParameterList();
   }
 
-  interface SendMessageViewImplUiBinder extends UiBinder<DockLayoutPanel, SendMessageViewImpl> {}
+  interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}
 }
