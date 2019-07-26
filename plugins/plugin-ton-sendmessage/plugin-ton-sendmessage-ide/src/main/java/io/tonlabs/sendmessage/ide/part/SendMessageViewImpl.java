@@ -10,6 +10,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import io.tonlabs.sendmessage.ide.model.Parameter;
 import java.util.ArrayList;
@@ -23,8 +24,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  private final DockLayoutPanel rootElement;
-
   @UiField CustomComboBox functionControl;
 
   @UiField CellTable<Parameter> inputsControl;
@@ -35,15 +34,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   public SendMessageViewImpl() {
     this.parameters = new ArrayList<>();
 
-    this.rootElement = this.initUi();
-    this.setContentWidget(this.rootElement);
+    this.setContentWidget(this.initUi());
 
     this.populateFunctionList();
     this.populateParameterList();
   }
 
-  private DockLayoutPanel initUi() {
-    DockLayoutPanel rootElement = UI_BINDER.createAndBindUi(this);
+  private Widget initUi() {
+    Widget rootElement = UI_BINDER.createAndBindUi(this);
 
     this.setupParameterTable(this.inputsControl);
 

@@ -4,26 +4,24 @@
              xmlns:che="urn:import:org.eclipse.che.ide.ui.listbox">
     <ui:style>
         .rootLayout {
-            margin: 5px;
-        }
-
-        .functionCombo {
-            padding-right: 5px;
+            padding: 10px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.rootLayout}">
-        <g:north size="20">
-            <g:VerticalPanel>
-                <g:Label>Function</g:Label>
-                <che:CustomComboBox width="100%" addStyleNames="{style.functionCombo}" ui:field="functionControl"/>
-            </g:VerticalPanel>
-        </g:north>
-        <g:center>
-            <g:VerticalPanel>
-                <g:Label>Inputs</g:Label>
-                <c:CellTable ui:field="inputsControl"/>
-                <g:Button text="Send Message"/>
-            </g:VerticalPanel>
-        </g:center>
-    </g:DockLayoutPanel>
+    <g:VerticalPanel width="100%" height="100%" addStyleNames="{style.rootLayout}">
+        <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+            <g:north size="20">
+                <g:VerticalPanel>
+                    <g:Label>Function</g:Label>
+                    <che:CustomComboBox width="100%" ui:field="functionControl"/>
+                </g:VerticalPanel>
+            </g:north>
+            <g:center>
+                <g:VerticalPanel>
+                    <g:Label>Inputs</g:Label>
+                    <c:CellTable ui:field="inputsControl"/>
+                    <g:Button text="Send Message"/>
+                </g:VerticalPanel>
+            </g:center>
+        </g:DockLayoutPanel>
+    </g:VerticalPanel>
 </ui:UiBinder>
