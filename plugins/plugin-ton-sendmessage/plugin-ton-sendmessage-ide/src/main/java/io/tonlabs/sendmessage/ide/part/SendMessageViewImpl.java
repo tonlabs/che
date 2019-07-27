@@ -5,15 +5,17 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import io.tonlabs.sendmessage.ide.model.Parameter;
-import java.util.ArrayList;
-import java.util.List;
+import io.tonlabs.sendmessage.ide.model.Abi;
+import io.tonlabs.sendmessage.ide.model.AbiFunction;
+import io.tonlabs.sendmessage.ide.model.UiFunction;
+import io.tonlabs.sendmessage.ide.model.UiParameter;
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
@@ -24,49 +26,66 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  private final List<Parameter> parameters;
+  private Abi abi;
+  private Map<String, UiFunction> functions;
 
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
 
   @Inject
   public SendMessageViewImpl() {
-    this.parameters = new ArrayList<>();
-
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
 
     this.populateFunctionList();
-    this.populateParameterList();
+    this.refreshInputsControl();
+  }
+
+  private static Map<String, UiFunction> extractFunctionsFromAbi(Abi abi) {
+    Map<String, UiFunction> result = new HashMap<>();
+    for (AbiFunction abiFunction : abi.getFunctions()) {
+      result.put(abiFunction.getName(), new UiFunction(abiFunction));
+    }
+
+    return result;
   }
 
   private void populateFunctionList() {
     this.functionControl.clear();
-    this.functionControl.addItem("");
-    this.functionControl.addItem("compute0");
+
+    for (AbiFunction function : this.abi.getFunctions()) {
+      this.functionControl.addItem(function.getName());
+    }
+    if (this.functionControl.getItemCount() > 0) {
+      this.functionControl.setSelectedIndex(0);
+    }
+    this.refreshInputsControl();
   }
 
-  private void populateParameterList() {
-    this.parameters.clear();
-    this.parameters.add(new Parameter("Param1"));
-    this.parameters.add(new Parameter("Param Last"));
+  private void refreshInputsControl() {
+    String functionName = this.functionControl.getSelectedItemText();
+    if (functionName == null) {
+      this.inputsControl.resize(0, 2);
+    }
 
-    this.refreshParameterList();
-  }
-
-  private void refreshParameterList() {
-    this.inputsControl.resize(this.parameters.size(), 2);
-    for (int i = 0; i < this.parameters.size(); i++) {
-      this.inputsControl.setText(i, 0, this.parameters.get(i).getName());
+    UiFunction function = this.functions.get(functionName);
+    this.inputsControl.resize(function.getInputs().size(), 2);
+    int index = 0;
+    for (Map.Entry<String, UiParameter> entry : function.getInputs().entrySet()) {
+      UiParameter parameter = entry.getValue();
+      this.inputsControl.setText(index, 0, parameter.format());
 
       TextBox valueTextBox = new TextBox();
-      valueTextBox.setValue(this.parameters.get(i).getValue());
-      this.inputsControl.setWidget(i, 1, valueTextBox);
+      valueTextBox.setName(parameter.getName());
+      valueTextBox.setValue(parameter.getValue());
+      this.inputsControl.setWidget(index, 1, valueTextBox);
+
+      index++;
     }
   }
 
   @UiHandler("functionControl")
   void handleChange(ChangeEvent event) {
-    this.populateParameterList();
+    this.refreshInputsControl();
   }
 
   @Override
@@ -76,8 +95,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         .then(
             (Function<String, Object>)
                 content -> {
-                  Window.alert(content);
-                  return content;
+                  Abi abi = Abi.fromJson(content);
+                  SendMessageViewImpl.this.abi = abi;
+                  SendMessageViewImpl.this.functions =
+                      SendMessageViewImpl.extractFunctionsFromAbi(abi);
+                  SendMessageViewImpl.this.populateFunctionList();
+                  return SendMessageViewImpl.this.abi;
                 });
   }
 
