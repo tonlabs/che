@@ -2,6 +2,7 @@ package io.tonlabs.sendmessage.ide.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -13,7 +14,11 @@ import com.google.inject.Inject;
 import io.tonlabs.sendmessage.ide.model.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.parts.base.BaseView;
+import org.eclipse.che.ide.api.resources.File;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -64,6 +69,19 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiHandler("functionControl")
   void handleChange(ChangeEvent event) {
     this.populateParameterList();
+  }
+
+  @Override
+  public void updateAbi(File abiFile) {
+    abiFile
+        .getContent()
+        .then(
+            (Function<String, Object>)
+                content -> {
+                  final Logger log = Logger.getLogger(LogConfiguration.class.getName());
+                  log.log(Level.INFO, content);
+                  return content;
+                });
   }
 
   interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}

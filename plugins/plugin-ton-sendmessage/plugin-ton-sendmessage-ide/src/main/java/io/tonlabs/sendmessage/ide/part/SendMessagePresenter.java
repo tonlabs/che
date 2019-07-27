@@ -34,6 +34,10 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
     this.view.setVisible(visible);
   }
 
+  public SendMessageView getSendMessageView() {
+    return this.view;
+  }
+
   @Override
   public void go(AcceptsOneWidget container) {
     container.setWidget(this.getView());
