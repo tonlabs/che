@@ -35,9 +35,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @Inject
   public SendMessageViewImpl() {
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
-
-    this.populateFunctionList();
-    this.refreshInputsControl();
   }
 
   private static Map<String, UiFunction> extractFunctionsFromAbi(Abi abi) {
