@@ -5,7 +5,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,6 +31,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private Abi abi;
   private Map<String, UiFunction> functions;
 
+  @UiField Label inputsHeader;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
 
@@ -62,10 +65,16 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String functionName = this.functionControl.getSelectedItemText();
     if (functionName == null) {
       this.inputsControl.resize(0, 2);
+      this.inputsHeader.setVisible(false);
+
+      return;
     }
 
     UiFunction function = this.functions.get(functionName);
+
+    this.inputsHeader.setVisible(function.getInputs().size() > 0);
     this.inputsControl.resize(function.getInputs().size(), 2);
+
     int index = 0;
     for (Map.Entry<String, UiParameter> entry : function.getInputs().entrySet()) {
       UiParameter parameter = entry.getValue();
