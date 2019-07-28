@@ -173,7 +173,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.tvcMap = null;
 
     deploymentFolder
-        .search("*.tvc", "")
+        .search("*.tvc", null)
         .then(
             (Function<SearchResult, Object>)
                 result -> {
@@ -185,7 +185,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                 });
 
     deploymentFolder
-        .search("*.abi", "")
+        .search("*.abi", null)
         .then(
             (Function<SearchResult, Object>)
                 result -> {
