@@ -19,8 +19,6 @@ import io.tonlabs.sendmessage.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.che.api.core.model.workspace.config.Command;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.command.CommandExecutor;
 import org.eclipse.che.ide.api.command.CommandImpl;
@@ -59,8 +57,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @Inject
   public SendMessageViewImpl(
       ResourceManager resourceManager,
-          ResourceManager.ResourceFactory resourceFactory,
-          CommandExecutor commandExecutor) {
+      ResourceManager.ResourceFactory resourceFactory,
+      CommandExecutor commandExecutor) {
     this.resourceManager = resourceManager;
     this.resourceFactory = resourceFactory;
     this.commandExecutor = commandExecutor;
