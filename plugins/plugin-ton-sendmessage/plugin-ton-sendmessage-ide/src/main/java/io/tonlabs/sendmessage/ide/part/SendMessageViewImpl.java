@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -91,6 +92,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private void refreshAbiControl() {
     this.refreshListControlFromSet(this.abiFileControl, this.abiMap.keySet());
+    this.populateFunctionList();
   }
 
   private void refreshTvcControl() {
@@ -168,6 +170,20 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.tvcMap = null;
 
     deploymentFolder
+        .search("*.tvc", "")
+        .then(
+            (Function<SearchResult, Object>)
+                result -> {
+                  Window.alert("Found TVC: " + result.getItemReferences().size());
+
+                  SendMessageViewImpl.this.tvcMap =
+                      SendMessageViewImpl.this.searchResultToMap(result);
+                  SendMessageViewImpl.this.refreshTvcControl();
+
+                  return SendMessageViewImpl.this.tvcMap;
+                });
+
+    deploymentFolder
         .search("*.abi", "")
         .then(
             (Function<SearchResult, Object>)
@@ -177,18 +193,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                   SendMessageViewImpl.this.refreshAbiControl();
 
                   return SendMessageViewImpl.this.abiMap;
-                });
-
-    deploymentFolder
-        .search("*.tvc", "")
-        .then(
-            (Function<SearchResult, Object>)
-                result -> {
-                  SendMessageViewImpl.this.tvcMap =
-                      SendMessageViewImpl.this.searchResultToMap(result);
-                  SendMessageViewImpl.this.refreshTvcControl();
-
-                  return SendMessageViewImpl.this.tvcMap;
                 });
   }
 
