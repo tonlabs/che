@@ -19,6 +19,7 @@ import io.tonlabs.sendmessage.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.command.CommandExecutor;
 import org.eclipse.che.ide.api.command.CommandImpl;
@@ -42,7 +43,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private CommandExecutor commandExecutor;
 
   private Folder deploymentFolder;
-  private Path abiPath;
   private Abi abi;
   private Map<String, File> abiMap;
   private Map<String, File> tvcMap;
@@ -146,7 +146,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   @UiHandler("abiFileControl")
-  void handleAbiFileControlChange(ChangeEvent event) {
+  void handleAbiFileControlChange(@SuppressWarnings("unused") ChangeEvent event) {
     this.handleAbiFileControlChange();
   }
 
@@ -160,12 +160,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   @UiHandler("functionControl")
-  void handleFunctionControlChange(ChangeEvent event) {
+  void handleFunctionControlChange(@SuppressWarnings("unused") ChangeEvent event) {
     this.refreshInputsControl();
   }
 
   @UiHandler("sendButton")
-  void handleSendButtonClick(ClickEvent event) {
+  void handleSendButtonClick(@SuppressWarnings("unused") ClickEvent event) {
     UiFunction function = this.getCurrentFunction();
     if (function == null) {
       return;
@@ -173,6 +173,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     String messageId =
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
+
+    @SuppressWarnings("StringBufferReplaceableByString")
     StringBuilder commandLine = new StringBuilder();
 
     commandLine.append("cd ");
@@ -187,7 +189,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     commandLine.append(" --abi-method ");
     commandLine.append(this.functionControl.getSelectedItemText());
     commandLine.append(" --abi-params ");
-    commandLine.append(function.paramsToJson());
+    commandLine.append(StringEscapeUtils.escapeJson(function.paramsToJson()));
     commandLine.append(" && ");
     commandLine.append("test-lite-client -C ton-global.json -f ");
     commandLine.append(messageId, 0, 8);
@@ -229,7 +231,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private void updateAbi(File abiFile) {
-    this.abiPath = abiFile.getLocation();
     abiFile
         .getContent()
         .then(
