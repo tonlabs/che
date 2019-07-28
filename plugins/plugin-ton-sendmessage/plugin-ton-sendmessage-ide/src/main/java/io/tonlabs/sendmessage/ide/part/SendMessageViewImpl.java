@@ -19,7 +19,11 @@ import io.tonlabs.sendmessage.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.eclipse.che.api.core.model.workspace.config.Command;
 import org.eclipse.che.api.promises.client.Function;
+import org.eclipse.che.ide.api.command.CommandExecutor;
+import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
@@ -37,6 +41,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private ResourceManager resourceManager;
   private ResourceManager.ResourceFactory resourceFactory;
+  private CommandExecutor commandExecutor;
 
   private Folder deploymentFolder;
   private Path abiPath;
@@ -53,9 +58,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @Inject
   public SendMessageViewImpl(
-      ResourceManager resourceManager, ResourceManager.ResourceFactory resourceFactory) {
+      ResourceManager resourceManager,
+          ResourceManager.ResourceFactory resourceFactory,
+          CommandExecutor commandExecutor) {
     this.resourceManager = resourceManager;
     this.resourceFactory = resourceFactory;
+    this.commandExecutor = commandExecutor;
 
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
@@ -163,7 +171,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     String paramsJson = function.paramsToJson();
 
-    // TODO:
+    this.commandExecutor.executeCommand(new CommandImpl("Send Message", "ls", "ton-send-message"));
   }
 
   @Override
