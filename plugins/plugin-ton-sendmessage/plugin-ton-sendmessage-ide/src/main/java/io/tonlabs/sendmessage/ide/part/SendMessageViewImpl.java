@@ -92,7 +92,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private void refreshAbiControl() {
     this.refreshListControlFromSet(this.abiFileControl, this.abiMap.keySet());
-    this.populateFunctionList();
+    this.handleAbiFileControlChange();
   }
 
   private void refreshTvcControl() {
@@ -138,6 +138,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiHandler("abiFileControl")
   void handleAbiFileControlChange(ChangeEvent event) {
+    this.handleAbiFileControlChange();
+  }
+
+  private void handleAbiFileControlChange() {
     String abiFileName = this.abiFileControl.getSelectedValue();
     if (!this.abiMap.containsKey(abiFileName)) {
       return;
@@ -174,8 +178,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         .then(
             (Function<SearchResult, Object>)
                 result -> {
-                  Window.alert("Found TVC: " + result.getItemReferences().size());
-
                   SendMessageViewImpl.this.tvcMap =
                       SendMessageViewImpl.this.searchResultToMap(result);
                   SendMessageViewImpl.this.refreshTvcControl();
