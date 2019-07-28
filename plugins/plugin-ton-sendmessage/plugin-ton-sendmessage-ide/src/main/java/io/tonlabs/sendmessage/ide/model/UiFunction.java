@@ -1,6 +1,5 @@
 package io.tonlabs.sendmessage.ide.model;
 
-import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -41,10 +40,7 @@ public class UiFunction {
   public String paramsToJson() {
     JSONObject result = new JSONObject();
     for (UiParameter parameter : this.inputs.values()) {
-      JSONValue value =
-          parameter.getValue() == null || parameter.getValue().length() < 1
-              ? JSONNull.getInstance()
-              : new JSONString(parameter.getValue());
+      JSONValue value = new JSONString(parameter.getValue() == null ? "" : parameter.getValue());
       result.put(parameter.getName(), value);
     }
 
