@@ -14,7 +14,7 @@ import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.parts.PartStackType;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 
-public class SendMessageAction extends TonAbiAction {
+public class SendMessageAction extends TonDeployedContractDirAction {
 
   private final WorkspaceAgent workspaceAgent;
   private final SendMessagePresenter sendMessagePresenter;
@@ -37,7 +37,7 @@ public class SendMessageAction extends TonAbiAction {
   public void actionPerformed(ActionEvent e) {
     this.sendMessagePresenter
         .getSendMessageView()
-        .updateAbi(this.appContext.get().getResource().asFile());
+        .updateDeploymentFolder(this.appContext.get().getResource().asFolder());
     this.workspaceAgent.openPart(this.sendMessagePresenter, PartStackType.TOOLING);
     this.workspaceAgent.setActivePart(this.sendMessagePresenter);
   }

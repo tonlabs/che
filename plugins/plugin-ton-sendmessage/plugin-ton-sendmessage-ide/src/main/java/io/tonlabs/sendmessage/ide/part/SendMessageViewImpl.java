@@ -18,10 +18,16 @@ import io.tonlabs.sendmessage.ide.model.UiFunction;
 import io.tonlabs.sendmessage.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
+import org.eclipse.che.ide.api.resources.Folder;
+import org.eclipse.che.ide.api.resources.SearchItemReference;
+import org.eclipse.che.ide.api.resources.SearchResult;
+import org.eclipse.che.ide.api.vcs.VcsStatus;
 import org.eclipse.che.ide.resource.Path;
+import org.eclipse.che.ide.resources.impl.ResourceManager;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -29,16 +35,28 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
+  private ResourceManager resourceManager;
+  private ResourceManager.ResourceFactory resourceFactory;
+
+  private Folder deploymentFolder;
   private Path abiPath;
   private Abi abi;
+  private Map<String, File> abiMap;
+  private Map<String, File> tvcMap;
   private Map<String, UiFunction> functions;
 
   @UiField Label inputsHeader;
+  @UiField ListBox tvcFileControl;
+  @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
 
   @Inject
-  public SendMessageViewImpl() {
+  public SendMessageViewImpl(
+      ResourceManager resourceManager, ResourceManager.ResourceFactory resourceFactory) {
+    this.resourceManager = resourceManager;
+    this.resourceFactory = resourceFactory;
+
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
@@ -71,6 +89,25 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     return this.functions.get(functionName);
   }
 
+  private void refreshAbiControl() {
+    this.refreshListControlFromSet(this.abiFileControl, this.abiMap.keySet());
+  }
+
+  private void refreshTvcControl() {
+    this.refreshListControlFromSet(this.tvcFileControl, this.tvcMap.keySet());
+  }
+
+  private void refreshListControlFromSet(ListBox control, Set<String> items) {
+    control.clear();
+    for (String item : items) {
+      control.addItem(item);
+    }
+
+    if (control.getItemCount() > 0) {
+      control.setSelectedIndex(0);
+    }
+  }
+
   private void refreshInputsControl() {
     UiFunction function = this.getCurrentFunction();
     if (function == null) {
@@ -97,6 +134,16 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     }
   }
 
+  @UiHandler("abiFileControl")
+  void handleAbiFileControlChange(ChangeEvent event) {
+    String abiFileName = this.abiFileControl.getSelectedValue();
+    if (!this.abiMap.containsKey(abiFileName)) {
+      return;
+    }
+
+    this.updateAbi(this.abiMap.get(abiFileName));
+  }
+
   @UiHandler("functionControl")
   void handleFunctionControlChange(ChangeEvent event) {
     this.refreshInputsControl();
@@ -115,7 +162,37 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   @Override
-  public void updateAbi(File abiFile) {
+  public void updateDeploymentFolder(Folder deploymentFolder) {
+    this.deploymentFolder = deploymentFolder;
+    this.abiMap = null;
+    this.tvcMap = null;
+
+    deploymentFolder
+        .search("*.abi", "")
+        .then(
+            (Function<SearchResult, Object>)
+                result -> {
+                  SendMessageViewImpl.this.abiMap =
+                      SendMessageViewImpl.this.searchResultToMap(result);
+                  SendMessageViewImpl.this.refreshAbiControl();
+
+                  return SendMessageViewImpl.this.abiMap;
+                });
+
+    deploymentFolder
+        .search("*.tvc", "")
+        .then(
+            (Function<SearchResult, Object>)
+                result -> {
+                  SendMessageViewImpl.this.tvcMap =
+                      SendMessageViewImpl.this.searchResultToMap(result);
+                  SendMessageViewImpl.this.refreshTvcControl();
+
+                  return SendMessageViewImpl.this.tvcMap;
+                });
+  }
+
+  private void updateAbi(File abiFile) {
     this.abiPath = abiFile.getLocation();
     abiFile
         .getContent()
@@ -131,6 +208,22 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
                   return SendMessageViewImpl.this.abi;
                 });
+  }
+
+  private Map<String, File> searchResultToMap(SearchResult searchResult) {
+    Map<String, File> result = new HashMap<>();
+
+    for (SearchItemReference item : searchResult.getItemReferences()) {
+      File file =
+          this.resourceFactory.newFileImpl(
+              Path.valueOf(item.getPath()),
+              item.getContentUrl(),
+              this.resourceManager,
+              VcsStatus.UNTRACKED);
+      result.put(item.getName(), file);
+    }
+
+    return result;
   }
 
   interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}

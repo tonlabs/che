@@ -15,12 +15,7 @@ import org.eclipse.che.ide.api.action.DefaultActionGroup;
 import org.eclipse.che.ide.api.action.IdeActions;
 import org.eclipse.che.ide.api.extension.Extension;
 
-/**
- * Server service extension that registers action which calls a service.
- *
- * @author Edgar Mueller
- */
-@Extension(title = "Server Service Sample Extension", version = "0.0.1")
+@Extension(title = "TON Send Message Extension", version = "0.0.1")
 public class SendMessageExtension {
 
   /**
