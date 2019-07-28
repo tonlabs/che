@@ -2,6 +2,7 @@ package io.tonlabs.sendmessage.ide.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,6 +21,7 @@ import java.util.Map;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
+import org.eclipse.che.ide.resource.Path;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -27,6 +29,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
+  private Path abiPath;
   private Abi abi;
   private Map<String, UiFunction> functions;
 
@@ -60,16 +63,22 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.refreshInputsControl();
   }
 
-  private void refreshInputsControl() {
+  private UiFunction getCurrentFunction() {
     String functionName = this.functionControl.getSelectedItemText();
     if (functionName == null) {
+      return null;
+    }
+    return this.functions.get(functionName);
+  }
+
+  private void refreshInputsControl() {
+    UiFunction function = this.getCurrentFunction();
+    if (function == null) {
       this.inputsControl.resize(0, 2);
       this.inputsHeader.setVisible(false);
 
       return;
     }
-
-    UiFunction function = this.functions.get(functionName);
 
     this.inputsHeader.setVisible(function.getInputs().size() > 0);
     this.inputsControl.resize(function.getInputs().size(), 2);
@@ -89,12 +98,25 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   @UiHandler("functionControl")
-  void handleChange(ChangeEvent event) {
+  void handleFunctionControlChange(ChangeEvent event) {
     this.refreshInputsControl();
+  }
+
+  @UiHandler("sendButton")
+  void handleSendButtonClick(ClickEvent event) {
+    UiFunction function = this.getCurrentFunction();
+    if (function == null) {
+      return;
+    }
+
+    String paramsJson = function.paramsToJson();
+
+    // TODO:
   }
 
   @Override
   public void updateAbi(File abiFile) {
+    this.abiPath = abiFile.getLocation();
     abiFile
         .getContent()
         .then(
@@ -104,7 +126,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                   SendMessageViewImpl.this.abi = abi;
                   SendMessageViewImpl.this.functions =
                       SendMessageViewImpl.extractFunctionsFromAbi(abi);
+
                   SendMessageViewImpl.this.populateFunctionList();
+
                   return SendMessageViewImpl.this.abi;
                 });
   }

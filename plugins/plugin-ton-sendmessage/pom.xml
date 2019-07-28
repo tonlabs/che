@@ -22,6 +22,7 @@
     <name>TON Plugins :: TON SendMessage :: Parent</name>
     <modules>
         <module>plugin-ton-sendmessage-server</module>
+        <module>plugin-ton-sendmessage-shared</module>
         <module>plugin-ton-sendmessage-ide</module>
     </modules>
     <build>

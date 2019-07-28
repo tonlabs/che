@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package io.tonlabs.sendmessage;
+package io.tonlabs.sendmessage.server;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

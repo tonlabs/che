@@ -1,5 +1,9 @@
 package io.tonlabs.sendmessage.ide.model;
 
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +36,18 @@ public class UiFunction {
 
   public Map<String, UiParameter> getOutputs() {
     return this.outputs;
+  }
+
+  public String paramsToJson() {
+    JSONObject result = new JSONObject();
+    for (UiParameter parameter : this.inputs.values()) {
+      JSONValue value =
+          parameter.getValue() == null || parameter.getValue().length() < 1
+              ? JSONNull.getInstance()
+              : new JSONString(parameter.getValue());
+      result.put(parameter.getName(), value);
+    }
+
+    return result.toString();
   }
 }

@@ -20,6 +20,6 @@
         <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1" />
         <g:Label ui:field="inputsHeader" addStyleNames="{style.inputsHeader}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
-        <g:Button text="Send Message"/>
+        <g:Button ui:field="sendButton" text="Send Message"/>
     </g:VerticalPanel>
 </ui:UiBinder>

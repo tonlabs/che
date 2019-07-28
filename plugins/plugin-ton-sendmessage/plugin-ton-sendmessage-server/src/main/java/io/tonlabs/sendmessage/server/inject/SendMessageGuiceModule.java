@@ -6,10 +6,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package io.tonlabs.sendmessage.inject;
+package io.tonlabs.sendmessage.server.inject;
 
 import com.google.inject.AbstractModule;
-import io.tonlabs.sendmessage.SendMessageService;
+import io.tonlabs.sendmessage.server.SendMessageService;
 import org.eclipse.che.inject.DynaModule;
 
 /** Server service example Guice module for setting up a simple service. */
