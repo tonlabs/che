@@ -167,9 +167,30 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       return;
     }
 
-    String paramsJson = function.paramsToJson();
+    String messageId =
+        this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
+    StringBuilder commandLine = new StringBuilder();
 
-    this.commandExecutor.executeCommand(new CommandImpl("Send Message", "ls", "ton-send-message"));
+    commandLine.append("cd ");
+    commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
+    commandLine.append(" && ");
+
+    commandLine.append("tvm_linker message ");
+    commandLine.append(messageId);
+    commandLine.append(" -w 0");
+    commandLine.append(" --abi-json ");
+    commandLine.append(this.abiFileControl.getSelectedItemText());
+    commandLine.append(" --abi-method ");
+    commandLine.append(this.functionControl.getSelectedItemText());
+    commandLine.append(" --abi-params ");
+    commandLine.append(function.paramsToJson());
+    commandLine.append(" && ");
+    commandLine.append("test-lite-client -C ton-global.json -f ");
+    commandLine.append(messageId, 0, 8);
+    commandLine.append("-msg-body.boc");
+
+    this.commandExecutor.executeCommand(
+        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
   }
 
   @Override
