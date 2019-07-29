@@ -125,11 +125,11 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       this.inputsControl.setText(index, 0, parameter.format());
 
       TextBox valueTextBox = new TextBox();
-      valueTextBox.setValue(parameter.getValue());
-      valueTextBox.addChangeHandler(
+      valueTextBox.setText(parameter.getValue());
+      valueTextBox.addKeyPressHandler(
           event -> {
             TextBox textBox = (TextBox) event.getSource();
-            parameter.setValue(textBox.getValue());
+            parameter.setValue(textBox.getText());
             this.updateSendButton();
           });
       this.inputsControl.setWidget(index, 1, valueTextBox);
