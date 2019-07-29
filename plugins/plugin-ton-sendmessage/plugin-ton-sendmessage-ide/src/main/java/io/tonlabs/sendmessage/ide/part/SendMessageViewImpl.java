@@ -27,7 +27,6 @@ import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
 import org.eclipse.che.ide.resource.Path;
-import org.eclipse.che.ide.resources.impl.ResourceManager;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -35,8 +34,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
-  private ResourceManager resourceManager;
-  private ResourceManager.ResourceFactory resourceFactory;
   private CommandExecutor commandExecutor;
 
   private Folder deploymentFolder;
@@ -52,12 +49,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField Grid inputsControl;
 
   @Inject
-  public SendMessageViewImpl(
-      ResourceManager resourceManager,
-      ResourceManager.ResourceFactory resourceFactory,
-      CommandExecutor commandExecutor) {
-    this.resourceManager = resourceManager;
-    this.resourceFactory = resourceFactory;
+  public SendMessageViewImpl(CommandExecutor commandExecutor) {
     this.commandExecutor = commandExecutor;
 
     this.setContentWidget(UI_BINDER.createAndBindUi(this));

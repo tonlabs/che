@@ -4,7 +4,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.tonlabs.sendmessage.ide.SendMessageResources;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 @Singleton
 public class SendMessagePresenter extends BasePresenter implements SendMessageView.ActionDelegate {
@@ -18,6 +20,11 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
   @Override
   public String getTitle() {
     return "Send Message";
+  }
+
+  @Override
+  public SVGResource getTitleImage() {
+    return (SendMessageResources.INSTANCE.tonIcon());
   }
 
   @Override

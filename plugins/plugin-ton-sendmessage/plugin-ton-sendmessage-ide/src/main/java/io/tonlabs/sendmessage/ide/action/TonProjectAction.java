@@ -11,11 +11,11 @@ import org.eclipse.che.ide.part.perspectives.project.ProjectPerspective;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 public abstract class TonProjectAction extends AbstractPerspectiveAction {
-  private static final String SUPPORTED_PROJECT_TYPES[] = {
+  private static final String[] SUPPORTED_PROJECT_TYPES = {
     "ton-c-project", "ton-solidity-project",
   };
 
-  public TonProjectAction(
+  TonProjectAction(
       @NotNull String text, @NotNull String description, @Nullable SVGResource svgResource) {
     super(
         Collections.singletonList(ProjectPerspective.PROJECT_PERSPECTIVE_ID),
