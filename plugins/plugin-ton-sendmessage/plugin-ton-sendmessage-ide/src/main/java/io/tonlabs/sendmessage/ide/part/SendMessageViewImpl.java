@@ -188,7 +188,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     commandLine.append(" --abi-params \"");
     commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
     commandLine.append("\" && ");
-    commandLine.append("test-lite-client -C ton-global.json -f ");
+    commandLine.append("cat | ./test-lite-client -C ton-global.json -f ");
     commandLine.append(messageId, 0, 8);
     commandLine.append("-msg-body.boc");
 
