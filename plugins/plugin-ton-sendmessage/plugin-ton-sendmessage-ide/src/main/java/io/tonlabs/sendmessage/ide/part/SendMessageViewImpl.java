@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -47,6 +48,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField CustomListBox abiFileControl;
   @UiField CustomListBox functionControl;
   @UiField Grid inputsControl;
+  @UiField Button sendButton;
 
   @Inject
   public SendMessageViewImpl(CommandExecutor commandExecutor) {
@@ -109,6 +111,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     if (function == null) {
       this.inputsControl.resize(0, 2);
       this.inputsHeader.setVisible(false);
+      this.updateSendButton();
 
       return;
     }
@@ -127,11 +130,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
           event -> {
             TextBox textBox = (TextBox) event.getSource();
             parameter.setValue(textBox.getValue());
+            this.updateSendButton();
           });
       this.inputsControl.setWidget(index, 1, valueTextBox);
 
       index++;
     }
+
+    this.updateSendButton();
   }
 
   @UiHandler("abiFileControl")
@@ -199,8 +205,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         .then(
             (Function<Resource[], Object>)
                 resources -> {
-                  SendMessageViewImpl.this.tvcMap = new HashMap<>();
-                  SendMessageViewImpl.this.abiMap = new HashMap<>();
+                  this.tvcMap = new HashMap<>();
+                  this.abiMap = new HashMap<>();
 
                   for (Resource resource : resources) {
                     if (!resource.isFile()) {
@@ -210,16 +216,16 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                     File file = resource.asFile();
                     switch (file.getExtension()) {
                       case "tvc":
-                        SendMessageViewImpl.this.tvcMap.put(file.getName(), file);
+                        this.tvcMap.put(file.getName(), file);
                         break;
                       case "abi":
-                        SendMessageViewImpl.this.abiMap.put(file.getName(), file);
+                        this.abiMap.put(file.getName(), file);
                         break;
                     }
                   }
 
-                  SendMessageViewImpl.this.refreshTvcControl();
-                  SendMessageViewImpl.this.refreshAbiControl();
+                  this.refreshTvcControl();
+                  this.refreshAbiControl();
 
                   return null;
                 });
@@ -232,14 +238,30 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
             (Function<String, Object>)
                 content -> {
                   Abi abi = Abi.fromJson(content);
-                  SendMessageViewImpl.this.abi = abi;
-                  SendMessageViewImpl.this.functions =
-                      SendMessageViewImpl.extractFunctionsFromAbi(abi);
+                  this.abi = abi;
+                  this.functions = extractFunctionsFromAbi(abi);
 
-                  SendMessageViewImpl.this.populateFunctionList();
+                  this.populateFunctionList();
 
-                  return SendMessageViewImpl.this.abi;
+                  return this.abi;
                 });
+  }
+
+  private void updateSendButton() {
+    UiFunction function = this.getCurrentFunction();
+    if (function == null) {
+      this.sendButton.setEnabled(false);
+      return;
+    }
+
+    for (UiParameter parameter : this.getCurrentFunction().getInputs().values()) {
+      if (parameter.getValue() == null || parameter.getValue().length() < 1) {
+        this.sendButton.setEnabled(false);
+        return;
+      }
+    }
+
+    this.sendButton.setEnabled(true);
   }
 
   interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}

@@ -27,6 +27,6 @@
         <che:CustomListBox ui:field="functionControl" addStyleNames="{style.listBox}"/>
         <g:Label ui:field="inputsHeader" addStyleNames="{style.header}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
-        <g:Button ui:field="sendButton" text="Send Message"/>
+        <g:Button ui:field="sendButton" enabled="false" text="Send Message"/>
     </g:VerticalPanel>
 </ui:UiBinder>
