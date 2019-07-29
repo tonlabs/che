@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:che='urn:import:org.eclipse.che.ide.ui.listbox'>
     <ui:style>
         .rootLayout {
             padding: 10px;
@@ -12,14 +13,18 @@
         .header {
             margin-top: 10px;
         }
+
+        .listBox {
+            width: 100%;
+        }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
         <g:Label>Compiled Contract File</g:Label>
-        <g:ListBox width="100%" ui:field="tvcFileControl" visibleItemCount="1" title="Compiled TON contract (*.tvc) file name" />
+        <che:CustomListBox ui:field="tvcFileControl" addStyleNames="{style.listBox}" title="Compiled TON contract (*.tvc) file name" />
         <g:Label addStyleNames="{style.header}">ABI File</g:Label>
-        <g:ListBox width="100%" ui:field="abiFileControl" visibleItemCount="1" title="ABI (*.abi) file name"  />
+        <che:CustomListBox ui:field="abiFileControl" addStyleNames="{style.listBox}" title="ABI (*.abi) file name"  />
         <g:Label addStyleNames="{style.header}">Function</g:Label>
-        <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1" />
+        <che:CustomListBox ui:field="functionControl" addStyleNames="{style.listBox}"/>
         <g:Label ui:field="inputsHeader" addStyleNames="{style.header}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
         <g:Button ui:field="sendButton" text="Send Message"/>
