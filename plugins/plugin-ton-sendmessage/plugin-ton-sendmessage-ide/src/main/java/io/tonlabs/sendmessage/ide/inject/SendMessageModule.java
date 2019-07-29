@@ -6,6 +6,5 @@ import org.eclipse.che.ide.api.extension.ExtensionGinModule;
 @ExtensionGinModule
 public class SendMessageModule extends AbstractGinModule {
   @Override
-  protected void configure() {
-  }
+  protected void configure() {}
 }
