@@ -14,8 +14,8 @@
         }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
-        <g:Label>Message File</g:Label>
-        <g:ListBox width="100%" ui:field="tvcFileControl" visibleItemCount="1" title="Message (*.tvc) file name" />
+        <g:Label>Compiled Contract File</g:Label>
+        <g:ListBox width="100%" ui:field="tvcFileControl" visibleItemCount="1" title="Compiled TON contract (*.tvc) file name" />
         <g:Label addStyleNames="{style.header}">ABI File</g:Label>
         <g:ListBox width="100%" ui:field="abiFileControl" visibleItemCount="1" title="ABI (*.abi) file name"  />
         <g:Label addStyleNames="{style.header}">Function</g:Label>
