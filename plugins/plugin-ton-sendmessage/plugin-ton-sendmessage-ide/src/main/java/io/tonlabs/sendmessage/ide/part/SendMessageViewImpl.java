@@ -19,7 +19,6 @@ import io.tonlabs.sendmessage.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.command.CommandExecutor;
 import org.eclipse.che.ide.api.command.CommandImpl;
@@ -189,7 +188,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     commandLine.append(" --abi-method ");
     commandLine.append(this.functionControl.getSelectedItemText());
     commandLine.append(" --abi-params ");
-    commandLine.append(StringEscapeUtils.escapeJson(function.paramsToJson()));
+    commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
     commandLine.append(" && ");
     commandLine.append("test-lite-client -C ton-global.json -f ");
     commandLine.append(messageId, 0, 8);
