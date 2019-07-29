@@ -25,9 +25,7 @@ import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
-import org.eclipse.che.ide.api.resources.SearchItemReference;
-import org.eclipse.che.ide.api.resources.SearchResult;
-import org.eclipse.che.ide.api.vcs.VcsStatus;
+import org.eclipse.che.ide.api.resources.Resource;
 import org.eclipse.che.ide.resource.Path;
 import org.eclipse.che.ide.resources.impl.ResourceManager;
 
@@ -205,27 +203,33 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.tvcMap = null;
 
     deploymentFolder
-        .search("*.tvc", null)
+        .getChildren(true)
         .then(
-            (Function<SearchResult, Object>)
-                result -> {
-                  SendMessageViewImpl.this.tvcMap =
-                      SendMessageViewImpl.this.searchResultToMap(result);
+            (Function<Resource[], Object>)
+                resources -> {
+                  SendMessageViewImpl.this.tvcMap = new HashMap<>();
+                  SendMessageViewImpl.this.abiMap = new HashMap<>();
+
+                  for (Resource resource : resources) {
+                    if (!resource.isFile()) {
+                      continue;
+                    }
+
+                    File file = resource.asFile();
+                    switch (file.getExtension()) {
+                      case "tvc":
+                        SendMessageViewImpl.this.tvcMap.put(file.getName(), file);
+                        break;
+                      case "abi":
+                        SendMessageViewImpl.this.abiMap.put(file.getName(), file);
+                        break;
+                    }
+                  }
+
                   SendMessageViewImpl.this.refreshTvcControl();
-
-                  return SendMessageViewImpl.this.tvcMap;
-                });
-
-    deploymentFolder
-        .search("*.abi", null)
-        .then(
-            (Function<SearchResult, Object>)
-                result -> {
-                  SendMessageViewImpl.this.abiMap =
-                      SendMessageViewImpl.this.searchResultToMap(result);
                   SendMessageViewImpl.this.refreshAbiControl();
 
-                  return SendMessageViewImpl.this.abiMap;
+                  return null;
                 });
   }
 
@@ -244,22 +248,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
                   return SendMessageViewImpl.this.abi;
                 });
-  }
-
-  private Map<String, File> searchResultToMap(SearchResult searchResult) {
-    Map<String, File> result = new HashMap<>();
-
-    for (SearchItemReference item : searchResult.getItemReferences()) {
-      File file =
-          this.resourceFactory.newFileImpl(
-              Path.valueOf(item.getPath()),
-              item.getContentUrl(),
-              this.resourceManager,
-              VcsStatus.UNTRACKED);
-      result.put(item.getName(), file);
-    }
-
-    return result;
   }
 
   interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}
