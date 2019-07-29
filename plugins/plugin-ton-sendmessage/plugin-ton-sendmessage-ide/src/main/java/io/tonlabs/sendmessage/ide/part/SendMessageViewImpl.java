@@ -185,9 +185,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     commandLine.append(this.abiFileControl.getSelectedItemText());
     commandLine.append(" --abi-method ");
     commandLine.append(this.functionControl.getSelectedItemText());
-    commandLine.append(" --abi-params ");
+    commandLine.append(" --abi-params \"");
     commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
-    commandLine.append(" && ");
+    commandLine.append("\" && ");
     commandLine.append("test-lite-client -C ton-global.json -f ");
     commandLine.append(messageId, 0, 8);
     commandLine.append("-msg-body.boc");
