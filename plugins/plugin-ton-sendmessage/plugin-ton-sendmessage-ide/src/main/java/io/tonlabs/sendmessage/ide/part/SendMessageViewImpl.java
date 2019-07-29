@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -27,7 +28,6 @@ import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
 import org.eclipse.che.ide.resource.Path;
-import org.eclipse.che.ide.ui.listbox.CustomListBox;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -44,9 +44,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private Map<String, UiFunction> functions;
 
   @UiField Label inputsHeader;
-  @UiField CustomListBox tvcFileControl;
-  @UiField CustomListBox abiFileControl;
-  @UiField CustomListBox functionControl;
+  @UiField ListBox tvcFileControl;
+  @UiField ListBox abiFileControl;
+  @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
 
@@ -95,10 +95,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.refreshListControlFromSet(this.tvcFileControl, this.tvcMap.keySet());
   }
 
-  private void refreshListControlFromSet(CustomListBox control, Set<String> items) {
+  private void refreshListControlFromSet(ListBox control, Set<String> items) {
     control.clear();
     for (String item : items) {
-      control.addItem(item, item);
+      control.addItem(item);
     }
 
     if (control.getItemCount() > 0) {
@@ -146,7 +146,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private void handleAbiFileControlChange() {
-    String abiFileName = this.abiFileControl.getSelectedItemText();
+    String abiFileName = this.abiFileControl.getSelectedValue();
     if (!this.abiMap.containsKey(abiFileName)) {
       return;
     }
