@@ -41,8 +41,11 @@ public class TonProjectExtension {
       ActionManager actionManager) {
 
     this.actionManager = actionManager;
+
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".samples.category.icon", tonProjectResources.tonIcon()));
+
+    this.registerActions();
   }
 
   private void registerActions() {
@@ -107,9 +110,10 @@ public class TonProjectExtension {
 
   private void registerAction(
       DefaultActionGroup group, String name, String text, SVGResource svgResource, String url) {
+
     OpenUrlAction action = new OpenUrlAction(text, svgResource, url);
 
     this.actionManager.registerAction(name, action);
-    group.add(action, this.actionManager);
+    group.add(action);
   }
 }
