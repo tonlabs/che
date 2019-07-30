@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import io.tonlabs.sendmessage.ide.event.InputEvent;
 import io.tonlabs.sendmessage.ide.model.Abi;
 import io.tonlabs.sendmessage.ide.model.AbiFunction;
 import io.tonlabs.sendmessage.ide.model.UiFunction;
@@ -126,12 +127,15 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
       TextBox valueTextBox = new TextBox();
       valueTextBox.setText(parameter.getValue());
-      valueTextBox.addChangeHandler(
+
+      valueTextBox.addDomHandler(
           event -> {
             TextBox textBox = (TextBox) event.getSource();
             parameter.setValue(textBox.getText());
             this.updateSendButton();
-          });
+          },
+          InputEvent.getType());
+
       this.inputsControl.setWidget(index, 1, valueTextBox);
 
       index++;
