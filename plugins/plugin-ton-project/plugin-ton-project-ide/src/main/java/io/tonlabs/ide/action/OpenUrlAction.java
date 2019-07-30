@@ -17,5 +17,6 @@ public class OpenUrlAction extends BaseAction {
   @Override
   public void actionPerformed(ActionEvent e) {
     Window.open(this.url, "_blank", null);
+    Window.alert(this.url);
   }
 }
