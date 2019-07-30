@@ -47,9 +47,14 @@ public class TonProjectExtension {
       SendMessageAction sendMessageAction,
       AccountStateTvcAction accountStateTvcAction) {
     this.actionManager = actionManager;
+
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".samples.category.icon", tonProjectResources.tonIcon()));
 
+    this.registerActions();
+  }
+
+  private void registerActions() {
     DefaultActionGroup mainContextMenuGroup =
         (DefaultActionGroup) actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
 
@@ -58,9 +63,7 @@ public class TonProjectExtension {
 
     actionManager.registerAction("accountStateTvcAction", accountStateTvcAction);
     mainContextMenuGroup.add(accountStateTvcAction);
-  }
 
-  private void registerActions() {
     DefaultActionGroup helpMenu =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_HELP);
 
@@ -122,9 +125,10 @@ public class TonProjectExtension {
 
   private void registerAction(
       DefaultActionGroup group, String name, String text, SVGResource svgResource, String url) {
+
     OpenUrlAction action = new OpenUrlAction(text, svgResource, url);
 
     this.actionManager.registerAction(name, action);
-    group.add(action, this.actionManager);
+    group.add(action);
   }
 }
