@@ -53,7 +53,11 @@ public class TonProjectExtension {
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_HELP);
 
     this.registerAction(
-        helpMenu, "ideQuickStart", "Che IDE Quick Start", null, "https://ton.dev/quickstart");
+        helpMenu,
+        "ideQuickStart",
+        "Che IDE Quick Start",
+        TonProjectResources.INSTANCE.tonDevIcon(),
+        "https://ton.dev/quickstart");
 
     helpMenu.addSeparator();
 
@@ -61,16 +65,20 @@ public class TonProjectExtension {
         helpMenu,
         "cCompiler",
         "LLVM C Compiler Features & Limitations",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c-compiler");
     this.registerAction(
         helpMenu,
         "cCompilerTips",
         "Online LLVM Compiler Tips",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=online-c-compiler");
     this.registerAction(
-        helpMenu, "tvmCLanguage", "С Language for TVM", null, "https://ton.dev/guides?section=c");
+        helpMenu,
+        "tvmCLanguage",
+        "С Language for TVM",
+        TonProjectResources.INSTANCE.tonDevIcon(),
+        "https://ton.dev/guides?section=c");
 
     helpMenu.addSeparator();
 
@@ -78,19 +86,19 @@ public class TonProjectExtension {
         helpMenu,
         "solCompiler",
         "Solidity Compiler Features & Limitations",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=solidity-compiler");
     this.registerAction(
         helpMenu,
         "solCompilerTips",
         "Online Solidity Compiler Tips",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=online-solidity-compiler");
     this.registerAction(
         helpMenu,
         "tvmSolLanguage",
         "Solidity Language for TVM",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=solidity");
 
     helpMenu.addSeparator();
@@ -99,13 +107,23 @@ public class TonProjectExtension {
         helpMenu,
         "tvmLinker",
         "Linker Command Line Options",
-        null,
+        TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=tvm-linker");
 
     helpMenu.addSeparator();
 
-    this.registerAction(helpMenu, "tonDev", "Visit TON Dev site", null, "https://ton.dev");
-    this.registerAction(helpMenu, "tonLabs", "Visit TON Labs site", null, "https://tonlabs.io");
+    this.registerAction(
+        helpMenu,
+        "tonDev",
+        "Visit the TON Dev website",
+        TonProjectResources.INSTANCE.tonDevIcon(),
+        "https://ton.dev");
+    this.registerAction(
+        helpMenu,
+        "tonLabs",
+        "Visit the TON Labs website",
+        TonProjectResources.INSTANCE.tonLabsIcon(),
+        "https://tonlabs.io");
   }
 
   private void registerAction(
