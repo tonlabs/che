@@ -33,4 +33,10 @@ public interface TonProjectResources extends ClientBundle {
 
   @Source("svg/ton.svg")
   SVGResource tonIcon();
+
+  @Source("svg/tondev.svg")
+  SVGResource tonDevIcon();
+
+  @Source("svg/tonlabs.svg")
+  SVGResource tonLabsIcon();
 }
