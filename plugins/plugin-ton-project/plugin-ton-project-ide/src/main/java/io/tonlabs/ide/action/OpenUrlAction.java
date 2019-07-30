@@ -1,8 +1,8 @@
 package io.tonlabs.ide.action;
 
-import com.google.gwt.user.client.Window;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.BaseAction;
+import org.eclipse.che.ide.util.browser.BrowserUtils;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 public class OpenUrlAction extends BaseAction {
@@ -16,7 +16,6 @@ public class OpenUrlAction extends BaseAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    Window.open(this.url, "_blank", null);
-    Window.alert(this.url);
+    BrowserUtils.openInNewTab(this.url);
   }
 }
