@@ -61,41 +61,47 @@ public class TonProjectExtension {
 
     helpMenu.addSeparator();
 
+    DefaultActionGroup cLangGroup =
+        new DefaultActionGroup("Development Using C Language", true, this.actionManager);
+    helpMenu.add(cLangGroup);
+
     this.registerAction(
-        helpMenu,
+        cLangGroup,
         "cCompiler",
         "LLVM C Compiler Features & Limitations",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c-compiler");
     this.registerAction(
-        helpMenu,
+        cLangGroup,
         "cCompilerTips",
         "Online LLVM Compiler Tips",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=online-c-compiler");
     this.registerAction(
-        helpMenu,
+        cLangGroup,
         "tvmCLanguage",
         "С Language for TVM",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c");
 
-    helpMenu.addSeparator();
+    DefaultActionGroup solLangGroup =
+        new DefaultActionGroup("Development Using Solidity Language", true, this.actionManager);
+    helpMenu.add(solLangGroup);
 
     this.registerAction(
-        helpMenu,
+        solLangGroup,
         "solCompiler",
         "Solidity Compiler Features & Limitations",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=solidity-compiler");
     this.registerAction(
-        helpMenu,
+        solLangGroup,
         "solCompilerTips",
         "Online Solidity Compiler Tips",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=online-solidity-compiler");
     this.registerAction(
-        helpMenu,
+        solLangGroup,
         "tvmSolLanguage",
         "Solidity Language for TVM",
         TonProjectResources.INSTANCE.tonDevIcon(),
