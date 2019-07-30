@@ -136,13 +136,13 @@ public class TonProjectExtension {
     this.registerAction(
         helpMenu,
         "tonDev",
-        "Visit the TON Dev website",
+        "Visit the TON Dev Website",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev");
     this.registerAction(
         helpMenu,
         "tonLabs",
-        "Visit the TON Labs website",
+        "Visit the TON Labs Website",
         TonProjectResources.INSTANCE.tonLabsIcon(),
         "https://tonlabs.io");
   }
