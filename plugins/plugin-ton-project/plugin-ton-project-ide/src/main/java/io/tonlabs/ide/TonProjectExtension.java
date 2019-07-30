@@ -49,7 +49,7 @@ public class TonProjectExtension {
     this.actionManager = actionManager;
 
     iconRegistry.registerIcon(
-        new Icon(TON_CATEGORY + ".samples.category.icon", tonProjectResources.tonIcon()));
+        new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
 
     this.registerActions();
   }
@@ -120,7 +120,7 @@ public class TonProjectExtension {
     helpMenu.addSeparator();
 
     this.registerAction(helpMenu, "tonDev", "Visit TON Dev site", null, "https://ton.dev");
-    this.registerAction(helpMenu, "tonDev", "Visit TON Labs site", null, "https://tonlabs.io");
+    this.registerAction(helpMenu, "tonLabs", "Visit TON Labs site", null, "https://tonlabs.io");
   }
 
   private void registerAction(
