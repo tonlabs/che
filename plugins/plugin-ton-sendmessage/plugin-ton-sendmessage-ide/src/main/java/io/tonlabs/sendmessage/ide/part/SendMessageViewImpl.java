@@ -126,7 +126,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
       TextBox valueTextBox = new TextBox();
       valueTextBox.setText(parameter.getValue());
-      valueTextBox.addKeyPressHandler(
+      valueTextBox.addChangeHandler(
           event -> {
             TextBox textBox = (TextBox) event.getSource();
             parameter.setValue(textBox.getText());
