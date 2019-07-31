@@ -1,10 +1,10 @@
-package io.tonlabs.sendmessage.ide.part;
+package io.tonlabs.ide.part;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.tonlabs.sendmessage.ide.SendMessageResources;
+import io.tonlabs.ide.TonProjectResources;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -24,7 +24,7 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
 
   @Override
   public SVGResource getTitleImage() {
-    return (SendMessageResources.INSTANCE.tonIcon());
+    return (TonProjectResources.INSTANCE.tonIcon());
   }
 
   @Override

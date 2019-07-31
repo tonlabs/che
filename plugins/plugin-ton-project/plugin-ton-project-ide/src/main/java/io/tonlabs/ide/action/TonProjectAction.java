@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.action;
+package io.tonlabs.ide.action;
 
 import java.util.Collections;
 import javax.validation.constraints.NotNull;

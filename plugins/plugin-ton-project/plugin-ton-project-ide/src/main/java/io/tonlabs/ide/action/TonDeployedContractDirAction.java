@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.action;
+package io.tonlabs.ide.action;
 
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.vectomatic.dom.svg.ui.SVGResource;

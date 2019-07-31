@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.part;
+package io.tonlabs.ide.part;
 
 import com.google.inject.ImplementedBy;
 import org.eclipse.che.ide.api.mvp.View;

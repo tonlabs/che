@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.part;
+package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -14,11 +14,11 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import io.tonlabs.sendmessage.ide.event.InputEvent;
-import io.tonlabs.sendmessage.ide.model.Abi;
-import io.tonlabs.sendmessage.ide.model.AbiFunction;
-import io.tonlabs.sendmessage.ide.model.UiFunction;
-import io.tonlabs.sendmessage.ide.model.UiParameter;
+import io.tonlabs.ide.event.InputEvent;
+import io.tonlabs.ide.model.Abi;
+import io.tonlabs.ide.model.AbiFunction;
+import io.tonlabs.ide.model.UiFunction;
+import io.tonlabs.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
