@@ -7,7 +7,7 @@ import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.parts.PartStackType;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 
-public class SendMessageAction extends TonDeployedContractDirAction {
+public class SendMessageAction extends TonFolderAction {
 
   private final WorkspaceAgent workspaceAgent;
   private final SendMessagePresenter sendMessagePresenter;
