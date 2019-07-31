@@ -14,7 +14,7 @@ package io.tonlabs.ide;
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
-import io.tonlabs.ide.action.AccountInfoTvcAction;
+import io.tonlabs.ide.action.AccountStateTvcAction;
 import io.tonlabs.ide.action.SendMessageAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
@@ -32,7 +32,7 @@ public class TonProjectExtension {
       IconRegistry iconRegistry,
       ActionManager actionManager,
       SendMessageAction sendMessageAction,
-      AccountInfoTvcAction accountInfoTvcAction) {
+      AccountStateTvcAction accountStateTvcAction) {
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".samples.category.icon", tonProjectResources.tonIcon()));
 
@@ -42,7 +42,7 @@ public class TonProjectExtension {
     actionManager.registerAction("sendMessageAction", sendMessageAction);
     mainContextMenuGroup.add(sendMessageAction);
 
-    actionManager.registerAction("accountInfoTvcAction", accountInfoTvcAction);
-    mainContextMenuGroup.add(accountInfoTvcAction);
+    actionManager.registerAction("accountStateTvcAction", accountStateTvcAction);
+    mainContextMenuGroup.add(accountStateTvcAction);
   }
 }

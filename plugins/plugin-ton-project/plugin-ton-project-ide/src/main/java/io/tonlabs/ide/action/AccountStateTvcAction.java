@@ -11,14 +11,14 @@ import org.eclipse.che.ide.api.resources.Resource;
 import org.eclipse.che.ide.resource.Path;
 
 @Singleton
-public class AccountInfoTvcAction extends TonProjectAction {
+public class AccountStateTvcAction extends TonProjectAction {
   private CommandExecutor commandExecutor;
   private File tvcFile;
 
   @Inject
-  public AccountInfoTvcAction(CommandExecutor commandExecutor) {
+  public AccountStateTvcAction(CommandExecutor commandExecutor) {
     super(
-        "Get Account Info",
+        "Get Account State",
         "Retrieve selected smart contract information from the TON blockchain",
         TonProjectResources.INSTANCE.tonIcon());
 
@@ -59,6 +59,6 @@ public class AccountInfoTvcAction extends TonProjectAction {
     commandLine.append(" -C ton-global.json");
 
     this.commandExecutor.executeCommand(
-        new CommandImpl("Account Info", commandLine.toString(), "ton-account-info"));
+        new CommandImpl("Account State", commandLine.toString(), "ton-account-state"));
   }
 }
