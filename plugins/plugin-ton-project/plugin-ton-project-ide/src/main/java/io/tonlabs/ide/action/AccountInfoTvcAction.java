@@ -54,7 +54,7 @@ public class AccountInfoTvcAction extends TonProjectAction {
     commandLine.append(
         this.tvcFile.getParent().asFolder().getLocation().makeRelativeTo(Path.ROOT).toString());
     commandLine.append(" && ");
-    commandLine.append("test-lite-client -a 0:");
+    commandLine.append("cat | ./test-lite-client -a 0:");
     commandLine.append(this.tvcFile.getNameWithoutExtension());
     commandLine.append(" -C ton-global.json");
 
