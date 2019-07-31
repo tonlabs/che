@@ -37,6 +37,16 @@ public class UiFunction {
     return this.outputs;
   }
 
+  public boolean hasEmptyParams() {
+    for (UiParameter parameter : this.inputs.values()) {
+      if (parameter.getValue() == null || parameter.getValue().length() < 1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public String paramsToJson() {
     JSONObject result = new JSONObject();
     for (UiParameter parameter : this.inputs.values()) {

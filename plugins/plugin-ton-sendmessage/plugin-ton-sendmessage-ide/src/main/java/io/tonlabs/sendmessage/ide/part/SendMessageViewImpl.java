@@ -3,6 +3,7 @@ package io.tonlabs.sendmessage.ide.part;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -35,21 +36,18 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
-
-  private CommandExecutor commandExecutor;
-
-  private Folder deploymentFolder;
-  private Abi abi;
-  private Map<String, File> abiMap;
-  private Map<String, File> tvcMap;
-  private Map<String, UiFunction> functions;
-
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
+  private CommandExecutor commandExecutor;
+  private Folder deploymentFolder;
+  private Abi abi;
+  private Map<String, File> abiMap;
+  private Map<String, File> tvcMap;
+  private Map<String, UiFunction> functions;
 
   @Inject
   public SendMessageViewImpl(CommandExecutor commandExecutor) {
@@ -136,6 +134,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
           },
           InputEvent.getType());
 
+          valueTextBox.addKeyPressHandler(
+              event -> {
+                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+                  this.sendMessage();
+                }
+              }
+          );
+
       this.inputsControl.setWidget(index, 1, valueTextBox);
 
       index++;
@@ -165,8 +171,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiHandler("sendButton")
   void handleSendButtonClick(@SuppressWarnings("unused") ClickEvent event) {
+    this.sendMessage();
+  }
+
+  private void sendMessage() {
     UiFunction function = this.getCurrentFunction();
-    if (function == null) {
+    if (function == null || function.hasEmptyParams()) {
       return;
     }
 
