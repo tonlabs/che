@@ -134,13 +134,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
           },
           InputEvent.getType());
 
-          valueTextBox.addKeyPressHandler(
-              event -> {
-                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-                  this.sendMessage();
-                }
-              }
-          );
+      valueTextBox.addKeyPressHandler(
+          event -> {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+              this.sendMessage();
+            }
+          });
 
       this.inputsControl.setWidget(index, 1, valueTextBox);
 
