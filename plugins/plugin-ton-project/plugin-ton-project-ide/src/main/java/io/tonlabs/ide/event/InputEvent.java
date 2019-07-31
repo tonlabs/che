@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.event;
+package io.tonlabs.ide.event;
 
 import com.google.gwt.event.dom.client.DomEvent;
 

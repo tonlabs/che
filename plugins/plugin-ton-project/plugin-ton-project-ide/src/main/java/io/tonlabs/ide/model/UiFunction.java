@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.model;
+package io.tonlabs.ide.model;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -35,6 +35,16 @@ public class UiFunction {
 
   public Map<String, UiParameter> getOutputs() {
     return this.outputs;
+  }
+
+  public boolean hasEmptyParams() {
+    for (UiParameter parameter : this.inputs.values()) {
+      if (parameter.getValue() == null || parameter.getValue().length() < 1) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public String paramsToJson() {

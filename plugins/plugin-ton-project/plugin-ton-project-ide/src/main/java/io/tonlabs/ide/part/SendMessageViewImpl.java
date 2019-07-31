@@ -1,8 +1,9 @@
-package io.tonlabs.sendmessage.ide.part;
+package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -13,11 +14,11 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import io.tonlabs.sendmessage.ide.event.InputEvent;
-import io.tonlabs.sendmessage.ide.model.Abi;
-import io.tonlabs.sendmessage.ide.model.AbiFunction;
-import io.tonlabs.sendmessage.ide.model.UiFunction;
-import io.tonlabs.sendmessage.ide.model.UiParameter;
+import io.tonlabs.ide.event.InputEvent;
+import io.tonlabs.ide.model.Abi;
+import io.tonlabs.ide.model.AbiFunction;
+import io.tonlabs.ide.model.UiFunction;
+import io.tonlabs.ide.model.UiParameter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,21 +36,18 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
-
-  private CommandExecutor commandExecutor;
-
-  private Folder deploymentFolder;
-  private Abi abi;
-  private Map<String, File> abiMap;
-  private Map<String, File> tvcMap;
-  private Map<String, UiFunction> functions;
-
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
+  private CommandExecutor commandExecutor;
+  private Folder deploymentFolder;
+  private Abi abi;
+  private Map<String, File> abiMap;
+  private Map<String, File> tvcMap;
+  private Map<String, UiFunction> functions;
 
   @Inject
   public SendMessageViewImpl(CommandExecutor commandExecutor) {
@@ -136,6 +134,13 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
           },
           InputEvent.getType());
 
+      valueTextBox.addKeyPressHandler(
+          event -> {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+              this.sendMessage();
+            }
+          });
+
       this.inputsControl.setWidget(index, 1, valueTextBox);
 
       index++;
@@ -165,8 +170,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @UiHandler("sendButton")
   void handleSendButtonClick(@SuppressWarnings("unused") ClickEvent event) {
+    this.sendMessage();
+  }
+
+  private void sendMessage() {
     UiFunction function = this.getCurrentFunction();
-    if (function == null) {
+    if (function == null || function.hasEmptyParams()) {
       return;
     }
 
@@ -174,9 +183,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
     @SuppressWarnings("StringBufferReplaceableByString")
-    StringBuilder commandLine = new StringBuilder();
+    StringBuilder commandLine = new StringBuilder("cd ");
 
-    commandLine.append("cd ");
     commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
     commandLine.append(" && ");
 

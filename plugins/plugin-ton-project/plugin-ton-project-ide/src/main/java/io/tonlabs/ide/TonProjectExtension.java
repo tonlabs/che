@@ -18,6 +18,11 @@ import io.tonlabs.ide.action.OpenUrlAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
 import org.eclipse.che.ide.api.action.IdeActions;
+import io.tonlabs.ide.action.AccountStateTvcAction;
+import io.tonlabs.ide.action.SendMessageAction;
+import org.eclipse.che.ide.api.action.ActionManager;
+import org.eclipse.che.ide.api.action.DefaultActionGroup;
+import org.eclipse.che.ide.api.action.IdeActions;
 import org.eclipse.che.ide.api.extension.Extension;
 import org.eclipse.che.ide.api.icon.Icon;
 import org.eclipse.che.ide.api.icon.IconRegistry;
@@ -28,24 +33,28 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public class TonProjectExtension {
   private final ActionManager actionManager;
 
-  /**
-   * Constructor.
-   *
-   * @param tonProjectResources the resources that contains our icon
-   * @param iconRegistry the {@link IconRegistry} that is used to register our icon
-   */
   @Inject
   public TonProjectExtension(
       TonProjectResources tonProjectResources,
       IconRegistry iconRegistry,
-      ActionManager actionManager) {
-
+      ActionManager actionManager,
+      SendMessageAction sendMessageAction,
+      AccountStateTvcAction accountStateTvcAction) {
     this.actionManager = actionManager;
 
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
 
     this.registerActions();
+
+    DefaultActionGroup mainContextMenuGroup =
+        (DefaultActionGroup) actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+
+    actionManager.registerAction("sendMessageAction", sendMessageAction);
+    mainContextMenuGroup.add(sendMessageAction);
+
+    actionManager.registerAction("accountStateTvcAction", accountStateTvcAction);
+    mainContextMenuGroup.add(accountStateTvcAction);
   }
 
   private void registerActions() {
@@ -80,7 +89,7 @@ public class TonProjectExtension {
     this.registerAction(
         cLangGroup,
         "tvmCLanguage",
-        "ะก Language for TVM",
+        "ั Language for TVM",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c");
 

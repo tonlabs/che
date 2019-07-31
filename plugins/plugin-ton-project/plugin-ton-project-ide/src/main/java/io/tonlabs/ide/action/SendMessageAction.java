@@ -1,13 +1,13 @@
-package io.tonlabs.sendmessage.ide.action;
+package io.tonlabs.ide.action;
 
 import com.google.inject.Inject;
-import io.tonlabs.sendmessage.ide.SendMessageResources;
-import io.tonlabs.sendmessage.ide.part.SendMessagePresenter;
+import io.tonlabs.ide.TonProjectResources;
+import io.tonlabs.ide.part.SendMessagePresenter;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.parts.PartStackType;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 
-public class SendMessageAction extends TonDeployedContractDirAction {
+public class SendMessageAction extends TonFolderAction {
 
   private final WorkspaceAgent workspaceAgent;
   private final SendMessagePresenter sendMessagePresenter;
@@ -24,7 +24,7 @@ public class SendMessageAction extends TonDeployedContractDirAction {
     super(
         "Send Message...",
         "Sends message to the specified smart contract",
-        SendMessageResources.INSTANCE.tonIcon());
+        TonProjectResources.INSTANCE.tonIcon());
     this.workspaceAgent = workspaceAgent;
     this.sendMessagePresenter = sendMessagePresenter;
   }

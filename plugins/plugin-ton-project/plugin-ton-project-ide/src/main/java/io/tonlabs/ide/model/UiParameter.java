@@ -1,4 +1,4 @@
-package io.tonlabs.sendmessage.ide.model;
+package io.tonlabs.ide.model;
 
 public class UiParameter {
   private final AbiParameter abiParameter;
