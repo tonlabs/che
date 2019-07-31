@@ -14,11 +14,8 @@ package io.tonlabs.ide;
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
-import io.tonlabs.ide.action.OpenUrlAction;
-import org.eclipse.che.ide.api.action.ActionManager;
-import org.eclipse.che.ide.api.action.DefaultActionGroup;
-import org.eclipse.che.ide.api.action.IdeActions;
 import io.tonlabs.ide.action.AccountStateTvcAction;
+import io.tonlabs.ide.action.OpenUrlAction;
 import io.tonlabs.ide.action.SendMessageAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
@@ -89,7 +86,7 @@ public class TonProjectExtension {
     this.registerAction(
         cLangGroup,
         "tvmCLanguage",
-        "Ñ Language for TVM",
+        "C Language for TVM",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c");
 
