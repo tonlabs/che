@@ -183,9 +183,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
     @SuppressWarnings("StringBufferReplaceableByString")
-    StringBuilder commandLine = new StringBuilder();
+    StringBuilder commandLine = new StringBuilder("cd ");
 
-    commandLine.append("cd ");
     commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
     commandLine.append(" && ");
 
