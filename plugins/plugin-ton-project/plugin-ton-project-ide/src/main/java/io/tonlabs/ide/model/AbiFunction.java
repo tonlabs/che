@@ -2,6 +2,7 @@ package io.tonlabs.ide.model;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+@SuppressWarnings({"unused", "JSUnresolvedVariable"})
 public class AbiFunction extends JavaScriptObject {
   protected AbiFunction() {}
 
@@ -15,7 +16,6 @@ public class AbiFunction extends JavaScriptObject {
 
   public final native AbiParameter[] getOutputs() /*-{
       return this.outputs;
-      ѳѳ
   }-*/;
 
   public final native boolean getSigned() /*-{

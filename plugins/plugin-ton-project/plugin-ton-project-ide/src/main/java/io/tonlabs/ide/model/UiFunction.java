@@ -1,11 +1,10 @@
 package io.tonlabs.ide.model;
 
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class UiFunction {
   private final AbiFunction abiFunction;
   private final Map<String, UiParameter> inputs;
@@ -50,8 +49,7 @@ public class UiFunction {
   public String paramsToJson() {
     JSONObject result = new JSONObject();
     for (UiParameter parameter : this.inputs.values()) {
-      JSONValue value = new JSONString(parameter.getValue() == null ? "" : parameter.getValue());
-      result.put(parameter.getName(), value);
+      result.put(parameter.getName(), parameter.getValueAsJson());
     }
 
     return result.toString();

@@ -3,6 +3,7 @@ package io.tonlabs.ide.model;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 
+@SuppressWarnings("unused")
 public class Abi extends JavaScriptObject {
   protected Abi() {}
 
