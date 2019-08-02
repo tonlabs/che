@@ -14,6 +14,10 @@ package io.tonlabs.ide;
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
+import io.tonlabs.ide.action.SendMessageAction;
+import org.eclipse.che.ide.api.action.ActionManager;
+import org.eclipse.che.ide.api.action.DefaultActionGroup;
+import org.eclipse.che.ide.api.action.IdeActions;
 import org.eclipse.che.ide.api.extension.Extension;
 import org.eclipse.che.ide.api.icon.Icon;
 import org.eclipse.che.ide.api.icon.IconRegistry;
@@ -26,11 +30,22 @@ public class TonProjectExtension {
    *
    * @param tonProjectResources the resources that contains our icon
    * @param iconRegistry the {@link IconRegistry} that is used to register our icon
+   * @param actionManager the {@link ActionManager} that is used to register our actions
+   * @param sendMessageAction the action that calls the example server service
    */
   @Inject
-  public TonProjectExtension(TonProjectResources tonProjectResources, IconRegistry iconRegistry) {
-
+  public TonProjectExtension(
+      TonProjectResources tonProjectResources,
+      IconRegistry iconRegistry,
+      ActionManager actionManager,
+      SendMessageAction sendMessageAction) {
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".samples.category.icon", tonProjectResources.tonIcon()));
+
+    actionManager.registerAction("sendMessageAction", sendMessageAction);
+
+    DefaultActionGroup mainContextMenuGroup =
+        (DefaultActionGroup) actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+    mainContextMenuGroup.add(sendMessageAction);
   }
 }
