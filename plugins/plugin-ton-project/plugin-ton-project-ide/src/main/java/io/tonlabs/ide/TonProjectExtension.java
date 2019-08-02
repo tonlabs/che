@@ -14,11 +14,8 @@ package io.tonlabs.ide;
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
-import io.tonlabs.ide.action.OpenUrlAction;
-import org.eclipse.che.ide.api.action.ActionManager;
-import org.eclipse.che.ide.api.action.DefaultActionGroup;
-import org.eclipse.che.ide.api.action.IdeActions;
 import io.tonlabs.ide.action.AccountStateTvcAction;
+import io.tonlabs.ide.action.OpenUrlAction;
 import io.tonlabs.ide.action.SendMessageAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
@@ -32,6 +29,8 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 @Extension(title = "TON Project Extension", version = "0.0.1")
 public class TonProjectExtension {
   private final ActionManager actionManager;
+  private final SendMessageAction sendMessageAction;
+  private final AccountStateTvcAction accountStateTvcAction;
 
   /**
    * Constructor.
@@ -47,6 +46,8 @@ public class TonProjectExtension {
       SendMessageAction sendMessageAction,
       AccountStateTvcAction accountStateTvcAction) {
     this.actionManager = actionManager;
+    this.sendMessageAction = sendMessageAction;
+    this.accountStateTvcAction = accountStateTvcAction;
 
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
@@ -56,13 +57,13 @@ public class TonProjectExtension {
 
   private void registerActions() {
     DefaultActionGroup mainContextMenuGroup =
-        (DefaultActionGroup) actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+        (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
 
-    actionManager.registerAction("sendMessageAction", sendMessageAction);
-    mainContextMenuGroup.add(sendMessageAction);
+    this.actionManager.registerAction("sendMessageAction", this.sendMessageAction);
+    mainContextMenuGroup.add(this.sendMessageAction);
 
-    actionManager.registerAction("accountStateTvcAction", accountStateTvcAction);
-    mainContextMenuGroup.add(accountStateTvcAction);
+    this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
+    mainContextMenuGroup.add(this.accountStateTvcAction);
 
     DefaultActionGroup helpMenu =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_HELP);
@@ -95,7 +96,7 @@ public class TonProjectExtension {
     this.registerAction(
         cLangGroup,
         "tvmCLanguage",
-        "Ñ Language for TVM",
+        "C Language for TVM",
         TonProjectResources.INSTANCE.tonDevIcon(),
         "https://ton.dev/guides?section=c");
 
