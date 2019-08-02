@@ -54,9 +54,8 @@ public class AccountStateTvcAction extends TonProjectAction {
     commandLine.append(
         this.tvcFile.getParent().asFolder().getLocation().makeRelativeTo(Path.ROOT).toString());
     commandLine.append(" && ");
-    commandLine.append("cat | ./test-lite-client -a 0:");
+    commandLine.append("adnl_client_test --config config  -g ");
     commandLine.append(this.tvcFile.getNameWithoutExtension());
-    commandLine.append(" -C ton-global.json");
 
     this.commandExecutor.executeCommand(
         new CommandImpl("Account State", commandLine.toString(), "ton-account-state"));
