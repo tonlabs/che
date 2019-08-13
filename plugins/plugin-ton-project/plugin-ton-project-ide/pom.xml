@@ -90,20 +90,31 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-js-deps</id>
+                        <id>install-sdk-js</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
-                                <!-- install SDK JS -->
+                                <!-- Install SDK JS -->
                                 <exec dir="${basedir}" executable="npm" failonerror="true">
                                     <arg value="install" />
                                     <arg value="git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master" />
                                     <arg value="--save" />
                                 </exec>
-                                <!-- install SDK WASM -->
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-sdk-wasm</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Install SDK WASM -->
                                 <exec dir="${basedir}" executable="npm" failonerror="true">
                                     <arg value="install" />
                                     <arg value="git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master" />
