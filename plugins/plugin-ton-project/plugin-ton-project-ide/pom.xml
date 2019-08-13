@@ -86,6 +86,34 @@
                     </ignoredUnusedDeclaredDependencies>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-js-deps</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- install SDK JS -->
+                                <exec dir="${basedir}" executable="npm" failonerror="true">
+                                    <arg value="install" />
+                                    <arg value="git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master" />
+                                    <arg value="--save" />
+                                </exec>
+                                <!-- install SDK WASM -->
+                                <exec dir="${basedir}" executable="npm" failonerror="true">
+                                    <arg value="install" />
+                                    <arg value="git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master" />
+                                    <arg value="--save" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
