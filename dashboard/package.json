@@ -120,6 +120,8 @@
     "jquery": "3.3.1",
     "js-yaml": "3.6.1",
     "jsonlint": "1.6.0",
-    "ng-lodash": "0.2.3"
+    "ng-lodash": "0.2.3",
+    "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
+    "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master"
   }
 }

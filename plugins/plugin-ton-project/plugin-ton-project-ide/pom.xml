@@ -73,25 +73,6 @@
                     </ignoredUnusedDeclaredDependencies>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>install-npm-packages</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <exec dir="${basedir}" executable="npm" failonerror="true">
-                                    <arg value="install" />
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>
