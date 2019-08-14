@@ -4,5 +4,11 @@
   "dependencies": {
     "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
     "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "TON Project Plugin",
+  "repository": "git+ssh://git@github.com/tonlabs/che.git#dev"
 }
