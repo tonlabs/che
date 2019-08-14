@@ -1,0 +1,8 @@
+{
+  "name": "plugin-ton-project",
+  "version": "1.0.0",
+  "dependencies": {
+    "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
+    "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master"
+  }
+}
