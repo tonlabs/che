@@ -58,8 +58,6 @@ import 'angular-filter';
 import 'angular-uuid4';
 import 'angular-websocket';
 import 'ng-lodash';
-import 'ton-sdk-wasm';
-import 'ton-sdk-js';
 import '../node_modules/angular-gravatar/build/md5.min.js';
 import '../node_modules/angular-gravatar/build/angular-gravatar.min.js';
 
