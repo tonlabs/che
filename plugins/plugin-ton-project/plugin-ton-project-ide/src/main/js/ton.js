@@ -16,8 +16,3 @@ async function initTon() {
 async function initApp() {
   await initTon();
 }
-
-alert('init');
-initApp().then(() => {
-  alert('init ok');
-});

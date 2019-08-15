@@ -45,11 +45,11 @@ public class TonProjectExtension {
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
 
-    insertJs();
+    insertTonJs();
     this.registerActions();
   }
 
-  private static void insertJs() {
+  private static void insertTonJs() {
     Element script = DOM.createElement("script");
     script.setAttribute("src", GWT.getModuleBaseForStaticFiles() + "ton.js");
     script.setAttribute("defer", null);

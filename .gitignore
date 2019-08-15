@@ -79,3 +79,7 @@ docs/assets/imgs
 plugins/plugin-terminal-ui/node_modules/
 plugins/plugin-terminal-ui/build/
 requirements.lock
+
+# TON #
+#######
+/ide/che-ide-gwt-app/src/main/resources/org/eclipse/che/ide/public/ton.js

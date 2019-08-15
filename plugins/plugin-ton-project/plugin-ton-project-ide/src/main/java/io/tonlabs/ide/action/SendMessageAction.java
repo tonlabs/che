@@ -3,6 +3,7 @@ package io.tonlabs.ide.action;
 import com.google.inject.Inject;
 import io.tonlabs.ide.TonProjectResources;
 import io.tonlabs.ide.part.SendMessagePresenter;
+import io.tonlabs.ide.sdk.TonSDK;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.parts.PartStackType;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
@@ -31,6 +32,8 @@ public class SendMessageAction extends TonFolderAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    TonSDK.init();
+
     this.sendMessagePresenter
         .getSendMessageView()
         .updateDeploymentFolder(this.appContext.get().getResource().asFolder());
