@@ -2,6 +2,10 @@ package io.tonlabs.ide;
 
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.inject.Inject;
 import io.tonlabs.ide.action.AccountStateTvcAction;
 import io.tonlabs.ide.action.OpenUrlAction;
@@ -41,7 +45,16 @@ public class TonProjectExtension {
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
 
+    insertJs();
     this.registerActions();
+  }
+
+  private static void insertJs() {
+    Element script = DOM.createElement("script");
+    script.setAttribute("src", GWT.getModuleBaseForStaticFiles() + "ton.js");
+    script.setAttribute("defer", null);
+
+    Document.get().getHead().appendChild(script);
   }
 
   private void registerActions() {

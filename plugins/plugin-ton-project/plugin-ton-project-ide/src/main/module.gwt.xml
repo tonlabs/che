@@ -3,4 +3,5 @@
 <module>
     <source path="ide"/>
     <source path="shared"/>
+    <public path="../../target/public"/>
 </module>

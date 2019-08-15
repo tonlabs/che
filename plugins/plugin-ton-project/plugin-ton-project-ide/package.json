@@ -1,0 +1,22 @@
+{
+  "name": "plugin-ton-project",
+  "version": "1.0.0",
+  "scripts": {
+    "webpack": "webpack"
+  },
+  "dependencies": {
+    "@babel/runtime": "7.0.0-beta.55",
+    "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
+    "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master"
+  },
+  "devDependencies": {
+    "webpack": "^4",
+    "webpack-cli": "^3",
+    "html-webpack-plugin": "^3.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "TON Project Plugin",
+  "repository": "git+ssh://git@github.com/tonlabs/che.git#dev"
+}
