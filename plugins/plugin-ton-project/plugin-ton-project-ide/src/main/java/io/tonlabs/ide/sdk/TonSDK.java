@@ -10,8 +10,7 @@ import jsinterop.annotations.JsType;
 
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
 public final class TonSDK {
-  @JsOverlay
-  private static TonSDK instance = null;
+  @JsOverlay private static TonSDK instance = null;
 
   private TonSDK() {}
 
