@@ -32,8 +32,7 @@ public class SendMessageAction extends TonFolderAction {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    TonSDK sdk = new TonSDK();
-    sdk.init();
+    TonSDK sdk = TonSDK.getInstance();
 
     this.sendMessagePresenter
         .getSendMessageView()
