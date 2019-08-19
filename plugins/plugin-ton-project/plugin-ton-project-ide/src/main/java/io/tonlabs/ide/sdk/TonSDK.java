@@ -33,7 +33,7 @@ public final class TonSDK {
   }
 
   private static native TonSDK getTonSDK() /*-{
-    return window.frames['ide-application-iframe'].tonSdk;
+    return top.frames['ide-application-iframe'].tonSdk;
   }-*/;
 
   private native void init();
