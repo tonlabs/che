@@ -22,6 +22,9 @@ public class TonSdkInitializer {
           @Override
           public void onSuccess(JavaScriptObject[] result) {
             Window.alert("TonSdk is loaded");
+            for (JavaScriptObject obj : result) {
+              Window.alert(obj.toString());
+            }
           }
         },
         new String[] {"ton"},

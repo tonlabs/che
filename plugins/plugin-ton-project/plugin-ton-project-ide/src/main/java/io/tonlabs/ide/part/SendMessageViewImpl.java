@@ -1,12 +1,14 @@
 package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -20,7 +22,6 @@ import io.tonlabs.ide.model.AbiFunction;
 import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
-import io.tonlabs.ide.sdk.jso.TonSdkJso;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -210,8 +211,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     //    Window.alert("Sending message using SDK...");
 
-    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
-    tonSdk.sendMessage();
+    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
+    Window.alert(obj.toString());
+    //    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
+    //    tonSdk.sendMessage();
   }
 
   @Override
