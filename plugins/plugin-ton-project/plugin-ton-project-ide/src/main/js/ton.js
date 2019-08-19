@@ -31,4 +31,4 @@ class TonSdk {
   }
 }
 
-module.exports = TonSdk;
+module.exports = new TonSdk();
