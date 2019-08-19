@@ -207,6 +207,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     //        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
 
     Window.alert("Sending message using SDK...");
+    GWT.debugger();
 
     TonSDK tonSdk = TonSDK.getInstance();
     tonSdk.sendMessage();
