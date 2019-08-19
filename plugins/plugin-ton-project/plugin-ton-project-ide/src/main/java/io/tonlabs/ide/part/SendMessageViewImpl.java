@@ -20,39 +20,42 @@ import io.tonlabs.ide.model.Abi;
 import io.tonlabs.ide.model.AbiFunction;
 import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
-import io.tonlabs.ide.sdk.TonSDK;
+import io.tonlabs.ide.sdk.TonSdkInitializer;
+import io.tonlabs.ide.sdk.jso.TonSdkJso;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.che.api.promises.client.Function;
-import org.eclipse.che.ide.api.command.CommandExecutor;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
+import org.eclipse.che.requirejs.ModuleHolder;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
+
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
-  private CommandExecutor commandExecutor;
+
+  @Inject private TonSdkInitializer tonSdkInitializer;
+  @Inject private ModuleHolder moduleHolder;
+  //  @Inject private CommandExecutor commandExecutor;
+
   private Folder deploymentFolder;
   private Abi abi;
   private Map<String, File> abiMap;
   private Map<String, File> tvcMap;
   private Map<String, UiFunction> functions;
 
-  @Inject
-  public SendMessageViewImpl(CommandExecutor commandExecutor) {
-    this.commandExecutor = commandExecutor;
-
+  public SendMessageViewImpl() {
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
@@ -207,9 +210,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     //        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
 
     Window.alert("Sending message using SDK...");
-    GWT.debugger();
 
-    TonSDK tonSdk = TonSDK.getInstance();
+    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
     tonSdk.sendMessage();
   }
 

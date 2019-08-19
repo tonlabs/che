@@ -1,9 +1,12 @@
 import TONClientLibrary from 'ton-sdk-wasm';
 import {TONClient} from 'ton-sdk-js';
 
-class TonSDK {
-  constructor(tonConfig) {
-    this.tonConfig = tonConfig;
+class TonSdk {
+  constructor() {
+    this.tonConfig = {
+      servers: ['services.tonlabs.io'],
+      log_verbose: true
+    };
     this.ton = TONClient.shared;
   }
 
@@ -19,7 +22,7 @@ class TonSDK {
 
   init() {
     this.initApp().then(() => {
-      alert('TonSDK init ok');
+      alert('TonSdk init ok');
     });
   }
 
@@ -28,11 +31,4 @@ class TonSDK {
   }
 }
 
-const tonSdk = new TonSDK({
-  servers: ['services.tonlabs.io'],
-  log_verbose: true
-});
-
-tonSdk.init();
-
-debugger;
+module.exports = TonSdk;
