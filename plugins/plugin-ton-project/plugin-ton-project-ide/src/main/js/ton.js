@@ -1,16 +1,16 @@
 import TONClientLibrary from 'ton-sdk-wasm';
-import { TONClient } from 'ton-sdk-js';
+import {TONClient} from 'ton-sdk-js';
 
 class TonSDK {
   constructor(tonConfig) {
     this.tonConfig = tonConfig;
+    this.ton = TONClient.shared;
   }
 
   async initTon() {
-    const ton = TONClient.shared;
     TONClient.setLibrary(TONClientLibrary);
-    ton.config.setData(this.tonConfig);
-    await ton.setup();
+    this.ton.config.setData(this.tonConfig);
+    await this.ton.setup();
   }
 
   async initApp() {
@@ -19,8 +19,12 @@ class TonSDK {
 
   init() {
     this.initApp().then(() => {
-      alert('init JsInterop ok');
+      alert('TonSDK init ok');
     });
+  }
+
+  sendMessage() {
+    alert('sendMessage');
   }
 }
 

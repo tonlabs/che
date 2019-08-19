@@ -32,5 +32,5 @@ public final class TonSDK {
     Document.get().getHead().appendChild(script);
   }
 
-  private native void init();
+  public native void sendMessage();
 }

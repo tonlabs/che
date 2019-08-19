@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -19,17 +20,16 @@ import io.tonlabs.ide.model.Abi;
 import io.tonlabs.ide.model.AbiFunction;
 import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
+import io.tonlabs.ide.sdk.TonSDK;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.ide.api.command.CommandExecutor;
-import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
-import org.eclipse.che.ide.resource.Path;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -182,28 +182,34 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String messageId =
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
-    @SuppressWarnings("StringBufferReplaceableByString")
-    StringBuilder commandLine = new StringBuilder("cd ");
+    //    @SuppressWarnings("StringBufferReplaceableByString")
+    //    StringBuilder commandLine = new StringBuilder("cd ");
+    //
+    //
+    // commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
+    //    commandLine.append(" && ");
+    //
+    //    commandLine.append("tvm_linker message ");
+    //    commandLine.append(messageId);
+    //    commandLine.append(" -w 0");
+    //    commandLine.append(" --abi-json ");
+    //    commandLine.append(this.abiFileControl.getSelectedItemText());
+    //    commandLine.append(" --abi-method ");
+    //    commandLine.append(this.functionControl.getSelectedItemText());
+    //    commandLine.append(" --abi-params \"");
+    //    commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
+    //    commandLine.append("\" && ");
+    //    commandLine.append("cat | ./test-lite-client -C ton-global.json -f ");
+    //    commandLine.append(messageId, 0, 8);
+    //    commandLine.append("-msg-body.boc");
+    //
+    //    this.commandExecutor.executeCommand(
+    //        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
 
-    commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
-    commandLine.append(" && ");
+    Window.alert("Sending message using SDK...");
 
-    commandLine.append("tvm_linker message ");
-    commandLine.append(messageId);
-    commandLine.append(" -w 0");
-    commandLine.append(" --abi-json ");
-    commandLine.append(this.abiFileControl.getSelectedItemText());
-    commandLine.append(" --abi-method ");
-    commandLine.append(this.functionControl.getSelectedItemText());
-    commandLine.append(" --abi-params \"");
-    commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
-    commandLine.append("\" && ");
-    commandLine.append("cat | ./test-lite-client -C ton-global.json -f ");
-    commandLine.append(messageId, 0, 8);
-    commandLine.append("-msg-body.boc");
-
-    this.commandExecutor.executeCommand(
-        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
+    TonSDK tonSdk = TonSDK.getInstance();
+    tonSdk.sendMessage();
   }
 
   @Override
