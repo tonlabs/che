@@ -2,11 +2,8 @@ import TONClientLibrary from 'ton-sdk-wasm';
 import { TONClient } from 'ton-sdk-js';
 
 class TonSDK {
-  constructor() {
-    this.tonConfig = {
-      servers: ['services.tonlabs.io'],
-      log_verbose: true
-    };
+  constructor(tonConfig) {
+    this.tonConfig = tonConfig;
   }
 
   async initTon() {
@@ -26,3 +23,10 @@ class TonSDK {
     });
   }
 }
+
+const tonSdk = new TonSDK({
+  servers: ['services.tonlabs.io'],
+  log_verbose: true
+});
+
+tonSdk.init();
