@@ -1,7 +1,7 @@
 import TONClientLibrary from 'ton-sdk-wasm';
 import {TONClient} from 'ton-sdk-js';
 
-export default class TonSdk {
+class TonSdk {
   constructor() {
     this.tonConfig = {
       servers: ['services.tonlabs.io'],
@@ -30,3 +30,5 @@ export default class TonSdk {
     alert('sendMessage');
   }
 }
+
+export default new TonSdk();

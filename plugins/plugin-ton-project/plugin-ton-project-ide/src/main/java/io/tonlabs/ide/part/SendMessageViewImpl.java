@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -209,7 +208,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     //    this.commandExecutor.executeCommand(
     //        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
 
-    Window.alert("Sending message using SDK...");
+    //    Window.alert("Sending message using SDK...");
 
     TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
     tonSdk.sendMessage();
