@@ -82,6 +82,7 @@
                     <compilerArgs>
                         <arg>-generateJsInteropExports</arg>
                     </compilerArgs>
+                    <style>DETAILED</style>
                 </configuration>
             </plugin>
             <plugin>

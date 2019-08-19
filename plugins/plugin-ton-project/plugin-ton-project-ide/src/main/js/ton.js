@@ -34,3 +34,5 @@ const tonSdk = new TonSDK({
 });
 
 tonSdk.init();
+
+debugger;
