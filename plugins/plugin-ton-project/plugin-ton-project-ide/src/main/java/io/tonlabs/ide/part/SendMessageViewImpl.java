@@ -212,7 +212,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     //    Window.alert("Sending message using SDK...");
 
     JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
-    Window.alert(obj.toString());
+    Window.alert(obj == null ? "null" : obj.toString());
     //    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
     //    tonSdk.sendMessage();
   }

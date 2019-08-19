@@ -23,7 +23,7 @@ public class TonSdkInitializer {
           public void onSuccess(JavaScriptObject[] result) {
             Window.alert("TonSdk is loaded, count: " + result.length);
             for (JavaScriptObject obj : result) {
-              Window.alert(obj.toString());
+              Window.alert(obj == null ? "null" : obj.toString());
             }
           }
         },
