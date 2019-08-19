@@ -18,7 +18,7 @@ public final class TonSDK {
   public static TonSDK getInstance() {
     if (instance == null) {
       insertTonJs();
-      instance = getTonSDK();
+      instance = JsUtil.getTonSDK();
     }
 
     return instance;
@@ -31,10 +31,6 @@ public final class TonSDK {
 
     Document.get().getHead().appendChild(script);
   }
-
-  private static native TonSDK getTonSDK() /*-{
-    return top.frames['ide-application-iframe'].tonSdk;
-  }-*/;
 
   private native void init();
 }
