@@ -16,12 +16,12 @@ public class TonSdkInitializer {
         new Callback<JavaScriptObject[], Throwable>() {
           @Override
           public void onFailure(Throwable reason) {
-            Window.alert("TonSdk loading failure");
+            Window.alert("TonSdk loading failure: " + reason);
           }
 
           @Override
           public void onSuccess(JavaScriptObject[] result) {
-            Window.alert("TonSdk is loaded");
+            Window.alert("TonSdk is loaded, count: " + result.length);
             for (JavaScriptObject obj : result) {
               Window.alert(obj.toString());
             }

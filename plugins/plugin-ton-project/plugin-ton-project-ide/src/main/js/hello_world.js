@@ -1,3 +1,7 @@
-module.exports = {
-  hello: "world"
-};
+define(function () {
+  return {
+    getHello: function () {
+      return 'Hello World';
+    }
+  };
+});
