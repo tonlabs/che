@@ -20,6 +20,7 @@ import io.tonlabs.ide.model.AbiFunction;
 import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
+import io.tonlabs.ide.sdk.jso.TonSdkJso;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -211,14 +212,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     //    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
     //    Window.alert(obj == null ? "null" : obj.toString());
-    this.sendMessageJs();
-    //    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
-    //    tonSdk.sendMessage();
+    TonSdkJso tonSdk = createTonSdk();
+    tonSdk.sendMessage();
   }
 
-  private native void sendMessageJs() /*-{
+  private static native TonSdkJso createTonSdk() /*-{
+    return new window.top.frames['ide-application-iframe'].contentWindow.TonSdk.TonSdk();
+//    console.log(window.top.frames['ide-application-iframe'].contentWindow.foo);
     debugger;
-    console.log(window.top.frames['ide-application-iframe'].contentWindow.foo);
 //    console.log(window.tonSdk);
 //    window.tonSdk.sendMessage();
   }-*/;
