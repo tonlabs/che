@@ -218,7 +218,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private native void sendMessageJs() /*-{
     debugger;
-    console.log(window.foo);
+    console.log(window.top.foo);
 //    console.log(window.tonSdk);
 //    window.tonSdk.sendMessage();
   }-*/;

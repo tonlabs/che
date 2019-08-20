@@ -1,7 +1,8 @@
 package io.tonlabs.ide.sdk;
 
+import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -12,7 +13,7 @@ public class TonSdkInitializer {
   @Inject
   public TonSdkInitializer(/*final RequireJsLoader requireJsLoader*/ ) {
     ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "ton.js")
-        .setWindow(getWindow())
+        .setWindow(TOP_WINDOW)
         .inject();
     //    ScriptInjector.fromString(
     //            "debugger;\n"
@@ -42,8 +43,8 @@ public class TonSdkInitializer {
     //        new String[] {"TonSdk"});
   }
 
-  public static native JavaScriptObject getWindow() /*-{
-    debugger;
-    return $wnd;
-  }-*/;
+  //  public static native JavaScriptObject getWindow() /*-{
+  //    debugger;
+  //    return $wnd;
+  //  }-*/;
 }
