@@ -1,14 +1,12 @@
 package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -211,11 +209,17 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     //    Window.alert("Sending message using SDK...");
 
-    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
-    Window.alert(obj == null ? "null" : obj.toString());
+    //    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
+    //    Window.alert(obj == null ? "null" : obj.toString());
+    this.sendMessageJs();
     //    TonSdkJso tonSdk = TonSdkJso.fromJso(this.moduleHolder.getModule("TonSdk"));
     //    tonSdk.sendMessage();
   }
+
+  private native void sendMessageJs() /*-{
+    Console.log(Window.tonSdk);
+    Window.tonSdk.sendMessage();
+  }-*/;
 
   @Override
   public void updateDeploymentFolder(Folder deploymentFolder) {
