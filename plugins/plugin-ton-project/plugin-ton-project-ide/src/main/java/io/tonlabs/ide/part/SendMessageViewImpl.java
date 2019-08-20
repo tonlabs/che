@@ -175,13 +175,13 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private void sendMessage() {
-    UiFunction function = this.getCurrentFunction();
-    if (function == null || function.hasEmptyParams()) {
-      return;
-    }
+    //    UiFunction function = this.getCurrentFunction();
+    //    if (function == null || function.hasEmptyParams()) {
+    //      return;
+    //    }
 
-    String messageId =
-        this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
+    //    String messageId =
+    //        this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
     //    @SuppressWarnings("StringBufferReplaceableByString")
     //    StringBuilder commandLine = new StringBuilder("cd ");
@@ -217,8 +217,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private native void sendMessageJs() /*-{
-    Console.log(Window.tonSdk);
-    Window.tonSdk.sendMessage();
+    debugger;
+    console.log(window.foo);
+//    console.log(window.tonSdk);
+//    window.tonSdk.sendMessage();
   }-*/;
 
   @Override
