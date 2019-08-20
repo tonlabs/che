@@ -25,10 +25,17 @@ public class ModuleHolder {
   private Map<String, RequirejsModule> modules = new HashMap<>();
 
   public JavaScriptObject getModule(final String key) {
-    return modules.get(key);
+    if (!this.hasModule(key)) {
+      throw new IllegalArgumentException("Module not found: " + key);
+    }
+    return this.modules.get(key);
   }
 
-  public void setModule(final String key, final RequirejsModule module) {
+  public boolean hasModule(final String key) {
+    return this.modules.containsKey(key);
+  }
+
+  void setModule(final String key, final RequirejsModule module) {
     this.modules.put(key, module);
   }
 }
