@@ -2,49 +2,65 @@ package io.tonlabs.ide.sdk;
 
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.inject.Inject;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Singleton;
+import io.tonlabs.ide.sdk.jso.TonSdkJso;
+import org.eclipse.che.api.promises.client.Promise;
+import org.eclipse.che.api.promises.client.PromiseError;
+import org.eclipse.che.api.promises.client.js.Promises;
 
 @Singleton
 public class TonSdkInitializer {
+  private TonSdkJso tonSdk;
+  //  private Promise<Void> waitForIjection = Promises.create((success, fail) -> {
+  //
+  //  });
 
-  @Inject
-  public TonSdkInitializer(/*final RequireJsLoader requireJsLoader*/ ) {
+  public TonSdkInitializer() {
     ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "ton.js")
         .setWindow(TOP_WINDOW)
+        .setCallback(
+            new Callback<Void, Exception>() {
+              @Override
+              public void onFailure(Exception reason) {
+                Window.alert("TON SDK injection failed! Reload the page.");
+              }
+
+              @Override
+              public void onSuccess(Void result) {
+                // TODO:
+              }
+            })
         .inject();
-    //    ScriptInjector.fromString(
-    //            "debugger;\n"
-    //                + "require(['TonSdk'], function(TonSdk) {\n"
-    //                + "\t\tconsole.log(TonSdk);\n"
-    //                + "\t\twindow.tonSdk = new TonSdk.TonSdk();\n"
-    //                + "\t\twindow.tonSdk.init();\n"
-    //                + "\t});")
-    //        .setWindow(getWindow())
-    //        .inject();
-    //    requireJsLoader.require(
-    //        new Callback<JavaScriptObject[], Throwable>() {
-    //          @Override
-    //          public void onFailure(Throwable reason) {
-    //            Window.alert("TonSdk loading failure: " + reason);
-    //          }
-    //
-    //          @Override
-    //          public void onSuccess(JavaScriptObject[] result) {
-    //            Window.alert("TonSdk is loaded, count: " + result.length);
-    //            for (JavaScriptObject obj : result) {
-    //              Window.alert(obj == null ? "null" : obj.toString());
-    //            }
-    //          }
-    //        },
-    //        new String[] {"ton"},
-    //        new String[] {"TonSdk"});
   }
 
-  //  public static native JavaScriptObject getWindow() /*-{
-  //    debugger;
-  //    return $wnd;
-  //  }-*/;
+  private static native TonSdkJso createTonSdk() /*-{
+    return new window.top.frames['ide-application-iframe'].contentWindow.TonSdk.TonSdk();
+  }-*/;
+
+  public Promise<TonSdkJso> getTonSdk() {
+    if (this.tonSdk == null) {
+      this.tonSdk = createTonSdk();
+      return Promises.create(
+          (success, fail) ->
+              this.tonSdk
+                  .initApp()
+                  .then(
+                      (Void nothing) -> {
+                        success.apply(this.tonSdk);
+                      })
+                  .catchError(
+                      (PromiseError error) -> {
+                        Window.alert("Ton SDK initialization error: " + error.getMessage());
+                      }));
+    }
+
+    return Promises.create(
+        (success, fail) -> {
+          success.apply(this.tonSdk);
+        });
+  }
 }

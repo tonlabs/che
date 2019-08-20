@@ -20,12 +20,6 @@ export class TonSdk {
     await this.initTon();
   }
 
-  init() {
-    this.initApp().then(() => {
-      alert('TonSdk init ok');
-    });
-  }
-
   sendMessage() {
     alert('sendMessage');
   }

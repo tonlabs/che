@@ -29,7 +29,6 @@ import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
-import org.eclipse.che.requirejs.ModuleHolder;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
@@ -45,8 +44,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField Button sendButton;
 
   @Inject private TonSdkInitializer tonSdkInitializer;
-  @Inject private ModuleHolder moduleHolder;
-  //  @Inject private CommandExecutor commandExecutor;
 
   private Folder deploymentFolder;
   private Abi abi;
@@ -176,13 +173,17 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private void sendMessage() {
-    //    UiFunction function = this.getCurrentFunction();
-    //    if (function == null || function.hasEmptyParams()) {
-    //      return;
-    //    }
+    UiFunction function = this.getCurrentFunction();
+    if (function == null || function.hasEmptyParams()) {
+      return;
+    }
 
-    //    String messageId =
-    //        this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
+    String messageId =
+        this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
+
+    this.sendButton.setEnabled(false);
+
+    this.tonSdkInitializer.getTonSdk().then(TonSdkJso::sendMessage);
 
     //    @SuppressWarnings("StringBufferReplaceableByString")
     //    StringBuilder commandLine = new StringBuilder("cd ");
@@ -212,17 +213,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     //    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
     //    Window.alert(obj == null ? "null" : obj.toString());
-    TonSdkJso tonSdk = createTonSdk();
-    tonSdk.sendMessage();
   }
-
-  private static native TonSdkJso createTonSdk() /*-{
-    return new window.top.frames['ide-application-iframe'].contentWindow.TonSdk.TonSdk();
-//    console.log(window.top.frames['ide-application-iframe'].contentWindow.foo);
-    debugger;
-//    console.log(window.tonSdk);
-//    window.tonSdk.sendMessage();
-  }-*/;
 
   @Override
   public void updateDeploymentFolder(Folder deploymentFolder) {
