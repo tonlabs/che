@@ -82,7 +82,7 @@
                     <compilerArgs>
                         <arg>-generateJsInteropExports</arg>
                     </compilerArgs>
-<!--                    <style>DETAILED</style>-->
+                    <style>PRETTY</style>
                 </configuration>
             </plugin>
             <plugin>
