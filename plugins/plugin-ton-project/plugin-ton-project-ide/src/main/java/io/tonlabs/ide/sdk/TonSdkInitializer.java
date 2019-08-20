@@ -43,14 +43,15 @@ public class TonSdkInitializer {
 
   public Promise<TonSdkJso> getTonSdk() {
     if (this.tonSdk == null) {
-      this.tonSdk = createTonSdk();
+      TonSdkJso tonSdk = createTonSdk();
       return Promises.create(
           (success, fail) ->
-              this.tonSdk
-                  .initApp()
+              tonSdk
+                  .initTon()
                   .then(
                       (Void nothing) -> {
-                        success.apply(this.tonSdk);
+                        success.apply(tonSdk);
+                        this.tonSdk = tonSdk;
                       })
                   .catchError(
                       (PromiseError error) -> {

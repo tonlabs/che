@@ -13,13 +13,10 @@ export class TonSdk {
   async initTon() {
     TONClient.setLibrary(TONClientLibrary);
     this.ton.config.setData(this.tonConfig);
-    await this.ton.setup();
-  }
 
-  async initApp() {
-    await this.initTon();
+    return this.ton.setup();
   }
-
+  
   sendMessage() {
     alert('sendMessage');
   }
