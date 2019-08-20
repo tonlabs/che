@@ -1,5 +1,6 @@
 package io.tonlabs.ide.sdk;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
@@ -10,7 +11,9 @@ public class TonSdkInitializer {
 
   @Inject
   public TonSdkInitializer(/*final RequireJsLoader requireJsLoader*/ ) {
-    ScriptInjector.fromUrl("ton.js").setWindow(getWindow()).inject();
+    ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "ton.js")
+        .setWindow(getWindow())
+        .inject();
     //    ScriptInjector.fromString(
     //            "debugger;\n"
     //                + "require(['TonSdk'], function(TonSdk) {\n"
