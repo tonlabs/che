@@ -7,6 +7,8 @@ module.exports = {
     path: path.resolve(__dirname,
         '../../../ide/che-ide-gwt-app/src/main/resources/org/eclipse/che/ide/public'),
     filename: 'ton.js',
+    library: "TonSdk",
+    libraryTarget: "amd",
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
