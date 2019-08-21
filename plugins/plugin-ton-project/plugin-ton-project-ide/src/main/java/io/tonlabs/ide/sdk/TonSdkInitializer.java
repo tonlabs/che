@@ -47,7 +47,7 @@ public class TonSdkInitializer {
       return Promises.create(
           (success, fail) ->
               tonSdk
-                  .initTon()
+                  .setup()
                   .then(
                       (Void nothing) -> {
                         success.apply(tonSdk);

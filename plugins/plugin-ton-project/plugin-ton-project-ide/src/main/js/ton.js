@@ -3,20 +3,18 @@ import {TONClient} from 'ton-sdk-js';
 
 export class TonSdk {
   constructor() {
-    this.tonConfig = {
+    this.ton = TONClient.shared;
+    TONClient.setLibrary(TONClientLibrary);
+    this.ton.config.setData({
       servers: ['services.tonlabs.io'],
       log_verbose: true
-    };
-    this.ton = TONClient.shared;
+    });
   }
 
-  async initTon() {
-    TONClient.setLibrary(TONClientLibrary);
-    this.ton.config.setData(this.tonConfig);
-
+  async setup() {
     return this.ton.setup();
   }
-  
+
   sendMessage() {
     alert('sendMessage');
   }
