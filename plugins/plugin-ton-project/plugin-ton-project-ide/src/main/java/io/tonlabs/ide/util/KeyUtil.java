@@ -10,11 +10,11 @@ public final class KeyUtil {
   }
 
   public static boolean isPublicKey(File file) {
-    return isKey(file) && file.getExtension().equals("pub");
+    return isKey(file) && file.getExtension() != null && file.getExtension().equals("pub");
   }
 
   public static boolean isPrivateKey(File file) {
-    return isKey(file) && file.getExtension().length() == 0;
+    return isKey(file) && file.getExtension() == null;
   }
 
   public static String abiFileNameFromKey(File file) {
