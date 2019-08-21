@@ -261,7 +261,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         .catchError(
             (error) -> {
               this.error("Error reading private key file. Error: " + error.toString());
-            });
+            })
+    .then((Void) -> {
+      this.notificationManager.notify("Method of contract run successfully!");
+    });
   }
 
   private Abi getOrAddAbi(String fileName) {
