@@ -23,6 +23,7 @@ import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
 import io.tonlabs.ide.sdk.jso.TonSdkJso;
+import io.tonlabs.ide.util.HexUtil;
 import io.tonlabs.ide.util.KeyUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -230,12 +231,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
         .getContent()
         .thenPromise(
             (String privKeyContent) -> {
-              privateKey[0] = privKeyContent;
+              privateKey[0] = HexUtil.strToHex(privKeyContent);
               return abi.getPublicKeyFile()
                   .getContent()
                   .thenPromise(
                       (String pubKeyContent) -> {
-                        publicKey[0] = pubKeyContent;
+                        publicKey[0] = HexUtil.strToHex(pubKeyContent);
                         return this.tonSdkInitializer
                             .getTonSdk()
                             .thenPromise(
@@ -262,9 +263,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
             (error) -> {
               this.error("Error reading private key file. Error: " + error.toString());
             })
-    .then((Void) -> {
-      this.notificationManager.notify("Method of contract run successfully!");
-    });
+        .then(
+            (Void) -> {
+              this.notificationManager.notify("Method of contract run successfully!");
+            });
   }
 
   private Abi getOrAddAbi(String fileName) {

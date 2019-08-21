@@ -6,9 +6,10 @@ public class TONKeyPairDataJso extends JavaScriptObject {
   protected TONKeyPairDataJso() {}
 
   public static native TONKeyPairDataJso fromPair(String secretKey, String publicKey) /*-{
-    return {
-      secret: secretKey,
-      public: publicKey
-    };
-  }-*/;
+      var result = {};
+      result['secret'] = secretKey;
+      result['public'] = publicKey;
+
+      return result;
+    }-*/;
 }
