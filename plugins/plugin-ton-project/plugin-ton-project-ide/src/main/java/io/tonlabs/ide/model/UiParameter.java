@@ -3,21 +3,20 @@ package io.tonlabs.ide.model;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-@SuppressWarnings("WeakerAccess")
 public class UiParameter {
-  private final AbiParameter abiParameter;
+  private final AbiParameterJso abiParameterJso;
   private String value;
 
-  UiParameter(AbiParameter abiParameter) {
-    this.abiParameter = abiParameter;
+  UiParameter(AbiParameterJso abiParameterJso) {
+    this.abiParameterJso = abiParameterJso;
   }
 
   public String getName() {
-    return this.abiParameter.getName();
+    return this.abiParameterJso.getName();
   }
 
   public String getType() {
-    return this.abiParameter.getType();
+    return this.abiParameterJso.getType();
   }
 
   public String format() {

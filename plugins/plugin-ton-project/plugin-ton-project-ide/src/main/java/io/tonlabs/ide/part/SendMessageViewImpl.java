@@ -16,15 +16,22 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import io.tonlabs.ide.event.InputEvent;
 import io.tonlabs.ide.model.Abi;
-import io.tonlabs.ide.model.AbiFunction;
+import io.tonlabs.ide.model.AbiFunctionJso;
+import io.tonlabs.ide.model.AbiJso;
 import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
+import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
 import io.tonlabs.ide.sdk.jso.TonSdkJso;
+import io.tonlabs.ide.util.KeyUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.che.api.promises.client.Function;
+import org.eclipse.che.api.promises.client.PromiseError;
+import org.eclipse.che.ide.api.notification.NotificationManager;
+import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
+import org.eclipse.che.ide.api.notification.StatusNotification.Status;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
@@ -44,44 +51,53 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField Button sendButton;
 
   @Inject private TonSdkInitializer tonSdkInitializer;
+  @Inject private NotificationManager notificationManager;
 
-  private Folder deploymentFolder;
-  private Abi abi;
-  private Map<String, File> abiMap;
+  private Map<String, Abi> abiMap;
   private Map<String, File> tvcMap;
-  private Map<String, UiFunction> functions;
 
   public SendMessageViewImpl() {
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
-  private static Map<String, UiFunction> extractFunctionsFromAbi(Abi abi) {
-    Map<String, UiFunction> result = new HashMap<>();
-    for (AbiFunction abiFunction : abi.getFunctions()) {
-      result.put(abiFunction.getName(), new UiFunction(abiFunction));
-    }
-
-    return result;
+  private static String keyNotFoundErrorMsg(File abiFile, boolean isPublic) {
+    return "Could not find "
+        + (isPublic ? "public" : "secret")
+        + " key file \""
+        + (isPublic
+            ? KeyUtil.publicKeyFileNameFromAbi(abiFile)
+            : KeyUtil.keyFileNameFromAbi(abiFile))
+        + "\". It must be stored in the same directory with the *.abi file.";
   }
 
-  private void populateFunctionList() {
+  private void populateFunctionList(Abi abi) {
     this.functionControl.clear();
 
-    for (AbiFunction function : this.abi.getFunctions()) {
+    for (AbiFunctionJso function : abi.getAbiJso().getFunctions()) {
       this.functionControl.addItem(function.getName());
     }
     if (this.functionControl.getItemCount() > 0) {
       this.functionControl.setSelectedIndex(0);
     }
+
     this.refreshInputsControl();
   }
 
-  private UiFunction getCurrentFunction() {
-    String functionName = this.functionControl.getSelectedItemText();
-    if (functionName == null) {
+  private Abi getSelectedAbi() {
+    String abiFileName = this.abiFileControl.getSelectedItemText();
+    if (abiFileName == null) {
       return null;
     }
-    return this.functions.get(functionName);
+    return this.abiMap.get(abiFileName);
+  }
+
+  private UiFunction getSelectedFunction() {
+    Abi abi = this.getSelectedAbi();
+    String functionName = this.functionControl.getSelectedItemText();
+    if (abi == null || functionName == null) {
+      return null;
+    }
+    return abi.getFunction(functionName);
   }
 
   private void refreshAbiControl() {
@@ -105,7 +121,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   }
 
   private void refreshInputsControl() {
-    UiFunction function = this.getCurrentFunction();
+    UiFunction function = this.getSelectedFunction();
     if (function == null) {
       this.inputsControl.resize(0, 2);
       this.inputsHeader.setVisible(false);
@@ -159,7 +175,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       return;
     }
 
-    this.updateAbi(this.abiMap.get(abiFileName));
+    Abi abi = this.abiMap.get(abiFileName);
+    if (abi.getAbiFile() == null) {
+      return;
+    }
+
+    this.updateAbi(abi);
   }
 
   @UiHandler("functionControl")
@@ -172,52 +193,89 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.sendMessage();
   }
 
+  private void error(String text) {
+    this.notificationManager.notify(text, Status.FAIL, DisplayMode.FLOAT_MODE);
+  }
+
   private void sendMessage() {
-    UiFunction function = this.getCurrentFunction();
+    UiFunction function = this.getSelectedFunction();
     if (function == null || function.hasEmptyParams()) {
       return;
     }
 
-    String messageId =
+    Abi abi = this.getSelectedAbi();
+    if (abi == null) {
+      return;
+    }
+
+    if (abi.getPrivateKeyFile() == null) {
+      this.error(keyNotFoundErrorMsg(abi.getAbiFile(), false));
+      return;
+    }
+
+    if (abi.getPublicKeyFile() == null) {
+      this.error(keyNotFoundErrorMsg(abi.getAbiFile(), true));
+      return;
+    }
+
+    String address =
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
     this.sendButton.setEnabled(false);
 
-    this.tonSdkInitializer.getTonSdk().then(TonSdkJso::sendMessage);
+    String[] privateKey = {null};
+    String[] publicKey = {null};
 
-    //    @SuppressWarnings("StringBufferReplaceableByString")
-    //    StringBuilder commandLine = new StringBuilder("cd ");
-    //
-    //
-    // commandLine.append(this.deploymentFolder.getLocation().makeRelativeTo(Path.ROOT).toString());
-    //    commandLine.append(" && ");
-    //
-    //    commandLine.append("tvm_linker message ");
-    //    commandLine.append(messageId);
-    //    commandLine.append(" -w 0");
-    //    commandLine.append(" --abi-json ");
-    //    commandLine.append(this.abiFileControl.getSelectedItemText());
-    //    commandLine.append(" --abi-method ");
-    //    commandLine.append(this.functionControl.getSelectedItemText());
-    //    commandLine.append(" --abi-params \"");
-    //    commandLine.append(function.paramsToJson().replace("\\", "\\\\").replace("\"", "\\\""));
-    //    commandLine.append("\" && ");
-    //    commandLine.append("cat | ./test-lite-client -C ton-global.json -f ");
-    //    commandLine.append(messageId, 0, 8);
-    //    commandLine.append("-msg-body.boc");
-    //
-    //    this.commandExecutor.executeCommand(
-    //        new CommandImpl("Send Message", commandLine.toString(), "ton-send-message"));
+    abi.getPrivateKeyFile()
+        .getContent()
+        .thenPromise(
+            (String privKeyContent) -> {
+              privateKey[0] = privKeyContent;
+              return abi.getPublicKeyFile()
+                  .getContent()
+                  .thenPromise(
+                      (String pubKeyContent) -> {
+                        publicKey[0] = pubKeyContent;
+                        return this.tonSdkInitializer
+                            .getTonSdk()
+                            .thenPromise(
+                                (TonSdkJso sdk) ->
+                                    sdk.runContract(
+                                        address,
+                                        this.functionControl.getSelectedItemText(),
+                                        abi.getAbiJso(),
+                                        function.paramsToJson(),
+                                        TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0])))
+                            .then((Void nothing) -> this.sendButton.setEnabled(true))
+                            .catchError(
+                                (PromiseError error) -> {
+                                  this.sendButton.setEnabled(true);
+                                  this.error("Error running contract: " + error.toString());
+                                });
+                      })
+                  .catchError(
+                      (error) -> {
+                        this.error("Error reading public key file. Error: " + error.toString());
+                      });
+            })
+        .catchError(
+            (error) -> {
+              this.error("Error reading private key file. Error: " + error.toString());
+            });
+  }
 
-    //    Window.alert("Sending message using SDK...");
+  private Abi getOrAddAbi(String fileName) {
+    Abi result = this.abiMap.get(fileName);
+    if (result == null) {
+      result = new Abi();
+      this.abiMap.put(fileName, result);
+    }
 
-    //    JavaScriptObject obj = this.moduleHolder.getModule("TonSdk");
-    //    Window.alert(obj == null ? "null" : obj.toString());
+    return result;
   }
 
   @Override
   public void updateDeploymentFolder(Folder deploymentFolder) {
-    this.deploymentFolder = deploymentFolder;
     this.abiMap = null;
     this.tvcMap = null;
 
@@ -240,8 +298,16 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                         this.tvcMap.put(file.getName(), file);
                         break;
                       case "abi":
-                        this.abiMap.put(file.getName(), file);
+                        this.getOrAddAbi(file.getName()).setAbiFile(file);
                         break;
+                      case "pub":
+                        this.getOrAddAbi(KeyUtil.abiFileNameFromKey(file)).setPublicKeyFile(file);
+                        break;
+                      default:
+                        if (KeyUtil.isPrivateKey(file)) {
+                          this.getOrAddAbi(KeyUtil.abiFileNameFromKey(file))
+                              .setPrivateKeyFile(file);
+                        }
                     }
                   }
 
@@ -252,30 +318,28 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                 });
   }
 
-  private void updateAbi(File abiFile) {
-    abiFile
+  private void updateAbi(Abi abi) {
+    abi.getAbiFile()
         .getContent()
         .then(
             (Function<String, Object>)
                 content -> {
-                  Abi abi = Abi.fromJson(content);
-                  this.abi = abi;
-                  this.functions = extractFunctionsFromAbi(abi);
+                  AbiJso abiJso = AbiJso.fromJson(content);
+                  abi.setAbiJso(abiJso);
+                  this.populateFunctionList(abi);
 
-                  this.populateFunctionList();
-
-                  return this.abi;
+                  return abiJso;
                 });
   }
 
   private void updateSendButton() {
-    UiFunction function = this.getCurrentFunction();
+    UiFunction function = this.getSelectedFunction();
     if (function == null) {
       this.sendButton.setEnabled(false);
       return;
     }
 
-    for (UiParameter parameter : this.getCurrentFunction().getInputs().values()) {
+    for (UiParameter parameter : this.getSelectedFunction().getInputs().values()) {
       if (parameter.getValue() == null || parameter.getValue().length() < 1) {
         this.sendButton.setEnabled(false);
         return;

@@ -15,7 +15,13 @@ export class TonSdk {
     return this.ton.setup();
   }
 
-  sendMessage() {
-    alert('sendMessage');
+  async runContract(address, functionName, abi, input, keyPair) {
+    return this.ton.contracts.run({
+      functionName,
+      address,
+      abi,
+      input,
+      keyPair,
+    });
   }
 }
