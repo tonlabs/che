@@ -6,8 +6,8 @@ import org.eclipse.che.api.promises.client.Promise;
 public final class TonSdkJso extends JavaScriptObject {
   protected TonSdkJso() {}
 
-  public final native Promise<Void> initApp() /*-{
-    return this.initApp();
+  public final native Promise<Void> initTon() /*-{
+    return this.initTon();
   }-*/;
 
   public final native void sendMessage() /*-{
