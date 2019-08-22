@@ -1,17 +1,16 @@
 package io.tonlabs.ide.util;
 
-import java.nio.charset.StandardCharsets;
+import com.google.gwt.typedarrays.shared.Uint8Array;
 
 public class HexUtil {
   private static final String HEX = "0123456789abcdef";
 
-  public static String strToHex(String str) {
-    byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-
+  public static String toHex(Uint8Array array) {
     StringBuilder result = new StringBuilder();
-    for (byte b : bytes) {
-      result.append(HEX.charAt(b & 0xFF >> 4));
-      result.append(HEX.charAt(b & 0x0F));
+    for (int i = 0; i < array.length(); i++) {
+      short value = array.get(i);
+      result.append(HEX.charAt((value & 0xFF) >> 4));
+      result.append(HEX.charAt(value & 0x0F));
     }
 
     return result.toString();

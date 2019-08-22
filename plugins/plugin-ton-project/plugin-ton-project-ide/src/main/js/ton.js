@@ -16,12 +16,14 @@ export class TonSdk {
   }
 
   async runContract(address, functionName, abi, input, keyPair) {
-    return this.ton.contracts.run({
+    var obj = {
       functionName,
       address,
       abi,
       input,
       keyPair,
-    });
+    };
+    console.log(obj);
+    return this.ton.contracts.run(obj);
   }
 }

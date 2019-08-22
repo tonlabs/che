@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.typedarrays.shared.Uint8Array;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,6 +25,7 @@ import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
 import io.tonlabs.ide.sdk.jso.TonSdkJso;
 import io.tonlabs.ide.util.HexUtil;
+import io.tonlabs.ide.util.HttpUtil;
 import io.tonlabs.ide.util.KeyUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -227,16 +229,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String[] privateKey = {null};
     String[] publicKey = {null};
 
-    abi.getPrivateKeyFile()
-        .getContent()
+    HttpUtil.getFileContent(abi.getPrivateKeyFile())
         .thenPromise(
-            (String privKeyContent) -> {
-              privateKey[0] = HexUtil.strToHex(privKeyContent);
-              return abi.getPublicKeyFile()
-                  .getContent()
+            (Uint8Array privKeyContent) -> {
+              privateKey[0] = HexUtil.toHex(privKeyContent);
+              return HttpUtil.getFileContent(abi.getPublicKeyFile())
                   .thenPromise(
-                      (String pubKeyContent) -> {
-                        publicKey[0] = HexUtil.strToHex(pubKeyContent);
+                      (Uint8Array pubKeyContent) -> {
+                        publicKey[0] = HexUtil.toHex(pubKeyContent);
                         return this.tonSdkInitializer
                             .getTonSdk()
                             .thenPromise(
@@ -251,17 +251,17 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                             .catchError(
                                 (PromiseError error) -> {
                                   this.sendButton.setEnabled(true);
-                                  this.error("Error running contract: " + error.toString());
+                                  this.error("Error running contract: " + error.getMessage());
                                 });
                       })
                   .catchError(
                       (error) -> {
-                        this.error("Error reading public key file. Error: " + error.toString());
+                        this.error("Error reading public key file. Error: " + error.getMessage());
                       });
             })
         .catchError(
             (error) -> {
-              this.error("Error reading private key file. Error: " + error.toString());
+              this.error("Error reading private key file. Error: " + error.getMessage());
             })
         .then(
             (Void) -> {

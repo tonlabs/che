@@ -17,6 +17,6 @@ public final class TonSdkJso extends JavaScriptObject {
       AbiJso abiJso,
       JavaScriptObject input,
       TONKeyPairDataJso keyPair) /*-{
-    return this.runContract(address, functionName, abi, input, keyPair);
+    return this.runContract(address, functionName, abiJso, input, keyPair);
   }-*/;
 }
