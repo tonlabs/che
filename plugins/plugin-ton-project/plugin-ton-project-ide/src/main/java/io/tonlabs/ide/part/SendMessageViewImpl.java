@@ -63,13 +63,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
-  private static String keyNotFoundErrorMsg(File abiFile, boolean isPublic) {
-    return "Could not find "
-        + (isPublic ? "public" : "secret")
-        + " key file \""
-        + (isPublic
-            ? KeyUtil.publicKeyFileNameFromAbi(abiFile)
-            : KeyUtil.keyFileNameFromAbi(abiFile))
+  private static String keyNotFoundErrorMsg(File abiFile) {
+    return "Could not find secret key file \""
+        + KeyUtil.keyFileNameFromAbi(abiFile)
         + "\". It must be stored in the same directory with the *.abi file.";
   }
 
@@ -211,13 +207,8 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       return;
     }
 
-    if (abi.getPrivateKeyFile() == null) {
-      this.error(keyNotFoundErrorMsg(abi.getAbiFile(), false));
-      return;
-    }
-
-    if (abi.getPublicKeyFile() == null) {
-      this.error(keyNotFoundErrorMsg(abi.getAbiFile(), true));
+    if (abi.getKeyFile() == null) {
+      this.error(keyNotFoundErrorMsg(abi.getAbiFile()));
       return;
     }
 
@@ -229,42 +220,36 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String[] privateKey = {null};
     String[] publicKey = {null};
 
-    HttpUtil.getFileContent(abi.getPrivateKeyFile())
+    HttpUtil.getFileContent(abi.getKeyFile())
         .thenPromise(
             (Uint8Array privKeyContent) -> {
-              privateKey[0] = HexUtil.toHex(privKeyContent);
-              return HttpUtil.getFileContent(abi.getPublicKeyFile())
+              privateKey[0] = HexUtil.toHex(privKeyContent.subarray(0, 32));
+              publicKey[0] = HexUtil.toHex(privKeyContent.subarray(32, 64));
+              return this.tonSdkInitializer
+                  .getTonSdk()
                   .thenPromise(
-                      (Uint8Array pubKeyContent) -> {
-                        publicKey[0] = HexUtil.toHex(pubKeyContent);
-                        return this.tonSdkInitializer
-                            .getTonSdk()
-                            .thenPromise(
-                                (TonSdkJso sdk) ->
-                                    sdk.runContract(
-                                        address,
-                                        this.functionControl.getSelectedItemText(),
-                                        abi.getAbiJso(),
-                                        function.paramsToJson(),
-                                        TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0])))
-                            .then((Void nothing) -> this.sendButton.setEnabled(true))
-                            .catchError(
-                                (PromiseError error) -> {
-                                  this.sendButton.setEnabled(true);
-                                  this.error("Error running contract: " + error.getMessage());
-                                });
-                      })
+                      (TonSdkJso sdk) ->
+                          sdk.runContract(
+                              address,
+                              this.functionControl.getSelectedItemText(),
+                              abi.getAbiJso(),
+                              function.paramsToJson(),
+                              TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0])))
+                  .then((Void nothing) -> this.sendButton.setEnabled(true))
                   .catchError(
-                      (error) -> {
-                        this.error("Error reading public key file. Error: " + error.getMessage());
+                      (PromiseError error) -> {
+                        this.sendButton.setEnabled(true);
+                        this.error("Error running contract: " + error.getMessage());
                       });
             })
         .catchError(
             (error) -> {
-              this.error("Error reading private key file. Error: " + error.getMessage());
+              this.sendButton.setEnabled(true);
+              this.error("Error reading secret key file. Error: " + error.getMessage());
             })
         .then(
             (Void) -> {
+              this.sendButton.setEnabled(true);
               this.notificationManager.notify("Method of contract run successfully!");
             });
   }
@@ -305,13 +290,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                       case "abi":
                         this.getOrAddAbi(file.getName()).setAbiFile(file);
                         break;
-                      case "pub":
-                        this.getOrAddAbi(KeyUtil.abiFileNameFromKey(file)).setPublicKeyFile(file);
-                        break;
                       default:
-                        if (KeyUtil.isPrivateKey(file)) {
-                          this.getOrAddAbi(KeyUtil.abiFileNameFromKey(file))
-                              .setPrivateKeyFile(file);
+                        if (KeyUtil.isKeyFile(file)) {
+                          this.getOrAddAbi(KeyUtil.abiFileNameFromKey(file)).setKeyFile(file);
                         }
                     }
                   }

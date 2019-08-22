@@ -15,6 +15,9 @@ public final class HttpUtil {
     return Promises.create(
         (resolve, reject) -> {
           XMLHttpRequest request = XMLHttpRequest.create();
+
+          Console.log(file.getContentUrl());
+
           request.open("GET", file.getContentUrl());
           request.setResponseType(ResponseType.ArrayBuffer);
           request.setOnReadyStateChange(
@@ -22,7 +25,8 @@ public final class HttpUtil {
                 if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                   if (xhr.getStatus() == 200) {
                     ArrayBuffer buffer = xhr.getResponseArrayBuffer();
-                    resolve.apply(TypedArrays.createUint8Array(buffer));
+                    Uint8Array array = TypedArrays.createUint8Array(buffer);
+                    resolve.apply(array);
                   } else {
                     reject.apply(
                         JsPromiseError.create(

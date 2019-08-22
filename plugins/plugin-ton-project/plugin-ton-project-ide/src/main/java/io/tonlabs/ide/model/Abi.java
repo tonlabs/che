@@ -7,8 +7,7 @@ import org.eclipse.che.ide.api.resources.File;
 public class Abi {
   private AbiJso abiJso;
   private File abiFile;
-  private File privateKeyFile;
-  private File publicKeyFile;
+  private File keyFile;
 
   Map<String, UiFunction> functions;
 
@@ -31,20 +30,12 @@ public class Abi {
     this.abiFile = abiFile;
   }
 
-  public File getPrivateKeyFile() {
-    return this.privateKeyFile;
+  public File getKeyFile() {
+    return this.keyFile;
   }
 
-  public void setPrivateKeyFile(File privateKeyFile) {
-    this.privateKeyFile = privateKeyFile;
-  }
-
-  public File getPublicKeyFile() {
-    return this.publicKeyFile;
-  }
-
-  public void setPublicKeyFile(File publicKeyFile) {
-    this.publicKeyFile = publicKeyFile;
+  public void setKeyFile(File keyFile) {
+    this.keyFile = keyFile;
   }
 
   public UiFunction getFunction(String name) {
