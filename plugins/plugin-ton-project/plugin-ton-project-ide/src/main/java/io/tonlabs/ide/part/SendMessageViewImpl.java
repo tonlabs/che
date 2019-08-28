@@ -230,6 +230,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                   .thenPromise(
                       (TonSdkJso sdk) ->
                           sdk.runContract(
+                              "services.tonlabs.io",
                               address,
                               this.functionControl.getSelectedItemText(),
                               abi.getAbiJso(),

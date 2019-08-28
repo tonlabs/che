@@ -7,16 +7,13 @@ import org.eclipse.che.api.promises.client.Promise;
 public final class TonSdkJso extends JavaScriptObject {
   protected TonSdkJso() {}
 
-  public final native Promise<Void> setup() /*-{
-    return this.setup();
-  }-*/;
-
   public final native Promise<Void> runContract(
+      String node,
       String address,
       String functionName,
       AbiJso abiJso,
       JavaScriptObject input,
       TONKeyPairDataJso keyPair) /*-{
-    return this.runContract(address, functionName, abiJso, input, keyPair);
+    return this.runContract(node, address, functionName, abiJso, input, keyPair);
   }-*/;
 }

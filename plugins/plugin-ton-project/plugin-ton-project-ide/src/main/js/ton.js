@@ -3,27 +3,25 @@ import {TONClient} from 'ton-sdk-js';
 
 export class TonSdk {
   constructor() {
-    this.ton = TONClient.shared;
+  }
+
+  async runContract(node, address, functionName, abi, input, keyPair) {
+    var ton = TONClient();
     TONClient.setLibrary(TONClientLibrary);
-    this.ton.config.setData({
-      servers: ['services.tonlabs.io'],
-      log_verbose: true
+    ton.setup().then(function(){
+      ton.config.setData({
+        servers: [node],
+        log_verbose: true
+      });
+      var obj = {
+        functionName,
+        address,
+        abi,
+        input,
+        keyPair,
+      };
+      console.log(obj);
+      return this.ton.contracts.run(obj);
     });
-  }
-
-  async setup() {
-    return this.ton.setup();
-  }
-
-  async runContract(address, functionName, abi, input, keyPair) {
-    var obj = {
-      functionName,
-      address,
-      abi,
-      input,
-      keyPair,
-    };
-    console.log(obj);
-    return this.ton.contracts.run(obj);
   }
 }
