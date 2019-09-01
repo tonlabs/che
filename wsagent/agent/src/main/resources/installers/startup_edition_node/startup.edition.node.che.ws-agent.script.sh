@@ -319,7 +319,7 @@ fi
 
 ans = 0
 
-if [ -d /home/user/sdk-prototype/ ] && [ -f /home/user/bin/stdlib_c.tvm ] && [ -d /home/user/LLVM/ ] 
+if [ -d /usr/bin/clang ] && [ -d /usr/bin/clang-7 ] && [ -f /usr/bin/stdlib_c.tvm ]
 then
 	echo "C compiler is exist"
 	let "ans = ans + 1"
@@ -327,7 +327,7 @@ else
 	echo "C compiler is missing"
 fi
 
-if [ -f /home/user/LLVM/bin/solc ] && [ -f /home/user/bin/stdlib_sol.tvm ]
+if [ -f /usr/bin/solc ] && [ -f /usr/bin/stdlib_sol.tvm ]
 then
 	echo "Solidity compiler is exist"
 	let "ans = ans + 1"
@@ -335,7 +335,7 @@ else
 	echo "Solidity compiler is missing"
 fi
 
-if [ -f /home/user/bin/tvm_linker]
+if [ -f /usr/bin/tvm_linker]
 then
 	echo "Linker is exist"
 	let "ans = ans + 1"
@@ -343,7 +343,7 @@ else
 	echo "Linker is missing"
 fi
 
-if [ -f /home/user/bin/ton-node]
+if [ -f /usr/bin/ton-node]
 then
 	echo "Node is exist"
 	let "ans = ans + 1"
