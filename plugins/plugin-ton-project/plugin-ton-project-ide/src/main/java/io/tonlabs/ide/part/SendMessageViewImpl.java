@@ -43,6 +43,8 @@ import org.eclipse.che.ide.api.resources.Resource;
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
 
+  private static final String SERVER_TERMINAL_REFERENCE = "se-node";
+
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
 
@@ -55,11 +57,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
+  @Inject private AgentURLModifier agentURLModifier;
+  private final Machine machine;
 
   private Map<String, Abi> abiMap;
   private Map<String, File> tvcMap;
 
-  public SendMessageViewImpl() {
+  public SendMessageViewImpl(@Assisted Machine machine) {
+    this.machine = machine;
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
@@ -195,8 +200,17 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private void error(String text) {
     this.notificationManager.notify(text, Status.FAIL, DisplayMode.FLOAT_MODE);
   }
-
+   
   private void sendMessage() {
+    Server server =
+        machine.getServers()
+            .get(SERVER_TERMINAL_REFERENCE)
+            .orElseThrow(() -> new OperationException("No SE-node server found."));
+    String sdkEndpoint = agentURLModifier.modify(server.getUrl());
+    sendMessage(sdkEndpoint);
+  }
+
+  private void sendMessage(@NotNull String wsUrl) {
     UiFunction function = this.getSelectedFunction();
     if (function == null || function.hasEmptyParams()) {
       return;
