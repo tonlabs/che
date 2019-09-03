@@ -111,6 +111,7 @@
   },
   {
     "name": "TON LLVM VM - Node SE",
+    "id": "ton-llvm-vm-node-se",
     "description": "TON LLVM VM Stack with SE node as sidecar container",
     "scope": "general",
     "tags": [
