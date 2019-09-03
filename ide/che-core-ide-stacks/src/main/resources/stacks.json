@@ -123,7 +123,7 @@
           "recipe": {
             "contentType": "text/x-yaml",
             "type": "kubernetes",
-            "content": "apiVersion: v1\nkind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     name: compiler-kit\n     image: 'ton_environment:compiler-kit-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n     limits:\n      memory: 1000Mi\n    - \n     name: se-node\n     image: 'ton_environment:se-node-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n"
+            "content": "apiVersion: v1\nkind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     name: compiler-kit\n     image: 'tonlabs/ton_environment:compiler-kit-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n     limits:\n      memory: 1000Mi\n    - \n     name: se-node\n     image: 'tonlabs/ton_environment:node-se-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n"
           },
           "machines": {
             "ws/compiler-kit": {
