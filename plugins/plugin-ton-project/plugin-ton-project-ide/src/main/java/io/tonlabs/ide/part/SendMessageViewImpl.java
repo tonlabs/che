@@ -23,15 +23,20 @@ import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
-import io.tonlabs.ide.sdk.jso.TonSdkJso;
 import io.tonlabs.ide.util.HexUtil;
 import io.tonlabs.ide.util.HttpUtil;
 import io.tonlabs.ide.util.KeyUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.validation.constraints.NotNull;
+import org.eclipse.che.api.core.model.workspace.Runtime;
+import org.eclipse.che.api.core.model.workspace.Workspace;
+import org.eclipse.che.api.core.model.workspace.runtime.Machine;
+import org.eclipse.che.api.core.model.workspace.runtime.Server;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.api.promises.client.PromiseError;
+import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
 import org.eclipse.che.ide.api.notification.StatusNotification.Status;
@@ -39,10 +44,12 @@ import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.resources.File;
 import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
+import org.eclipse.che.ide.core.AgentURLModifier;
 
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
 
+  private static final String MACHINE_TERMINAL_REFERENCE = "ws/se-node";
   private static final String SERVER_TERMINAL_REFERENCE = "se-node";
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
@@ -54,17 +61,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
-
+  @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
   @Inject private AgentURLModifier agentURLModifier;
-  private final Machine machine;
-
   private Map<String, Abi> abiMap;
   private Map<String, File> tvcMap;
 
-  public SendMessageViewImpl(@Assisted Machine machine) {
-    this.machine = machine;
+  public SendMessageViewImpl() {
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
@@ -200,14 +204,37 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private void error(String text) {
     this.notificationManager.notify(text, Status.FAIL, DisplayMode.FLOAT_MODE);
   }
-   
+
+  private Server getServer(String machineName, String serverName) {
+    Workspace workspace = this.appContext.getWorkspace();
+    Runtime runtime = workspace.getRuntime();
+    if (runtime == null) {
+      throw new IllegalStateException("Cannot get runtime");
+    }
+
+    Machine machine = runtime.getMachines().get(machineName);
+    if (machine == null) {
+      throw new IllegalArgumentException("Machine not found: " + machineName);
+    }
+
+    Server server = machine.getServers().get(serverName);
+    if (server == null) {
+      throw new IllegalArgumentException("Server not found: " + serverName);
+    }
+
+    return server;
+  }
+
   private void sendMessage() {
-    Server server =
-        machine.getServers()
-            .get(SERVER_TERMINAL_REFERENCE)
-            .orElseThrow(() -> new OperationException("No SE-node server found."));
-    String sdkEndpoint = agentURLModifier.modify(server.getUrl());
-    sendMessage(sdkEndpoint);
+    Server server;
+    try {
+      server = this.getServer(MACHINE_TERMINAL_REFERENCE, SERVER_TERMINAL_REFERENCE);
+    } catch (Exception ex) {
+      this.error(ex.getMessage());
+      return;
+    }
+    String sdkEndpoint = this.agentURLModifier.modify(server.getUrl());
+    this.sendMessage(sdkEndpoint);
   }
 
   private void sendMessage(@NotNull String wsUrl) {
@@ -241,15 +268,13 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
               publicKey[0] = HexUtil.toHex(privKeyContent.subarray(32, 64));
               return this.tonSdkInitializer
                   .getTonSdk()
-                  .thenPromise(
-                      (TonSdkJso sdk) ->
-                          sdk.runContract(
-                              "services.tonlabs.io",
-                              address,
-                              this.functionControl.getSelectedItemText(),
-                              abi.getAbiJso(),
-                              function.paramsToJson(),
-                              TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0])))
+                  .runContract(
+                      "services.tonlabs.io",
+                      address,
+                      this.functionControl.getSelectedItemText(),
+                      abi.getAbiJso(),
+                      function.paramsToJson(),
+                      TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0]))
                   .then((Void nothing) -> this.sendButton.setEnabled(true))
                   .catchError(
                       (PromiseError error) -> {

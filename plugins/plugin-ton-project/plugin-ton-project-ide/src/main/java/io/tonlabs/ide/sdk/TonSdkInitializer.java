@@ -8,9 +8,6 @@ import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.tonlabs.ide.sdk.jso.TonSdkJso;
-import org.eclipse.che.api.promises.client.Promise;
-import org.eclipse.che.api.promises.client.PromiseError;
-import org.eclipse.che.api.promises.client.js.Promises;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
 import org.eclipse.che.ide.api.notification.StatusNotification.Status;
@@ -46,30 +43,10 @@ public class TonSdkInitializer {
     return new window.top.frames['ide-application-iframe'].contentWindow.TonSdk.TonSdk();
   }-*/;
 
-  public Promise<TonSdkJso> getTonSdk() {
+  public TonSdkJso getTonSdk() {
     if (this.tonSdk == null) {
-      TonSdkJso tonSdk = createTonSdk();
-      return Promises.create(
-          (success, fail) ->
-              tonSdk
-                  .setup()
-                  .then(
-                      (Void nothing) -> {
-                        success.apply(tonSdk);
-                        this.tonSdk = tonSdk;
-                      })
-                  .catchError(
-                      (PromiseError error) -> {
-                        TonSdkInitializer.this.notificationManager.notify(
-                            "Ton SDK initialization error: " + error.getMessage(),
-                            Status.FAIL,
-                            DisplayMode.FLOAT_MODE);
-                      }));
+      this.tonSdk = createTonSdk();
     }
-
-    return Promises.create(
-        (success, fail) -> {
-          success.apply(this.tonSdk);
-        });
+    return this.tonSdk;
   }
 }

@@ -3,21 +3,16 @@ package io.tonlabs.ide.part;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import io.tonlabs.ide.TonProjectResources;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
-import org.eclipse.che.ide.api.workspace.model.MachineImpl;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-@Singleton
 public class SendMessagePresenter extends BasePresenter implements SendMessageView.ActionDelegate {
   private SendMessageView view;
-  private final MachineImpl machine;
 
   @Inject
-  private SendMessagePresenter(SendMessageView view, @NotNull @Assisted MachineImpl machine) {
+  private SendMessagePresenter(SendMessageView view) {
     this.view = view;
-    this.machine = machine;
   }
 
   @Override

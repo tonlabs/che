@@ -19,16 +19,19 @@ public class TonCProjectWizardRegistrar implements ProjectWizardRegistrar {
     this.wizardPagesProviders = new ArrayList<>();
   }
 
+  @Override
   @NotNull
   public String getProjectTypeId() {
     return Constants.TON_C_PROJECT_TYPE_ID;
   }
 
+  @Override
   @NotNull
   public String getCategory() {
     return Constants.TON_CATEGORY;
   }
 
+  @Override
   @NotNull
   public List<Provider<? extends WizardPage<MutableProjectConfig>>> getWizardPages() {
     return this.wizardPagesProviders;
