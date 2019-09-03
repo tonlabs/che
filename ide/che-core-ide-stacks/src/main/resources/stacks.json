@@ -1,112 +1,204 @@
 [
-{
-  "scope": "general",
-  "description": "TON LLVM VM Stack",
-  "workspaceConfig": {
-    "commands": [
-        {
-            "commandLine": "cat | sh /home/user/bin/deploy_all.sh ${current.project.path}", 
-            "name": "Deploy All Contracts", 
-            "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-            },
-            "type": "custom"
-        },
-        {
-            "commandLine": "cat | sh /home/user/bin/deploy_this.sh ${current.project.path} ${editor.current.file.name} ${editor.current.file.basename}",
-            "name": "Deploy Selected Contract", 
-            "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-            },
-            "type": "custom"
-        },
-        {
-            "commandLine": "sudo killall ton-node",
-            "name": "Stop Local Node",
-            "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-            },
-            "type": "custom"
-        },
-        {
-            "commandLine": "screen -d -m sh /home/user/bin/restart_node.sh",
-            "name": "Restart Local Node",
-            "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-            },
-            "type": "custom"
-        },
-        {
-            "commandLine": "cd /home/user/bin/ && sudo ./ton-node --localhost --config dummy",
-            "name": "Start Local Node",
-            "attributes": {
-            "goal": "Run", 
-            "previewUrl": ""
-            },
-            "type": "custom"
-        }
-    ],
-    "projects": [
-        {
-            "description": "A basic example of TON contract written in Solidity.",
-            "source": {
-                "location": "https://github.com/BorisI/Foo1.git",
-                "type": "git",
-                "parameters": {}
-            },
-            "links": [],
-            "mixins": [],
-            "problems": [],
-            "name": "ton-solidity-contract-example",
-            "type": "ton-solidity-project",
-            "path": "/project",
-            "attributes": {}
-        }
-    ],
-    "defaultEnv": "default",
-    "environments": {
-      "default": {
-        "recipe": {
-          "contentType": "",
-          "type": "dockerimage",
-          "content": "tonlabs/ton_environment:latest"
-        },
-        "machines": {
-          "new-machine": {
-            "installers": [
-              "org.eclipse.che.terminal",
-              "org.eclipse.che.ws-agent",
-              "org.eclipse.che.ssh",
-              "org.eclipse.che.exec"
-            ],
-            "env": {},
-            "servers": {},
-            "volumes": {},
-            "attributes": {
-              "memoryLimitBytes": "1073741824"
+  {
+    "scope": "general",
+    "description": "TON LLVM VM Stack",
+    "workspaceConfig": {
+      "commands": [
+          {
+              "commandLine": "cat | sh /home/user/bin/deploy_all.sh ${current.project.path}", 
+              "name": "Deploy All Contracts", 
+              "attributes": {
+              "goal": "Run",
+              "previewUrl": ""
+              },
+              "type": "custom"
+          },
+          {
+              "commandLine": "cat | sh /home/user/bin/deploy_this.sh ${current.project.path} ${editor.current.file.name} ${editor.current.file.basename}",
+              "name": "Deploy Selected Contract", 
+              "attributes": {
+              "goal": "Run",
+              "previewUrl": ""
+              },
+              "type": "custom"
+          },
+          {
+              "commandLine": "sudo killall ton-node",
+              "name": "Stop Local Node",
+              "attributes": {
+              "goal": "Run",
+              "previewUrl": ""
+              },
+              "type": "custom"
+          },
+          {
+              "commandLine": "screen -d -m sh /home/user/bin/restart_node.sh",
+              "name": "Restart Local Node",
+              "attributes": {
+              "goal": "Run",
+              "previewUrl": ""
+              },
+              "type": "custom"
+          },
+          {
+              "commandLine": "cd /home/user/bin/ && sudo ./ton-node --localhost --config dummy",
+              "name": "Start Local Node",
+              "attributes": {
+              "goal": "Run", 
+              "previewUrl": ""
+              },
+              "type": "custom"
+          }
+      ],
+      "projects": [
+          {
+              "description": "A basic example of TON contract written in Solidity.",
+              "source": {
+                  "location": "https://github.com/BorisI/Foo1.git",
+                  "type": "git",
+                  "parameters": {}
+              },
+              "links": [],
+              "mixins": [],
+              "problems": [],
+              "name": "ton-solidity-contract-example",
+              "type": "ton-solidity-project",
+              "path": "/project",
+              "attributes": {}
+          }
+      ],
+      "defaultEnv": "default",
+      "environments": {
+        "default": {
+          "recipe": {
+            "contentType": "",
+            "type": "dockerimage",
+            "content": "tonlabs/ton_environment:latest"
+          },
+          "machines": {
+            "new-machine": {
+              "installers": [
+                "org.eclipse.che.terminal",
+                "org.eclipse.che.ws-agent",
+                "org.eclipse.che.ssh",
+                "org.eclipse.che.exec"
+              ],
+              "env": {},
+              "servers": {},
+              "volumes": {},
+              "attributes": {
+                "memoryLimitBytes": "1073741824"
+              }
             }
           }
         }
-      }
+      },
+      "name": "default",
+      "attributes": {},
+      "links": []
     },
-    "name": "default",
-    "attributes": {},
-    "links": []
+    "components": [],
+    "creator": "ide",
+    "tags": [
+      "TVM"
+    ],
+    "name": "TON LLVM VM",
+    "id": "ton-llvm-vm",
+    "stackIcon": {
+        "name": "type-ton.svg",
+        "mediaType": "image/svg+xml"
+      }
   },
-  "components": [],
-  "creator": "ide",
-  "tags": [
-    "TVM"
-  ],
-  "name": "TON LLVM VM",
-  "id": "ton-llvm-vm",
-  "stackIcon": {
-      "name": "type-ton.svg",
-      "mediaType": "image/svg+xml"
-    }
-}
+  {
+    "name": "TON LLVM VM - Node SE",
+    "id": "ton-llvm-vm-node-se",
+    "description": "TON LLVM VM Stack with SE node as sidecar container",
+    "scope": "general",
+    "tags": [
+      "TVM"
+    ],
+    "workspaceConfig": {
+      "environments": {
+        "default": {
+          "recipe": {
+            "contentType": "text/x-yaml",
+            "type": "kubernetes",
+            "content": "apiVersion: v1\nkind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     name: compiler-kit\n     image: 'tonlabs/ton_environment:compiler-kit-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n     limits:\n      memory: 1000Mi\n    - \n     name: se-node\n     image: 'tonlabs/ton_environment:node-se-release-candidate'\n     resources:\n      limits:\n       memory: 512Mi\n"
+          },
+          "machines": {
+            "ws/compiler-kit": {
+              "env": {},
+              "servers": {},
+              "volumes": {},
+              "installers": [
+                "org.eclipse.che.exec",
+                "org.eclipse.che.ssh",
+                "org.eclipse.che.terminal",
+                "org.eclipse.che.ws-agent"
+              ],
+              "attributes": {
+                "memoryLimitBytes": "536870912"
+              }
+            },
+            "ws/se-node": {
+              "env": {},
+              "servers": {
+                "se-node": {
+                  "path": "/",
+                  "protocol": "http",
+                  "port": "80",
+                  "attributes": {}
+                },
+                "se-node-graphql": {
+                  "path": "/graphql",
+                  "protocol": "http",
+                  "port": "80",
+                  "attributes": {}
+                }                
+              },
+              "volumes": {},
+              "installers": [],
+              "attributes": {
+                "memoryLimitBytes": "536870912"
+              }
+            }
+          }
+        }
+      },
+      "projects": [
+      {
+        "name": "service",
+          "displayName": "service",
+        "description": "",
+          "path": "/service",
+          "category": ""
+        }
+      ],
+      "commands": [
+        {
+          "commandLine": "cat | sh /opt/app/scripts/deploy_this.sh ${current.project.path} ${editor.current.file.name} ${editor.current.file.basename}",
+          "name": "Deploy Selected Contract",
+          "type": "custom",
+          "attributes": {
+            "goal": "Run",
+            "previewUrl": ""
+          }
+        },
+        {
+          "commandLine": "cat | sh /opt/app/scripts/deploy_all.sh ${current.project.path}",
+          "name": "Deploy All Contracts",
+          "type": "custom",
+          "attributes": {
+            "goal": "Run",
+            "previewUrl": ""
+          }
+        }
+      ],
+      "defaultEnv": "default",
+      "name": "default",
+      "attributes": {},
+      "links": []
+    },
+    "components": []
+  }
 ]
