@@ -151,11 +151,7 @@
                 }
               },
               "volumes": {},
-              "installers": [
-                "org.eclipse.che.exec",
-                "org.eclipse.che.ssh",
-                "org.eclipse.che.terminal"
-              ],
+              "installers": [],
               "attributes": {
                 "memoryLimitBytes": "536870912"
               }
