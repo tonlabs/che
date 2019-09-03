@@ -143,12 +143,18 @@
             "ws/se-node": {
               "env": {},
               "servers": {
+                "se-node": {
+                  "path": "/",
+                  "protocol": "http",
+                  "port": "80",
+                  "attributes": {}
+                },
                 "se-node-graphql": {
                   "path": "/graphql",
                   "protocol": "http",
                   "port": "80",
                   "attributes": {}
-                }
+                }                
               },
               "volumes": {},
               "installers": [],
@@ -170,16 +176,7 @@
       ],
       "commands": [
         {
-          "commandLine": "sudo killall ton-node",
-          "name": "Stop Local Node",
-          "type": "custom",
-          "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-          }
-        },
-        {
-          "commandLine": "cat | sh /home/user/bin/deploy_this.sh ${current.project.path} ${editor.current.file.name} ${editor.current.file.basename}",
+          "commandLine": "cat | sh /opt/app/scripts/deploy_this.sh ${current.project.path} ${editor.current.file.name} ${editor.current.file.basename}",
           "name": "Deploy Selected Contract",
           "type": "custom",
           "attributes": {
@@ -188,26 +185,8 @@
           }
         },
         {
-          "commandLine": "screen -d -m sh /home/user/bin/restart_node.sh",
-          "name": "Restart Local Node",
-          "type": "custom",
-          "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-          }
-        },
-        {
-          "commandLine": "cat | sh /home/user/bin/deploy_all.sh ${current.project.path}",
+          "commandLine": "cat | sh /opt/app/scripts/deploy_all.sh ${current.project.path}",
           "name": "Deploy All Contracts",
-          "type": "custom",
-          "attributes": {
-            "goal": "Run",
-            "previewUrl": ""
-          }
-        },
-        {
-          "commandLine": "cd /home/user/bin/ && sudo ./ton-node --localhost --config dummy",
-          "name": "Start Local Node",
           "type": "custom",
           "attributes": {
             "goal": "Run",
