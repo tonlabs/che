@@ -261,7 +261,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String[] privateKey = {null};
     String[] publicKey = {null};
 
-    HttpUtil.getFileContent(abi.getKeyFile())
+    HttpUtil.getFileContent(this.appContext, abi.getKeyFile())
         .thenPromise(
             (Uint8Array privKeyContent) -> {
               privateKey[0] = HexUtil.toHex(privKeyContent.subarray(0, 32));
