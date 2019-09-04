@@ -23,6 +23,11 @@
             <artifactId>guice</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.googlecode.gwt-crypto</groupId>
+            <artifactId>gwt-crypto</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.tonlabs</groupId>
             <artifactId>plugin-ton-project-shared</artifactId>
             <version>${project.version}</version>

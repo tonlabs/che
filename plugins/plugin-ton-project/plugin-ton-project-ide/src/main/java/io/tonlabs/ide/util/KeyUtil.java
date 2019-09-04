@@ -4,10 +4,11 @@ import org.eclipse.che.ide.api.resources.File;
 
 public final class KeyUtil {
   private static final String KEY_FILENAME_SUFFIX = "_key";
+  private static final String KEY_FILENAME_EXT = "base64";
 
   public static boolean isKeyFile(File file) {
     return file.getNameWithoutExtension().endsWith(KEY_FILENAME_SUFFIX)
-        && file.getExtension() == null;
+        && KEY_FILENAME_EXT.equals(file.getExtension());
   }
 
   public static String abiFileNameFromKey(File file) {
@@ -19,6 +20,6 @@ public final class KeyUtil {
   }
 
   public static String keyFileNameFromAbi(File file) {
-    return file.getNameWithoutExtension() + KEY_FILENAME_SUFFIX;
+    return file.getNameWithoutExtension() + KEY_FILENAME_SUFFIX + "." + KEY_FILENAME_EXT;
   }
 }

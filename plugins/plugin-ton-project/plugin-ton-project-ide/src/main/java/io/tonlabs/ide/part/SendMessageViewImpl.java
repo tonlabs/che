@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.typedarrays.shared.Uint8Array;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -15,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import io.tonlabs.ide.event.InputEvent;
 import io.tonlabs.ide.model.Abi;
 import io.tonlabs.ide.model.AbiFunctionJso;
@@ -24,8 +24,8 @@ import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
 import io.tonlabs.ide.util.HexUtil;
-import io.tonlabs.ide.util.HttpUtil;
 import io.tonlabs.ide.util.KeyUtil;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -49,8 +49,8 @@ import org.eclipse.che.ide.core.AgentURLModifier;
 public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
     implements SendMessageView {
 
-  private static final String MACHINE_TERMINAL_REFERENCE = "ws/se-node";
-  private static final String SERVER_TERMINAL_REFERENCE = "se-node";
+  private static final String SE_NODE_MACHINE = "ws/se-node";
+  private static final String SE_NODE_SERVER = "se-node";
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
@@ -205,21 +205,22 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.notificationManager.notify(text, Status.FAIL, DisplayMode.FLOAT_MODE);
   }
 
-  private Server getServer(String machineName, String serverName) {
+  private Server getSeNodeServer() {
     Workspace workspace = this.appContext.getWorkspace();
     Runtime runtime = workspace.getRuntime();
     if (runtime == null) {
       throw new IllegalStateException("Cannot get runtime");
     }
 
-    Machine machine = runtime.getMachines().get(machineName);
+    Machine machine = runtime.getMachines().get(SendMessageViewImpl.SE_NODE_MACHINE);
     if (machine == null) {
-      throw new IllegalArgumentException("Machine not found: " + machineName);
+      throw new IllegalArgumentException(
+          "Machine not found: " + SendMessageViewImpl.SE_NODE_MACHINE);
     }
 
-    Server server = machine.getServers().get(serverName);
+    Server server = machine.getServers().get(SendMessageViewImpl.SE_NODE_SERVER);
     if (server == null) {
-      throw new IllegalArgumentException("Server not found: " + serverName);
+      throw new IllegalArgumentException("Server not found: " + SendMessageViewImpl.SE_NODE_SERVER);
     }
 
     return server;
@@ -228,7 +229,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private void sendMessage() {
     Server server;
     try {
-      server = this.getServer(MACHINE_TERMINAL_REFERENCE, SERVER_TERMINAL_REFERENCE);
+      server = this.getSeNodeServer();
     } catch (Exception ex) {
       this.error(ex.getMessage());
       return;
@@ -261,11 +262,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String[] privateKey = {null};
     String[] publicKey = {null};
 
-    HttpUtil.getFileContent(this.appContext, abi.getKeyFile())
+    abi.getKeyFile()
+        .getContent()
         .thenPromise(
-            (Uint8Array privKeyContent) -> {
-              privateKey[0] = HexUtil.toHex(privKeyContent.subarray(0, 32));
-              publicKey[0] = HexUtil.toHex(privKeyContent.subarray(32, 64));
+            privKeyContentBase64 -> {
+              byte[] privKeyContent = Base64.decode(privKeyContentBase64);
+
+              privateKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
+              publicKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
               return this.tonSdkInitializer
                   .getTonSdk()
                   .runContract(
