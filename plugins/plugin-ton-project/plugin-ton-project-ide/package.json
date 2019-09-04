@@ -7,7 +7,7 @@
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
     "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
-    "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#master"
+    "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#7f9fa847472f04ce30c5ad221cb1e3f31bf28ac1"
   },
   "devDependencies": {
     "webpack": "^4",
