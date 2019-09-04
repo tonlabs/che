@@ -8,17 +8,24 @@ import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 import org.eclipse.che.api.promises.client.Promise;
 import org.eclipse.che.api.promises.client.js.JsPromiseError;
 import org.eclipse.che.api.promises.client.js.Promises;
+import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.resources.File;
+import org.eclipse.che.ide.util.PathEncoder;
 
 public final class HttpUtil {
-  public static Promise<Uint8Array> getFileContent(File file) {
+  private static final String PROJECT = "/project";
+  private static final String FILE = "/file";
+
+  public static Promise<Uint8Array> getFileContent(AppContext appContext, File file) {
     return Promises.create(
         (resolve, reject) -> {
           XMLHttpRequest request = XMLHttpRequest.create();
 
-          Console.log(file.getContentUrl());
+          String url = getFileUrl(appContext, file);
 
-          request.open("GET", file.getContentUrl());
+          Console.log(url);
+
+          request.open("GET", url);
           request.setResponseType(ResponseType.ArrayBuffer);
           request.setOnReadyStateChange(
               xhr -> {
@@ -39,5 +46,12 @@ public final class HttpUtil {
               });
           request.send();
         });
+  }
+
+  private static String getFileUrl(AppContext appContext, File file) {
+    return appContext.getWsAgentServerApiEndpoint()
+        + PROJECT
+        + FILE
+        + PathEncoder.encodePath(file.getLocation());
   }
 }
