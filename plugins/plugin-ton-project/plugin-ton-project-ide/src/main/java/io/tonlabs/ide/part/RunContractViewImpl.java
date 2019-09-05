@@ -27,6 +27,7 @@ import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
 import io.tonlabs.ide.util.Console;
+import io.tonlabs.ide.util.Constants;
 import io.tonlabs.ide.util.HexUtil;
 import io.tonlabs.ide.util.KeyUtil;
 import java.util.Arrays;
@@ -52,9 +53,6 @@ import org.eclipse.che.ide.core.AgentURLModifier;
 
 public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate>
     implements RunContractView {
-
-  private static final String SE_NODE_MACHINE = "ws/se-node";
-  private static final String SE_NODE_SERVER = "se-node";
 
   private static final RunContractViewImplUiBinder UI_BINDER =
       GWT.create(RunContractViewImplUiBinder.class);
@@ -216,15 +214,14 @@ public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate
       throw new IllegalStateException("Cannot get runtime");
     }
 
-    Machine machine = runtime.getMachines().get(RunContractViewImpl.SE_NODE_MACHINE);
+    Machine machine = runtime.getMachines().get(Constants.SE_NODE_MACHINE);
     if (machine == null) {
-      throw new IllegalArgumentException(
-          "Machine not found: " + RunContractViewImpl.SE_NODE_MACHINE);
+      throw new IllegalArgumentException("Machine not found: " + Constants.SE_NODE_MACHINE);
     }
 
-    Server server = machine.getServers().get(RunContractViewImpl.SE_NODE_SERVER);
+    Server server = machine.getServers().get(Constants.SE_NODE_SERVER);
     if (server == null) {
-      throw new IllegalArgumentException("Server not found: " + RunContractViewImpl.SE_NODE_SERVER);
+      throw new IllegalArgumentException("Server not found: " + Constants.SE_NODE_SERVER);
     }
 
     return server;

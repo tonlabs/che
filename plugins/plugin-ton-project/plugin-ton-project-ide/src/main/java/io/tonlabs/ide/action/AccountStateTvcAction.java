@@ -3,6 +3,7 @@ package io.tonlabs.ide.action;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.tonlabs.ide.TonProjectResources;
+import io.tonlabs.ide.util.Constants;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.command.CommandExecutor;
 import org.eclipse.che.ide.api.command.CommandImpl;
@@ -59,6 +60,7 @@ public class AccountStateTvcAction extends TonProjectAction {
     commandLine.append(" -C ton-global.json");
 
     this.commandExecutor.executeCommand(
-        new CommandImpl("Account State", commandLine.toString(), "ton-account-state"));
+        new CommandImpl("Account State", commandLine.toString(), "ton-account-state"),
+        Constants.SE_NODE_MACHINE);
   }
 }
