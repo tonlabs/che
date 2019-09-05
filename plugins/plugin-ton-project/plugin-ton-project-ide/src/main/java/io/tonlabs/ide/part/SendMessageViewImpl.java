@@ -1,11 +1,11 @@
 package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -42,6 +42,8 @@ import org.eclipse.che.api.core.model.workspace.runtime.Server;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.api.promises.client.PromiseError;
 import org.eclipse.che.ide.api.app.AppContext;
+import org.eclipse.che.ide.api.command.CommandExecutor;
+import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
 import org.eclipse.che.ide.api.notification.StatusNotification.Status;
@@ -59,7 +61,6 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
-
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
@@ -67,6 +68,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField Grid inputsControl;
   @UiField Button sendButton;
   @UiField TextArea output;
+//  private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
@@ -271,50 +273,49 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     this.sendButton.setEnabled(false);
 
-    String[] privateKey = {null};
-    String[] publicKey = {null};
-
     abi.getKeyFile()
         .getContent()
         .thenPromise(
             privKeyContentBase64 -> {
               byte[] privKeyContent = Base64.decode(privKeyContentBase64);
 
-              privateKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
-              publicKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
-              try {
-                return this.tonSdkInitializer
-                    .getTonSdk()
-                    .runContract(
-                        wsUrl,
-                        address,
-                        this.functionControl.getSelectedItemText(),
-                        abi.getAbiJso(),
-                        function.paramsToJson(),
-                        TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0]))
-                    .then(
-                        (JavaScriptObject result) -> {
-                          this.sendButton.setEnabled(true);
-                          this.notificationManager.notify("Method of contract run successfully!");
-                          try {
-                            JSONValue jsonValue = JSONParser.parseStrict(result.getText());
-                            String prettyJsonValue = JsonUtil.stringify(jsonValue);
-                            this.output.setText(prettyJsonValue);
-                          } catch (Exception error) {
-                            this.error("Failed to parse response: " + error.getMessage());
-                            this.output.setText(result.getText());
-                          }
-                        })
-                    .catchError(
-                        (PromiseError error) -> {
-                          this.sendButton.setEnabled(true);
-                          this.error("Error running contract: " + error.getMessage());
-                        });
-              } catch (JavaScriptException ex) {
-                this.sendButton.setEnabled(true);
-                this.error("Error running contract: " + ex.getMessage());
-                throw ex;
-              }
+              String privateKey = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
+              String publicKey = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
+              return this.tonSdkInitializer
+                  .getTonSdk()
+                  .runContract(
+                      wsUrl,
+                      address,
+                      this.functionControl.getSelectedItemText(),
+                      abi.getAbiJso(),
+                      function.paramsToJson(),
+                      TONKeyPairDataJso.fromPair(privateKey, publicKey))
+                  .then(
+                      (JavaScriptObject result) -> {
+                        this.sendButton.setEnabled(true);
+                        this.notificationManager.notify("Method of contract run successfully!");
+                        try {
+                          JSONValue jsonValue = JSONParser.parseStrict(result.getText());
+                          String prettyJsonValue = JsonUtil.stringify(jsonValue);
+                          this.output.setText(prettyJsonValue);
+                        } catch (Exception error) {
+                          this.error("Failed to parse response: " + error.getMessage());
+                          this.output.setText(result.getText());
+                        }
+                        
+/*
+                        this.commandExecutor.executeCommand(
+                            new CommandImpl(
+                                "Send Message",
+                                "echo \"" + new JSONObject(result).get("output").toString() + "\"",
+                                "ton-send-message"));
+*/
+                      })
+                  .catchError(
+                      (PromiseError error) -> {
+                        this.sendButton.setEnabled(true);
+                        this.error("Error running contract: " + error.getMessage());
+                      });
             })
         .catchError(
             (error) -> {
