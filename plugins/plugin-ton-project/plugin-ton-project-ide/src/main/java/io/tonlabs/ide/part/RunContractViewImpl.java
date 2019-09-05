@@ -41,8 +41,6 @@ import org.eclipse.che.api.core.model.workspace.runtime.Server;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.api.promises.client.PromiseError;
 import org.eclipse.che.ide.api.app.AppContext;
-import org.eclipse.che.ide.api.command.CommandExecutor;
-import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
 import org.eclipse.che.ide.api.notification.StatusNotification.Status;
@@ -67,7 +65,6 @@ public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate
   @UiField Grid inputsControl;
   @UiField Button runButton;
   @UiField TextArea output;
-  @Inject private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
@@ -295,13 +292,7 @@ public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate
                         this.runButton.setEnabled(true);
                         this.notificationManager.notify("Method of contract run successfully!");
 
-                        this.output.setText(result.toString());
-
-                        this.commandExecutor.executeCommand(
-                            new CommandImpl(
-                                "Run Contract",
-                                "echo \"" + new JSONObject(result).get("output").toString() + "\"",
-                                "ton-run-contract"));
+                        this.output.setText(new JSONObject(result).get("output").toString());
                       })
                   .catchError(
                       (PromiseError error) -> {
