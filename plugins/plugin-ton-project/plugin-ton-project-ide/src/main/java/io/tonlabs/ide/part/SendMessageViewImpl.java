@@ -293,9 +293,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                           this.error("Error running contract: " + error.getMessage());
                         });
               } catch (JavaScriptException ex) {
-                this.sendButton.setEnabled(true);
-                this.error("Error running contract: " + ex.getMessage());
-                throw ex;
+//                this.sendButton.setEnabled(true);
+//                this.error("Error running contract: " + ex.getMessage());
+//                throw ex;
               }
             })
         .catchError(
