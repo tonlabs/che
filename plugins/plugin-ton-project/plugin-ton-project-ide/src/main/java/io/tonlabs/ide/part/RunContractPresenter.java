@@ -7,17 +7,17 @@ import io.tonlabs.ide.TonProjectResources;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-public class SendMessagePresenter extends BasePresenter implements SendMessageView.ActionDelegate {
-  private SendMessageView view;
+public class RunContractPresenter extends BasePresenter implements RunContractView.ActionDelegate {
+  private RunContractView view;
 
   @Inject
-  private SendMessagePresenter(SendMessageView view) {
+  private RunContractPresenter(RunContractView view) {
     this.view = view;
   }
 
   @Override
   public String getTitle() {
-    return "Send Message";
+    return "Run Contract";
   }
 
   @Override
@@ -39,7 +39,7 @@ public class SendMessagePresenter extends BasePresenter implements SendMessageVi
     this.view.setVisible(visible);
   }
 
-  public SendMessageView getSendMessageView() {
+  public RunContractView getRunContractView() {
     return this.view;
   }
 

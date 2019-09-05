@@ -5,7 +5,7 @@ import static io.tonlabs.shared.Constants.TON_CATEGORY;
 import com.google.inject.Inject;
 import io.tonlabs.ide.action.AccountStateTvcAction;
 import io.tonlabs.ide.action.OpenUrlAction;
-import io.tonlabs.ide.action.SendMessageAction;
+import io.tonlabs.ide.action.RunContractAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
 import org.eclipse.che.ide.api.action.IdeActions;
@@ -18,7 +18,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 @Extension(title = "TON Project Extension", version = "0.0.1")
 public class TonProjectExtension {
   private final ActionManager actionManager;
-  private final SendMessageAction sendMessageAction;
+  private final RunContractAction runContractAction;
   private final AccountStateTvcAction accountStateTvcAction;
 
   /**
@@ -32,10 +32,10 @@ public class TonProjectExtension {
       TonProjectResources tonProjectResources,
       IconRegistry iconRegistry,
       ActionManager actionManager,
-      SendMessageAction sendMessageAction,
+      RunContractAction runContractAction,
       AccountStateTvcAction accountStateTvcAction) {
     this.actionManager = actionManager;
-    this.sendMessageAction = sendMessageAction;
+    this.runContractAction = runContractAction;
     this.accountStateTvcAction = accountStateTvcAction;
 
     iconRegistry.registerIcon(
@@ -48,8 +48,8 @@ public class TonProjectExtension {
     DefaultActionGroup mainContextMenuGroup =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
 
-    this.actionManager.registerAction("sendMessageAction", this.sendMessageAction);
-    mainContextMenuGroup.add(this.sendMessageAction);
+    this.actionManager.registerAction("runContractAction", this.runContractAction);
+    mainContextMenuGroup.add(this.runContractAction);
 
     this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
     mainContextMenuGroup.add(this.accountStateTvcAction);

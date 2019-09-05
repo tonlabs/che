@@ -52,20 +52,20 @@ import org.eclipse.che.ide.api.resources.Folder;
 import org.eclipse.che.ide.api.resources.Resource;
 import org.eclipse.che.ide.core.AgentURLModifier;
 
-public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate>
-    implements SendMessageView {
+public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate>
+    implements RunContractView {
 
   private static final String SE_NODE_MACHINE = "ws/se-node";
   private static final String SE_NODE_SERVER = "se-node";
 
-  private static final SendMessageViewImplUiBinder UI_BINDER =
-      GWT.create(SendMessageViewImplUiBinder.class);
+  private static final RunContractViewImplUiBinder UI_BINDER =
+      GWT.create(RunContractViewImplUiBinder.class);
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
-  @UiField Button sendButton;
+  @UiField Button runButton;
   @UiField TextArea output;
   @Inject private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
@@ -75,7 +75,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private Map<String, Abi> abiMap;
   private Map<String, File> tvcMap;
 
-  public SendMessageViewImpl() {
+  public RunContractViewImpl() {
     this.setContentWidget(UI_BINDER.createAndBindUi(this));
   }
 
@@ -167,7 +167,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       valueTextBox.addKeyPressHandler(
           event -> {
             if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-              this.sendMessage();
+              this.runContract();
             }
           });
 
@@ -203,9 +203,9 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     this.refreshInputsControl();
   }
 
-  @UiHandler("sendButton")
+  @UiHandler("runButton")
   void handleSendButtonClick(@SuppressWarnings("unused") ClickEvent event) {
-    this.sendMessage();
+    this.runContract();
   }
 
   private void error(String text) {
@@ -219,21 +219,21 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       throw new IllegalStateException("Cannot get runtime");
     }
 
-    Machine machine = runtime.getMachines().get(SendMessageViewImpl.SE_NODE_MACHINE);
+    Machine machine = runtime.getMachines().get(RunContractViewImpl.SE_NODE_MACHINE);
     if (machine == null) {
       throw new IllegalArgumentException(
-          "Machine not found: " + SendMessageViewImpl.SE_NODE_MACHINE);
+          "Machine not found: " + RunContractViewImpl.SE_NODE_MACHINE);
     }
 
-    Server server = machine.getServers().get(SendMessageViewImpl.SE_NODE_SERVER);
+    Server server = machine.getServers().get(RunContractViewImpl.SE_NODE_SERVER);
     if (server == null) {
-      throw new IllegalArgumentException("Server not found: " + SendMessageViewImpl.SE_NODE_SERVER);
+      throw new IllegalArgumentException("Server not found: " + RunContractViewImpl.SE_NODE_SERVER);
     }
 
     return server;
   }
 
-  private void sendMessage() {
+  private void runContract() {
     Server server;
     try {
       server = this.getSeNodeServer();
@@ -242,10 +242,10 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
       return;
     }
     String sdkEndpoint = this.agentURLModifier.modify(server.getUrl());
-    this.sendMessage(sdkEndpoint);
+    this.runContract(sdkEndpoint);
   }
 
-  private void sendMessage(@NotNull String wsUrl) {
+  private void runContract(@NotNull String wsUrl) {
     UiFunction function = this.getSelectedFunction();
     if (function == null) {
       this.error("No function selected");
@@ -270,7 +270,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
     String address =
         this.tvcMap.get(this.tvcFileControl.getSelectedItemText()).getNameWithoutExtension();
 
-    this.sendButton.setEnabled(false);
+    this.runButton.setEnabled(false);
 
     abi.getKeyFile()
         .getContent()
@@ -292,31 +292,31 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                   .then(
                       (JavaScriptObject result) -> {
                         Console.log(result);
-                        this.sendButton.setEnabled(true);
+                        this.runButton.setEnabled(true);
                         this.notificationManager.notify("Method of contract run successfully!");
 
                         this.output.setText(result.toString());
 
                         this.commandExecutor.executeCommand(
                             new CommandImpl(
-                                "Send Message",
+                                "Run Contract",
                                 "echo \"" + new JSONObject(result).get("output").toString() + "\"",
-                                "ton-send-message"));
+                                "ton-run-contract"));
                       })
                   .catchError(
                       (PromiseError error) -> {
-                        this.sendButton.setEnabled(true);
+                        this.runButton.setEnabled(true);
                         this.error("Error running contract: " + error.getMessage());
                       });
             })
         .catchError(
             (error) -> {
-              this.sendButton.setEnabled(true);
+              this.runButton.setEnabled(true);
               this.error("Error reading secret key file. Error: " + error.getMessage());
             })
         .then(
             (Void) -> {
-              this.sendButton.setEnabled(true);
+              this.runButton.setEnabled(true);
               this.notificationManager.notify("Method of contract run successfully!");
             });
   }
@@ -388,19 +388,19 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   private void updateSendButton() {
     UiFunction function = this.getSelectedFunction();
     if (function == null) {
-      this.sendButton.setEnabled(false);
+      this.runButton.setEnabled(false);
       return;
     }
 
     for (UiParameter parameter : this.getSelectedFunction().getInputs().values()) {
       if (parameter.getValue() == null || parameter.getValue().length() < 1) {
-        this.sendButton.setEnabled(false);
+        this.runButton.setEnabled(false);
         return;
       }
     }
 
-    this.sendButton.setEnabled(true);
+    this.runButton.setEnabled(true);
   }
 
-  interface SendMessageViewImplUiBinder extends UiBinder<Widget, SendMessageViewImpl> {}
+  interface RunContractViewImplUiBinder extends UiBinder<Widget, RunContractViewImpl> {}
 }
