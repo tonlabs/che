@@ -5,6 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -38,6 +39,8 @@ import org.eclipse.che.api.core.model.workspace.runtime.Server;
 import org.eclipse.che.api.promises.client.Function;
 import org.eclipse.che.api.promises.client.PromiseError;
 import org.eclipse.che.ide.api.app.AppContext;
+import org.eclipse.che.ide.api.command.CommandExecutor;
+import org.eclipse.che.ide.api.command.CommandImpl;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.notification.StatusNotification.DisplayMode;
 import org.eclipse.che.ide.api.notification.StatusNotification.Status;
@@ -55,13 +58,13 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private static final SendMessageViewImplUiBinder UI_BINDER =
       GWT.create(SendMessageViewImplUiBinder.class);
-
   @UiField Label inputsHeader;
   @UiField ListBox tvcFileControl;
   @UiField ListBox abiFileControl;
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
+  private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
@@ -260,17 +263,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
     this.sendButton.setEnabled(false);
 
-    String[] privateKey = {null};
-    String[] publicKey = {null};
-
     abi.getKeyFile()
         .getContent()
         .thenPromise(
             privKeyContentBase64 -> {
               byte[] privKeyContent = Base64.decode(privKeyContentBase64);
 
-              privateKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
-              publicKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
+              String privateKey = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
+              String publicKey = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
               return this.tonSdkInitializer
                   .getTonSdk()
                   .runContract(
@@ -279,11 +279,16 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                       this.functionControl.getSelectedItemText(),
                       abi.getAbiJso(),
                       function.paramsToJson(),
-                      TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0]))
+                      TONKeyPairDataJso.fromPair(privateKey, publicKey))
                   .then(
                       (JavaScriptObject result) -> {
                         this.sendButton.setEnabled(true);
-                        this.notificationManager.notify("Method of contract run successfully!");
+                        // this.notificationManager.notify("Method of contract run successfully!");
+                        this.commandExecutor.executeCommand(
+                            new CommandImpl(
+                                "Send Message",
+                                "echo \"" + new JSONObject(result).get("output").toString() + "\"",
+                                "ton-send-message"));
                       })
                   .catchError(
                       (PromiseError error) -> {
