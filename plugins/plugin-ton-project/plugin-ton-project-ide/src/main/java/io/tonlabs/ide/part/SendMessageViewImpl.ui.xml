@@ -1,5 +1,5 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
         .rootLayout {
             padding: 10px;
@@ -12,22 +12,31 @@
         .header {
             margin-top: 10px;
         }
+
         .sendMessage {
             margin-bottom: 20px;
+        }
+
+        .resultTextArea {
+            padding-right: 10px;
         }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
         <g:Label>Compiled Contract File</g:Label>
-        <g:ListBox width="100%" ui:field="tvcFileControl" visibleItemCount="1" title="Compiled TON contract (*.tvc) file name" />
+        <g:ListBox width="100%" ui:field="tvcFileControl" visibleItemCount="1"
+            title="Compiled TON contract (*.tvc) file name"/>
         <g:Label addStyleNames="{style.header}">ABI File</g:Label>
-        <g:ListBox width="100%" ui:field="abiFileControl" visibleItemCount="1" title="ABI (*.abi) file name"  />
+        <g:ListBox width="100%" ui:field="abiFileControl" visibleItemCount="1"
+            title="ABI (*.abi) file name"/>
         <g:Label addStyleNames="{style.header}">Function</g:Label>
-        <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1" />
+        <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1"/>
         <g:Label ui:field="inputsHeader" addStyleNames="{style.header}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
-        <g:Button ui:field="sendButton" enabled="false" text="Send Message" addStyleNames="{style.sendMessage}"/>
-        <g:ScrollPanel>
-            <g:TextArea width="100%" ui:field="output" debugId="send-message-output" />
+        <g:Button ui:field="sendButton" enabled="false" text="Send Message"
+            addStyleNames="{style.sendMessage}"/>
+        <g:ScrollPanel width="100%">
+            <g:TextArea width="100%" readOnly="true" ui:field="output" debugId="send-message-output"
+                addStyleNames="{style.resultTextArea}"/>
         </g:ScrollPanel>
     </g:VerticalPanel>
 </ui:UiBinder>
