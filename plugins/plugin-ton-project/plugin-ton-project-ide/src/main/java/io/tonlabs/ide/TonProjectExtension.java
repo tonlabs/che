@@ -3,7 +3,6 @@ package io.tonlabs.ide;
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
-import io.tonlabs.ide.action.AccountStateTvcAction;
 import io.tonlabs.ide.action.OpenUrlAction;
 import io.tonlabs.ide.action.RunContractAction;
 import org.eclipse.che.ide.api.action.ActionManager;
@@ -14,12 +13,14 @@ import org.eclipse.che.ide.api.icon.Icon;
 import org.eclipse.che.ide.api.icon.IconRegistry;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+// import io.tonlabs.ide.action.AccountStateTvcAction;
+
 /** TON Project extension that registers actions and icons. */
 @Extension(title = "TON Project Extension", version = "0.0.1")
 public class TonProjectExtension {
   private final ActionManager actionManager;
   private final RunContractAction runContractAction;
-  private final AccountStateTvcAction accountStateTvcAction;
+  //  private final AccountStateTvcAction accountStateTvcAction;
 
   /**
    * Constructor.
@@ -32,11 +33,11 @@ public class TonProjectExtension {
       TonProjectResources tonProjectResources,
       IconRegistry iconRegistry,
       ActionManager actionManager,
-      RunContractAction runContractAction,
-      AccountStateTvcAction accountStateTvcAction) {
+      RunContractAction runContractAction /*,
+      AccountStateTvcAction accountStateTvcAction*/) {
     this.actionManager = actionManager;
     this.runContractAction = runContractAction;
-    this.accountStateTvcAction = accountStateTvcAction;
+    //    this.accountStateTvcAction = accountStateTvcAction;
 
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
@@ -51,8 +52,8 @@ public class TonProjectExtension {
     this.actionManager.registerAction("runContractAction", this.runContractAction);
     mainContextMenuGroup.add(this.runContractAction);
 
-    this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
-    mainContextMenuGroup.add(this.accountStateTvcAction);
+    //    this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
+    //    mainContextMenuGroup.add(this.accountStateTvcAction);
 
     DefaultActionGroup helpMenu =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_HELP);
