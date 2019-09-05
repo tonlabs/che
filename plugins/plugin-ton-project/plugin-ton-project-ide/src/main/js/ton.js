@@ -6,7 +6,7 @@ export class TonSdk {
   }
 
   async runContract(node, address, functionName, abi, input, keyPair) {
-    var ton = TONClient();
+    var ton = TONClient.shared;
     TONClient.setLibrary(TONClientLibrary);
     ton.setup().then(function(){
       ton.config.setData({
