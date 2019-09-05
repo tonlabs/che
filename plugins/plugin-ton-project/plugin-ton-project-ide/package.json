@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
-    "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#master",
+    "ton-sdk-js": "git+ssh://git@github.com/tonlabs/ton-sdk-js.git#6aaefacdc64a9a2f21b3232e79695bd12c097249",
     "ton-sdk-wasm": "git+ssh://git@github.com/tonlabs/ton-sdk-wasm.git#7f9fa847472f04ce30c5ad221cb1e3f31bf28ac1"
   },
   "devDependencies": {

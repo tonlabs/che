@@ -1,7 +1,6 @@
 package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -284,7 +283,7 @@ public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate
                       function.paramsToJson(),
                       TONKeyPairDataJso.fromPair(privateKey, publicKey))
                   .then(
-                      (JavaScriptObject result) -> {
+                      result -> {
                         Console.log(result);
                         this.runButton.setEnabled(true);
                         this.notificationManager.notify("Method of contract run successfully!");
@@ -292,7 +291,7 @@ public class RunContractViewImpl extends BaseView<RunContractView.ActionDelegate
                         this.output.setText(new JSONObject(result).get("output").toString());
                       })
                   .catchError(
-                      (PromiseError error) -> {
+                      error -> {
                         this.runButton.setEnabled(true);
                         this.error("Error running contract: " + error.getMessage());
                       });
