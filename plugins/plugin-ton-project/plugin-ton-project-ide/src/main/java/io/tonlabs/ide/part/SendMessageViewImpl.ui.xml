@@ -24,4 +24,12 @@
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
         <g:Button ui:field="sendButton" enabled="false" text="Send Message"/>
     </g:VerticalPanel>
+    <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
+        <g:ScrollPanel>
+            <g:TextArea  
+                    width="100%"
+                    ui:field="output" 
+                    debugId="send-message-output" />
+        </g:ScrollPanel>
+    </g:VerticalPanel>
 </ui:UiBinder>

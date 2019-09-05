@@ -15,6 +15,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.inject.Inject;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import io.tonlabs.ide.event.InputEvent;
@@ -63,6 +66,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
+  @UiField TextArea output;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
@@ -242,12 +246,18 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private void sendMessage(@NotNull String wsUrl) {
     UiFunction function = this.getSelectedFunction();
-    if (function == null || function.hasEmptyParams()) {
+    if (function == null) {
+      this.error("No function selected");
+      return;
+    }
+    if (function.hasEmptyParams()) {
+      this.error("All function parameters must be set");
       return;
     }
 
     Abi abi = this.getSelectedAbi();
     if (abi == null) {
+      this.error("Could not find contract ABI");
       return;
     }
 
@@ -286,6 +296,14 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                         (JavaScriptObject result) -> {
                           this.sendButton.setEnabled(true);
                           this.notificationManager.notify("Method of contract run successfully!");
+                          try {
+                            JSONValue jsonValue = JSONParser.parseStrict(result.getText());
+                            String prettyJsonValue = JsonUtil.stringify(jsonValue);
+                            this.output.setText(prettyJsonValue);
+                          } catch (Exception error) {
+                            this.error("Failed to parse response: " + error.getMessage());
+                            this.output.setText(result.getText());
+                          }
                         })
                     .catchError(
                         (PromiseError error) -> {
