@@ -14,7 +14,7 @@ export class TonSdk {
       log_verbose: true
     });
 
-    ton.setup().then(function() {
+    return ton.setup().then(function() {
       let obj = {
         functionName,
         address,
