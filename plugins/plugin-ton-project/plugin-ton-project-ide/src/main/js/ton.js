@@ -7,7 +7,7 @@ export class TonSdk {
   }
 
   async runContract(node, address, functionName, abi, input, keyPair) {
-    var ton = new TONClient();
+    let ton = new TONClient();
 
     ton.config.setData({
       servers: [node],
@@ -15,7 +15,7 @@ export class TonSdk {
     });
 
     ton.setup().then(function() {
-      var obj = {
+      let obj = {
         functionName,
         address,
         abi,
@@ -23,7 +23,7 @@ export class TonSdk {
         keyPair,
       };
       console.log(obj);
-      return this.ton.contracts.run(obj);
+      return ton.contracts.run(obj);
     });
   }
 }
