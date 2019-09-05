@@ -18,7 +18,6 @@
         }
 
         .resultTextArea {
-            padding-right: 10px;
         }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
@@ -34,9 +33,9 @@
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
         <g:Button ui:field="runButton" enabled="false" text="Run Contract"
             addStyleNames="{style.run}"/>
-        <g:ScrollPanel width="100%">
-            <g:TextArea width="100%" readOnly="true" ui:field="output" debugId="run-contract-output"
+<!--        <g:ScrollPanel width="100%">-->
+            <g:TextArea width="100%" height="300px" readOnly="true" ui:field="output" debugId="run-contract-output"
                 addStyleNames="{style.resultTextArea}"/>
-        </g:ScrollPanel>
+<!--        </g:ScrollPanel>-->
     </g:VerticalPanel>
 </ui:UiBinder>
