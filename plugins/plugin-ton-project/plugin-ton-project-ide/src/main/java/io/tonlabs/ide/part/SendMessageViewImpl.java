@@ -25,6 +25,7 @@ import io.tonlabs.ide.model.UiFunction;
 import io.tonlabs.ide.model.UiParameter;
 import io.tonlabs.ide.sdk.TonSdkInitializer;
 import io.tonlabs.ide.sdk.jso.TONKeyPairDataJso;
+import io.tonlabs.ide.util.Console;
 import io.tonlabs.ide.util.HexUtil;
 import io.tonlabs.ide.util.KeyUtil;
 import java.util.Arrays;
@@ -64,7 +65,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
-  private CommandExecutor commandExecutor;
+  @Inject private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
   @Inject private NotificationManager notificationManager;
@@ -284,6 +285,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                       (JavaScriptObject result) -> {
                         this.sendButton.setEnabled(true);
                         // this.notificationManager.notify("Method of contract run successfully!");
+                        Console.log(result);
                         this.commandExecutor.executeCommand(
                             new CommandImpl(
                                 "Send Message",
