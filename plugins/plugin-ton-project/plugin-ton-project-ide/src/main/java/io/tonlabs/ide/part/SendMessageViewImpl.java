@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -65,6 +66,7 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
   @UiField ListBox functionControl;
   @UiField Grid inputsControl;
   @UiField Button sendButton;
+  @UiField TextArea output;
   @Inject private CommandExecutor commandExecutor;
   @Inject private AppContext appContext;
   @Inject private TonSdkInitializer tonSdkInitializer;
@@ -245,12 +247,18 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
   private void sendMessage(@NotNull String wsUrl) {
     UiFunction function = this.getSelectedFunction();
-    if (function == null || function.hasEmptyParams()) {
+    if (function == null) {
+      this.error("No function selected");
+      return;
+    }
+    if (function.hasEmptyParams()) {
+      this.error("All function parameters must be set");
       return;
     }
 
     Abi abi = this.getSelectedAbi();
     if (abi == null) {
+      this.error("Could not find contract ABI");
       return;
     }
 
@@ -283,9 +291,12 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
                       TONKeyPairDataJso.fromPair(privateKey, publicKey))
                   .then(
                       (JavaScriptObject result) -> {
-                        this.sendButton.setEnabled(true);
-                        // this.notificationManager.notify("Method of contract run successfully!");
                         Console.log(result);
+                        this.sendButton.setEnabled(true);
+                        this.notificationManager.notify("Method of contract run successfully!");
+
+                        this.output.setText(result.toString());
+
                         this.commandExecutor.executeCommand(
                             new CommandImpl(
                                 "Send Message",

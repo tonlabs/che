@@ -12,6 +12,9 @@
         .header {
             margin-top: 10px;
         }
+        .sendMessage {
+            margin-bottom: 20px;
+        }
     </ui:style>
     <g:VerticalPanel width="100%" addStyleNames="{style.rootLayout}">
         <g:Label>Compiled Contract File</g:Label>
@@ -22,6 +25,9 @@
         <g:ListBox width="100%" ui:field="functionControl" visibleItemCount="1" />
         <g:Label ui:field="inputsHeader" addStyleNames="{style.header}">Inputs</g:Label>
         <g:Grid ui:field="inputsControl" addStyleNames="{style.inputsControl}"/>
-        <g:Button ui:field="sendButton" enabled="false" text="Send Message"/>
+        <g:Button ui:field="sendButton" enabled="false" text="Send Message" addStyleNames="{style.sendMessage}"/>
+        <g:ScrollPanel>
+            <g:TextArea width="100%" ui:field="output" debugId="send-message-output" />
+        </g:ScrollPanel>
     </g:VerticalPanel>
 </ui:UiBinder>
