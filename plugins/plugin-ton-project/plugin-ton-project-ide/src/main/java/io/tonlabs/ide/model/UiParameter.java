@@ -38,7 +38,7 @@ public class UiParameter {
       return JSONNull.getInstance();
     }
 
-    if (this.getType() != null && this.getType().matches("^uint\\d+$")) {
+    if (this.getType() != null && this.getType().matches("^(u?int|bits)\\d+$")) {
       if (this.getValue().matches("^[a-fA-F0-9]+$") && !this.getValue().matches("^\\d+$")) {
         return new JSONString("0x" + this.getValue());
       } else {
