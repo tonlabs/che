@@ -7,7 +7,7 @@ import org.eclipse.che.api.promises.client.Promise;
 public final class TonSdkJso extends JavaScriptObject {
   protected TonSdkJso() {}
 
-  public final native Promise<Void> runContract(
+  public final native Promise<JavaScriptObject> runContract(
       String node,
       String address,
       String functionName,

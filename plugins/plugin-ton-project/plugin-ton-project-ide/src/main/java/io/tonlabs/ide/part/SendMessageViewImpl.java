@@ -1,6 +1,8 @@
 package io.tonlabs.ide.part;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -270,21 +272,31 @@ public class SendMessageViewImpl extends BaseView<SendMessageView.ActionDelegate
 
               privateKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 0, 32));
               publicKey[0] = HexUtil.toHex(Arrays.copyOfRange(privKeyContent, 32, 64));
-              return this.tonSdkInitializer
-                  .getTonSdk()
-                  .runContract(
-                      wsUrl,
-                      address,
-                      this.functionControl.getSelectedItemText(),
-                      abi.getAbiJso(),
-                      function.paramsToJson(),
-                      TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0]))
-                  .then((Void nothing) -> this.sendButton.setEnabled(true))
-                  .catchError(
-                      (PromiseError error) -> {
-                        this.sendButton.setEnabled(true);
-                        this.error("Error running contract: " + error.getMessage());
-                      });
+              try {
+                return this.tonSdkInitializer
+                    .getTonSdk()
+                    .runContract(
+                        wsUrl,
+                        address,
+                        this.functionControl.getSelectedItemText(),
+                        abi.getAbiJso(),
+                        function.paramsToJson(),
+                        TONKeyPairDataJso.fromPair(privateKey[0], publicKey[0]))
+                    .then(
+                        (JavaScriptObject result) -> {
+                          this.sendButton.setEnabled(true);
+                          this.notificationManager.notify("Method of contract run successfully!");
+                        })
+                    .catchError(
+                        (PromiseError error) -> {
+                          this.sendButton.setEnabled(true);
+                          this.error("Error running contract: " + error.getMessage());
+                        });
+              } catch (JavaScriptException ex) {
+                this.sendButton.setEnabled(true);
+                this.error("Error running contract: " + ex.getMessage());
+                throw ex;
+              }
             })
         .catchError(
             (error) -> {
