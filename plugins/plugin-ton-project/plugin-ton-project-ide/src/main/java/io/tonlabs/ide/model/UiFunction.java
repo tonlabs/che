@@ -1,31 +1,33 @@
 package io.tonlabs.ide.model;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
 public class UiFunction {
-  private final AbiFunction abiFunction;
+  private final AbiFunctionJso abiFunctionJso;
   private final Map<String, UiParameter> inputs;
   private final Map<String, UiParameter> outputs;
 
-  public UiFunction(AbiFunction abiFunction) {
-    this.abiFunction = abiFunction;
+  public UiFunction(AbiFunctionJso abiFunctionJso) {
+    this.abiFunctionJso = abiFunctionJso;
     this.inputs = new HashMap<>();
     this.outputs = new HashMap<>();
 
-    for (AbiParameter parameter : abiFunction.getInputs()) {
+    for (AbiParameterJso parameter : abiFunctionJso.getInputs()) {
       this.inputs.put(parameter.getName(), new UiParameter(parameter));
     }
 
-    for (AbiParameter parameter : abiFunction.getOutputs()) {
+    for (AbiParameterJso parameter : abiFunctionJso.getOutputs()) {
       this.outputs.put(parameter.getName(), new UiParameter(parameter));
     }
   }
 
-  public AbiFunction getAbiFunction() {
-    return this.abiFunction;
+  public AbiFunctionJso getAbiFunctionJso() {
+    return this.abiFunctionJso;
   }
 
   public Map<String, UiParameter> getInputs() {
@@ -46,12 +48,12 @@ public class UiFunction {
     return false;
   }
 
-  public String paramsToJson() {
+  public JavaScriptObject paramsToJson() {
     JSONObject result = new JSONObject();
     for (UiParameter parameter : this.inputs.values()) {
       result.put(parameter.getName(), parameter.getValueAsJson());
     }
 
-    return result.toString();
+    return JsonUtils.safeEval(result.toString());
   }
 }

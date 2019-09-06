@@ -1,14 +1,3 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
 package io.tonlabs.ide.project;
 
 import com.google.inject.Provider;
@@ -30,16 +19,19 @@ public class TonCProjectWizardRegistrar implements ProjectWizardRegistrar {
     this.wizardPagesProviders = new ArrayList<>();
   }
 
+  @Override
   @NotNull
   public String getProjectTypeId() {
     return Constants.TON_C_PROJECT_TYPE_ID;
   }
 
+  @Override
   @NotNull
   public String getCategory() {
     return Constants.TON_CATEGORY;
   }
 
+  @Override
   @NotNull
   public List<Provider<? extends WizardPage<MutableProjectConfig>>> getWizardPages() {
     return this.wizardPagesProviders;

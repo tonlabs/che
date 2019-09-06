@@ -1,21 +1,53 @@
 package io.tonlabs.ide.model;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsonUtils;
+import java.util.HashMap;
+import java.util.Map;
+import org.eclipse.che.ide.api.resources.File;
 
-@SuppressWarnings("unused")
-public class Abi extends JavaScriptObject {
-  protected Abi() {}
+public class Abi {
+  private AbiJso abiJso;
+  private File abiFile;
+  private File keyFile;
 
-  public static Abi fromJson(String json) {
-    return (Abi) JsonUtils.safeEval(json);
+  Map<String, UiFunction> functions;
+
+  public Abi() {}
+
+  public AbiJso getAbiJso() {
+    return this.abiJso;
   }
 
-  public final native AbiFunction[] getFunctions() /*-{
-      return this.functions;
-  }-*/;
+  public void setAbiJso(AbiJso abiJso) {
+    this.abiJso = abiJso;
+    this.functions = extractFunctionsFromAbi(abiJso);
+  }
 
-  public final native int getVersion() /*-{
-      return this["ABI version"];
-  }-*/;
+  public File getAbiFile() {
+    return this.abiFile;
+  }
+
+  public void setAbiFile(File abiFile) {
+    this.abiFile = abiFile;
+  }
+
+  public File getKeyFile() {
+    return this.keyFile;
+  }
+
+  public void setKeyFile(File keyFile) {
+    this.keyFile = keyFile;
+  }
+
+  public UiFunction getFunction(String name) {
+    return this.functions.get(name);
+  }
+
+  private static Map<String, UiFunction> extractFunctionsFromAbi(AbiJso abiJso) {
+    Map<String, UiFunction> result = new HashMap<>();
+    for (AbiFunctionJso abiFunctionJso : abiJso.getFunctions()) {
+      result.put(abiFunctionJso.getName(), new UiFunction(abiFunctionJso));
+    }
+
+    return result;
+  }
 }

@@ -1,23 +1,24 @@
 package io.tonlabs.ide.model;
 
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-@SuppressWarnings("WeakerAccess")
 public class UiParameter {
-  private final AbiParameter abiParameter;
+  private final AbiParameterJso abiParameterJso;
   private String value;
 
-  UiParameter(AbiParameter abiParameter) {
-    this.abiParameter = abiParameter;
+  UiParameter(AbiParameterJso abiParameterJso) {
+    this.abiParameterJso = abiParameterJso;
   }
 
   public String getName() {
-    return this.abiParameter.getName();
+    return this.abiParameterJso.getName();
   }
 
   public String getType() {
-    return this.abiParameter.getType();
+    return this.abiParameterJso.getType();
   }
 
   public String format() {
@@ -34,14 +35,15 @@ public class UiParameter {
 
   JSONValue getValueAsJson() {
     if (this.getValue() == null) {
-      return new JSONString("");
+      return JSONNull.getInstance();
     }
 
-    if (this.getType() != null
-        && this.getType().matches("^uint\\d+$")
-        && this.getValue().matches("^[a-fA-F0-9]+$")
-        && !this.getValue().matches("^\\d+$")) {
-      return new JSONString("0x" + this.getValue());
+    if (this.getType() != null && this.getType().matches("^(u?int)\\d+$")) {
+      if (this.getValue().matches("^[a-fA-F0-9]+$") && !this.getValue().matches("^\\d+$")) {
+        return new JSONString("0x" + this.getValue());
+      } else {
+        return new JSONNumber(Double.parseDouble(this.getValue()));
+      }
     }
 
     return new JSONString(this.getValue());

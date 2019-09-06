@@ -1,22 +1,10 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
 package io.tonlabs.ide;
 
 import static io.tonlabs.shared.Constants.TON_CATEGORY;
 
 import com.google.inject.Inject;
-import io.tonlabs.ide.action.AccountStateTvcAction;
 import io.tonlabs.ide.action.OpenUrlAction;
-import io.tonlabs.ide.action.SendMessageAction;
+import io.tonlabs.ide.action.RunContractAction;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
 import org.eclipse.che.ide.api.action.IdeActions;
@@ -25,12 +13,14 @@ import org.eclipse.che.ide.api.icon.Icon;
 import org.eclipse.che.ide.api.icon.IconRegistry;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+// import io.tonlabs.ide.action.AccountStateTvcAction;
+
 /** TON Project extension that registers actions and icons. */
 @Extension(title = "TON Project Extension", version = "0.0.1")
 public class TonProjectExtension {
   private final ActionManager actionManager;
-  private final SendMessageAction sendMessageAction;
-  private final AccountStateTvcAction accountStateTvcAction;
+  private final RunContractAction runContractAction;
+  //  private final AccountStateTvcAction accountStateTvcAction;
 
   /**
    * Constructor.
@@ -43,11 +33,11 @@ public class TonProjectExtension {
       TonProjectResources tonProjectResources,
       IconRegistry iconRegistry,
       ActionManager actionManager,
-      SendMessageAction sendMessageAction,
-      AccountStateTvcAction accountStateTvcAction) {
+      RunContractAction runContractAction /*,
+      AccountStateTvcAction accountStateTvcAction*/) {
     this.actionManager = actionManager;
-    this.sendMessageAction = sendMessageAction;
-    this.accountStateTvcAction = accountStateTvcAction;
+    this.runContractAction = runContractAction;
+    //    this.accountStateTvcAction = accountStateTvcAction;
 
     iconRegistry.registerIcon(
         new Icon(TON_CATEGORY + ".ton.category.icon", tonProjectResources.tonIcon()));
@@ -59,11 +49,11 @@ public class TonProjectExtension {
     DefaultActionGroup mainContextMenuGroup =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
 
-    this.actionManager.registerAction("sendMessageAction", this.sendMessageAction);
-    mainContextMenuGroup.add(this.sendMessageAction);
+    this.actionManager.registerAction("runContractAction", this.runContractAction);
+    mainContextMenuGroup.add(this.runContractAction);
 
-    this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
-    mainContextMenuGroup.add(this.accountStateTvcAction);
+    //    this.actionManager.registerAction("accountStateTvcAction", this.accountStateTvcAction);
+    //    mainContextMenuGroup.add(this.accountStateTvcAction);
 
     DefaultActionGroup helpMenu =
         (DefaultActionGroup) this.actionManager.getAction(IdeActions.GROUP_HELP);
